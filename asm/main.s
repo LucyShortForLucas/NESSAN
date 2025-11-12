@@ -1,7 +1,20 @@
+;;
+;; This module holds the entry-point, main game loop, and NMI interrupt
+;;
+
+
+;; exports and imports
+.export nmi
+.export reset
+
+.import hello
+.import palettes
+.importzp some_var
 
 ; Main code segment for the program
 .segment "CODE"
 
+; reset is the Entry-point of the entire project
 reset:
   sei		; disable IRQs
   cld		; disable decimal mode
@@ -59,9 +72,16 @@ enable_rendering:
   sta $2001
 
 forever:
-  jmp forever
+  jmp forever ; loop
 
+; The NMI interrupt is called every frame during V-blank (if enabled)
 nmi:
+  pha ; push A
+  txa
+  pha ; push X
+  tya
+  pha ; push Y
+
   ldx #$00 	; Set SPR-RAM address to 0
   stx $2003
 @loop:	lda hello, x 	; Load the hello message into SPR-RAM
@@ -69,11 +89,12 @@ nmi:
   inx
   cpx #$5c
   bne @loop
-  rti
 
-;; exports and imports
-.export nmi
-.export reset
+  pla ; pull Y
+  tay
+  pla ; pull X
+  tax
+  pla ; pull A
+  rti ; resume code
 
-.import hello
-.import palettes
+.macro 
