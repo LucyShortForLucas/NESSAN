@@ -11,6 +11,7 @@
 .exportzp clock_x
 .exportzp clock_y
 .exportzp math_buffer
+.exportzp inputs
 
 .segment "ZEROPAGE" ; zero-page memory, fast access: Use sparingly!
 
@@ -24,3 +25,5 @@ second_counter: .res 2
 clock_x: .res 1
 clock_y: .res 1
 clock_dirty: .res 1 ; a flag set to determine which parts of the buffer must be updated. Bit 0: value, bit 1: x, bit 2:y
+
+inputs: .res 1

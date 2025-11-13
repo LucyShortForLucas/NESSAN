@@ -9,6 +9,7 @@
 .importzp clock_x
 .importzp clock_y
 .importzp math_buffer
+.importzp inputs
 
 .import division_16
 
@@ -200,5 +201,59 @@
     and #%11111011
     sta clock_dirty
 @skip:
+.endscope
+.endmacro
+
+.macro MoveClock
+.scope
+
+    lda inputs
+    and #%00001000 ; up
+    beq @skip_up
+    lda clock_y
+    sec
+    sbc #1
+    sta clock_y
+    lda clock_dirty
+    ora #%00000100
+    sta clock_dirty
+@skip_up:
+
+    lda inputs
+    and #%00000100 ; down
+    beq @skip_down
+    lda clock_y
+    clc
+    adc #1
+    sta clock_y
+    lda clock_dirty
+    ora #%00000100
+    sta clock_dirty
+@skip_down:
+
+    lda inputs
+    and #%00000010 ; left
+    beq @skip_left
+    lda clock_x
+    sec
+    sbc #1
+    sta clock_x
+    lda clock_dirty
+    ora #%00000010
+    sta clock_dirty
+@skip_left:
+
+    lda inputs
+    and #%0000001 ; right
+    beq @skip_right
+    lda clock_x
+    clc
+    adc #1
+    sta clock_x
+    lda clock_dirty
+    ora #%00000010
+    sta clock_dirty
+@skip_right:
+
 .endscope
 .endmacro

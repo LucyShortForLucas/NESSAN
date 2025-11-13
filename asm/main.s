@@ -15,6 +15,7 @@
 
 
 .include "demoMacro.s"
+.include "inputMacro.s"
 
 ; Main code segment for the program
 .segment "CODE"
@@ -93,6 +94,9 @@ main:
   sta frame_ready
 
   UpdateTime ; macro
+
+  FetchInput
+  MoveClock
 
   UpdateClockBufferX
   UpdateClockBufferY
