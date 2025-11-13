@@ -9,7 +9,12 @@
 
 .import hello
 .import palettes
-.importzp some_var
+.import clock_draw_buffer
+
+.importzp frame_ready
+
+
+.include "demoMacro.s"
 
 ; Main code segment for the program
 .segment "CODE"
@@ -50,8 +55,7 @@ vblankwait2:
   bit $2002
   bpl vblankwait2
 
-main:
-load_palettes:
+; load palettes
   lda $2002
   lda #$3f
   sta $2006
@@ -65,14 +69,37 @@ load_palettes:
   cpx #$20
   bne @loop
 
-enable_rendering:
+; enable rendering
   lda #%10000000	; Enable NMI
   sta $2000
   lda #%00010000	; Enable Sprites
   sta $2001
 
-forever:
-  jmp forever ; loop
+
+; Setup initial variables
+
+lda #50
+sta clock_x
+sta clock_y
+
+lda #%00000111 
+sta clock_dirty
+
+; Main loop
+main:
+  lda frame_ready 
+  beq main ; wait until NMI sets frame_ready
+  lda #$00
+  sta frame_ready
+
+  UpdateTime ; macro
+
+  UpdateClockBufferX
+  UpdateClockBufferY
+  UpdateClockBufferValue
+
+  jmp main ; loop forever
+
 
 ; The NMI interrupt is called every frame during V-blank (if enabled)
 nmi:
@@ -83,12 +110,23 @@ nmi:
   pha ; push Y
 
   ldx #$00 	; Set SPR-RAM address to 0
-  stx $2003
-@loop:	lda hello, x 	; Load the hello message into SPR-RAM
+  stx $2003 ;; first 8 bytes must be 0 for some reason
+  stx $2004
+  stx $2004
+  stx $2004
+  stx $2004
+  stx $2004
+  stx $2004
+  stx $2004
+  stx $2004
+@loop:	 	
+  lda clock_draw_buffer, x
   sta $2004
   inx
-  cpx #$5c
+  cpx #$10
   bne @loop
+
+  inc frame_ready ; signal that frame is ready for main loop
 
   pla ; pull Y
   tay
@@ -96,5 +134,3 @@ nmi:
   tax
   pla ; pull A
   rti ; resume code
-
-.macro 

@@ -4,8 +4,8 @@
 ;; In order to keep consistent track of our ram memory ALL ram variables should be defined in this file 
 ;;
 
-.export some_var_in_ram
+.export clock_draw_buffer
 
 .segment "BSS"
 
-some_var_in_ram: .res 2
+clock_draw_buffer: .res 16

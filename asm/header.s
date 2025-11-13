@@ -1,3 +1,7 @@
+;; exports and imports
+.import nmi
+.import reset
+
 .segment "HEADER"
   ; .byte "NES", $1A      ; iNES header identifier
   .byte $4E, $45, $53, $1A
@@ -17,6 +21,3 @@
 ; if it's empty
 .segment "STARTUP"
 
-;; exports and imports
-.import nmi
-.import reset
