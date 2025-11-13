@@ -209,7 +209,7 @@
 
     lda inputs
     and #%00001000 ; up
-    beq @skip_up
+    beq skip_up
     lda clock_y
     sec
     sbc #1
@@ -217,11 +217,11 @@
     lda clock_dirty
     ora #%00000100
     sta clock_dirty
-@skip_up:
+skip_up:
 
     lda inputs
     and #%00000100 ; down
-    beq @skip_down
+    beq skip_down
     lda clock_y
     clc
     adc #1
@@ -229,11 +229,11 @@
     lda clock_dirty
     ora #%00000100
     sta clock_dirty
-@skip_down:
+skip_down:
 
     lda inputs
     and #%00000010 ; left
-    beq @skip_left
+    beq skip_left
     lda clock_x
     sec
     sbc #1
@@ -241,11 +241,11 @@
     lda clock_dirty
     ora #%00000010
     sta clock_dirty
-@skip_left:
+skip_left:
 
     lda inputs
     and #%0000001 ; right
-    beq @skip_right
+    beq skip_right
     lda clock_x
     clc
     adc #1
@@ -253,7 +253,7 @@
     lda clock_dirty
     ora #%00000010
     sta clock_dirty
-@skip_right:
+skip_right:
 
 .endscope
 .endmacro
@@ -263,37 +263,43 @@
 
     lda inputs
     and #%10000000 ; A
-    beq @skip_a
-    lda second_counter
-    clc
-    adc #1
-    sta second_counter
+    beq skip_a
+    inc second_counter
+    bne @no_overflow ; check for overflow
+    inc second_counter+1
+@no_overflow:
     lda clock_dirty
     ora #%00000001
     sta clock_dirty
-@skip_a:
+skip_a:
 
     lda inputs
     and #%01000000 ; B
-    beq @skip_b
+    beq skip_b
+    
+    clc ; add 1 byte value to 2 byte value
     lda second_counter
-    clc
     adc #10
     sta second_counter
+    lda second_counter+1 ; add cary, if any
+    adc #0
+    sta second_counter+1
+
     lda clock_dirty
     ora #%00000001
     sta clock_dirty
-@skip_b:
+skip_b:
 
     lda inputs
     and #%00100000 ; Select
-    beq @skip_select
+    beq skip_select
     lda #0
     sta second_counter
+    sta second_counter+1
     lda clock_dirty
     ora #%00000001
     sta clock_dirty
-@skip_select:
+skip_select:
 
 .endscope
 .endmacro
