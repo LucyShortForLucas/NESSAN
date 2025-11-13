@@ -257,3 +257,43 @@
 
 .endscope
 .endmacro
+
+.macro ClockValueButtons
+.scope
+
+    lda inputs
+    and #%10000000 ; A
+    beq @skip_a
+    lda second_counter
+    clc
+    adc #1
+    sta second_counter
+    lda clock_dirty
+    ora #%00000001
+    sta clock_dirty
+@skip_a:
+
+    lda inputs
+    and #%01000000 ; B
+    beq @skip_b
+    lda second_counter
+    clc
+    adc #10
+    sta second_counter
+    lda clock_dirty
+    ora #%00000001
+    sta clock_dirty
+@skip_b:
+
+    lda inputs
+    and #%00100000 ; Select
+    beq @skip_select
+    lda #0
+    sta second_counter
+    lda clock_dirty
+    ora #%00000001
+    sta clock_dirty
+@skip_select:
+
+.endscope
+.endmacro

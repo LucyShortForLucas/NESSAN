@@ -97,6 +97,7 @@ main:
 
   FetchInput
   MoveClock
+  ClockValueButtons
 
   UpdateClockBufferX
   UpdateClockBufferY
