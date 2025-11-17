@@ -11,7 +11,7 @@
 .import palettes
 .import clock_draw_buffer
 
-.importzp frame_ready
+.import frame_ready
 
 
 .include "demoMacro.s"

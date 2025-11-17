@@ -5,7 +5,10 @@
 ;;
 
 .export clock_draw_buffer
+.export frame_ready
 
 .segment "BSS"
+
+frame_ready: .res 1 ; set to a value != 0 when frame logic is ready to be processed
 
 clock_draw_buffer: .res 16
