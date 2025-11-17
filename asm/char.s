@@ -2,16 +2,6 @@
 .export hello
 .export palettes
 
-.segment "CODE"
-hello:
-  .byte $00, $00, $00, $00 	; Why do I need these here?
-  .byte $00, $00, $00, $00
-
-  .byte $6c, $03, $00, $4e ;h 
-  .byte $6c, $04, $00, $58 ;e
-  .byte $6c, $05, $00, $62 ;l
-  .byte $6c, $05, $00, $6c ;l
-
 palettes:
   ; Background Palette
   .byte $0f, $00, $00, $00
