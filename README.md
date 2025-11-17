@@ -8,6 +8,8 @@
 
 - use camelCare for file names
 
+- asm instructions should be lowercase
+
 
 ## Structural conventions
 
