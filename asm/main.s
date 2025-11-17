@@ -4,20 +4,33 @@
 
 
 ;; exports and imports
+
+; Interrupt adresses
 .export nmi
 .export reset
 
-.import hello
+; drawing
 .import palettes
 .import clock_draw_buffer
 
+; flags
+.import current_scene
 .import frame_ready
 
+; Scenes
+.import start_screen_scene
+.import demo_scene
 
-.include "demoMacro.s"
-.include "inputMacro.s"
+; demo
+.importzp clock_x
+.importzp clock_y
+.importzp clock_dirty
 
-; Main code segment for the program
+;; includes
+.include "systemMacro.s"
+.include "consts.s"
+
+;; Main code segment for the program
 .segment "CODE"
 
 ; reset is the Entry-point of the entire project
@@ -94,14 +107,18 @@ main:
   sta frame_ready
 
   UpdateTime ; macro
-
   FetchInput
-  MoveClock
-  ClockValueButtons
 
-  UpdateClockBufferX
-  UpdateClockBufferY
-  UpdateClockBufferValue
+  ;; Scene Select
+  lda current_scene
+  bne @skipStartScene ; $00 is always start screen
+  jsr start_screen_scene
+  @skipStartScene:
+
+  cmp #SCENE_GAME
+  bne @skipGameScene
+  jsr demo_scene
+  @skipGameScene:
 
   jmp main ; loop forever
 

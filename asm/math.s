@@ -6,7 +6,7 @@
 .segment "CODE"
 
 ;;
-;; A division alghorithm that divides a 32-bit dividen with a 16-bit divisor
+;; A division alghorithm that divides a 32-bit dividend with a 16-bit divisor
 ;; 
 ;; The divisor is the block math_buffer+0 to math_buffer+1, the dividend hi-cell is math_buffer+2 to math_buffer+3, and its lo-cell in math_buffer+4 to math_buffer + 5
 ;;

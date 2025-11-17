@@ -1,5 +1,4 @@
 ;; exports and imports
-.export hello
 .export palettes
 
 palettes:

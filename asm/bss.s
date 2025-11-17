@@ -7,8 +7,12 @@
 .export clock_draw_buffer
 .export frame_ready
 
+.export current_scene
+
 .segment "BSS"
 
+;; System variables
 frame_ready: .res 1 ; set to a value != 0 when frame logic is ready to be processed
+current_scene: .res 1
 
 clock_draw_buffer: .res 16
