@@ -13,6 +13,7 @@
 .importzp inputs
 
 .import division_16
+.import prng
 
 .export demo_scene
 
@@ -295,5 +296,7 @@ demo_scene:
   UpdateClockBufferX
   UpdateClockBufferY
   UpdateClockBufferValue
+
+  jsr prng
 
   rts
