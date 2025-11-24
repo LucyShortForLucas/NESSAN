@@ -1,140 +1,164 @@
 ;; exports and imports
-.export hello
+.export background
 .export palettes
 
-.segment "CODE"
-hello:
-  .byte $00, $00, $00, $00 	; Why do I need these here?
-  .byte $00, $00, $00, $00
+.segment "RODATA" ; 
+background:
+  ; --- TOP BORDER (Rows 0-1) ---
+  .byte $01, $02
+  .byte $07, $0B, $0B, $0B, $0B, $08
+  .repeat 8
+    .byte $01, $02
+  .endrepeat
+  .byte $07, $0B, $0B, $0B, $0B, $08
+  .byte $01, $02
 
-  .byte $6c, $03, $00, $4e ;h 
-  .byte $6c, $04, $00, $58 ;e
-  .byte $6c, $05, $00, $62 ;l
-  .byte $6c, $05, $00, $6c ;l
+  .byte $03, $04
+  .byte $09, $0C, $0C, $0C, $0C, $0A
+  .repeat 8
+    .byte $03, $04
+  .endrepeat
+  .byte $09, $0C, $0C, $0C, $0C, $0A
+  .byte $03, $04
+
+  ; Row 2 
+  .byte $02
+  .repeat 30
+    .byte $05
+  .endrepeat
+  .byte $01
+
+  ; Row 3 
+  .byte $04
+  .repeat 30
+    .byte $05
+  .endrepeat
+  .byte $03
+
+  ; Row 4 
+  .byte $02
+  .repeat 30
+    .byte $05
+  .endrepeat
+  .byte $01
+
+  ; Row 5
+  .byte $04             ; Left Border
+  .repeat 3             ; 3 tiles of Path
+    .byte $05
+  .endrepeat
+  .repeat 9             ; 9 tiles of Void
+    .byte $06
+  .endrepeat
+  .repeat 6             ; 6 tiles of Path
+    .byte $05
+  .endrepeat
+  .repeat 9             ; 9 tiles of Void
+    .byte $06
+  .endrepeat
+  .repeat 3             ; 3 tiles of Path
+    .byte $05
+  .endrepeat
+  .byte $03             ; Right Border
+
+  ; Row 6
+  .byte $02             ; Left Border
+  .repeat 3             ; 3 tiles of Path
+    .byte $05
+  .endrepeat
+  .repeat 9             ; 9 tiles of Void
+    .byte $00
+  .endrepeat
+  .repeat 6             ; 6 tiles of Path
+    .byte $05
+  .endrepeat
+  .repeat 9             ; 9 tiles of Void
+    .byte $00
+  .endrepeat
+  .repeat 3             ; 3 tiles of Path
+    .byte $05
+  .endrepeat
+  .byte $01             ; Right Border
+
+  ; Row 7
+  .byte $04
+  .byte $05, $05, $05
+  .byte $00, $00
+  .repeat 20
+    .byte $05
+  .endrepeat
+  .byte $00, $00
+  .byte $05, $05, $05
+  .byte $03
+
+  ; Row 8
+  .byte $02
+  .byte $05, $05, $05
+  .byte $00, $00
+  .repeat 20
+    .byte $05
+  .endrepeat
+  .byte $00, $00
+  .byte $05, $05, $05
+  .byte $01
+
+  ; Row 9
+  .byte $04
+  .byte $05, $05, $05
+  .byte $00, $00
+  .repeat 20
+    .byte $05
+  .endrepeat
+  .byte $00, $00
+  .byte $05, $05, $05
+  .byte $03
+
+  ; 10-27 
+  .repeat 9
+    ; Line A
+    .byte $02
+    .repeat 30
+      .byte $05
+    .endrepeat
+    .byte $01
+
+    ; Line B
+    .byte $04
+    .repeat 30
+      .byte $05
+    .endrepeat
+    .byte $03
+  .endrepeat
+
+
+  ; --- BOTTOM BORDER (Rows 28-29) ---
+  .repeat 16
+    .byte $01, $02
+  .endrepeat
+  .repeat 16
+    .byte $03, $04
+  .endrepeat
+
+
+  ; --- ATTRIBUTE TABLE (64 bytes) ---
+  .repeat 64
+    .byte $00
+  .endrepeat
 
 palettes:
   ; Background Palette
-  .byte $0f, $00, $00, $00
+  .byte $0f, $00, $10, $20
   .byte $0f, $00, $00, $00
   .byte $0f, $00, $00, $00
   .byte $0f, $00, $00, $00
 
   ; Sprite Palette
-  .byte $0f, $20, $00, $00
+  .byte $0f, $00, $10, $20
   .byte $0f, $00, $00, $00
   .byte $0f, $00, $00, $00
   .byte $0f, $00, $00, $00
 
 ; Character memory
 .segment "CHARS"
-
-; 0
-.byte %01111110
-.byte %11111111
-.byte %11000011
-.byte %11000011
-.byte %11000011
-.byte %11000011
-.byte %11111111
-.byte %01111110
-.byte $00,$00,$00,$00,$00,$00,$00,$00
-
-; 1
-.byte %00011000
-.byte %00111000
-.byte %01111000
-.byte %00011000
-.byte %00011000
-.byte %00011000
-.byte %11111111
-.byte %11111111
-.byte $00,$00,$00,$00,$00,$00,$00,$00
-
-; 2
-.byte %01111110
-.byte %11111111
-.byte %00000111
-.byte %00011110
-.byte %00111100
-.byte %01111000
-.byte %11111111
-.byte %11111111
-.byte $00,$00,$00,$00,$00,$00,$00,$00
-
-; 3
-.byte %01111110
-.byte %11111111
-.byte %00000111
-.byte %00111110
-.byte %00111110
-.byte %00000111
-.byte %11111111
-.byte %01111110
-.byte $00,$00,$00,$00,$00,$00,$00,$00
-
-; 4
-.byte %00011100
-.byte %00111100
-.byte %01111100
-.byte %11111100
-.byte %11011111
-.byte %00011100
-.byte %00011100
-.byte %00011100
-.byte $00,$00,$00,$00,$00,$00,$00,$00
-
-; 5
-.byte %11111111
-.byte %11111111
-.byte %11000000
-.byte %11111110
-.byte %11111111
-.byte %00000111
-.byte %11111111
-.byte %01111110
-.byte $00,$00,$00,$00,$00,$00,$00,$00
-
-; 6
-.byte %01111110
-.byte %11111111
-.byte %11000000
-.byte %11111110
-.byte %11111111
-.byte %11000011
-.byte %11111111
-.byte %01111110
-.byte $00,$00,$00,$00,$00,$00,$00,$00
-
-; 7
-.byte %11111111
-.byte %11111111
-.byte %00000111
-.byte %00001110
-.byte %00011100
-.byte %00111000
-.byte %01110000
-.byte %01110000
-.byte $00,$00,$00,$00,$00,$00,$00,$00
-
-; 8
-.byte %01111110
-.byte %11111111
-.byte %11000011
-.byte %01111110
-.byte %01111110
-.byte %11000011
-.byte %11111111
-.byte %01111110
-.byte $00,$00,$00,$00,$00,$00,$00,$00
-
-; 9
-.byte %01111110
-.byte %11111111
-.byte %11000011
-.byte %11111111
-.byte %01111111
-.byte %00000011
-.byte %11111111
-.byte %01111110
-.byte $00,$00,$00,$00,$00,$00,$00,$00
+.incbin "assets.chr"
 

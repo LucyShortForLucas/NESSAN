@@ -7,12 +7,11 @@
 .export nmi
 .export reset
 
-.import hello
+.import background
 .import palettes
 .import clock_draw_buffer
 
 .importzp frame_ready
-
 
 .include "demoMacro.s"
 .include "inputMacro.s"
@@ -70,10 +69,42 @@ vblankwait2:
   cpx #$20
   bne @loop
 
+; load full background into $2000 nametable
+  lda $2002             ; Reset PPU latch
+  lda #$20
+  sta $2006             ; Set PPU address to $2000
+  lda #$00
+  sta $2006
+
+  ldx #$00
+@load_chunk_1:
+  lda background, x     ; Load from 0-255
+  sta $2007
+  inx
+  bne @load_chunk_1
+
+@load_chunk_2:
+  lda background + 256, x ; Load from 256-511
+  sta $2007
+  inx
+  bne @load_chunk_2
+
+@load_chunk_3:
+  lda background + 512, x ; Load from 512-767
+  sta $2007
+  inx
+  bne @load_chunk_3
+
+@load_chunk_4:
+  lda background + 768, x ; Load from 768-1023
+  sta $2007
+  inx
+  bne @load_chunk_4
+
 ; enable rendering
   lda #%10000000	; Enable NMI
   sta $2000
-  lda #%00010000	; Enable Sprites
+  lda #%00011110  ; Enable Background and Sprites
   sta $2001
 
 
@@ -105,7 +136,6 @@ main:
 
   jmp main ; loop forever
 
-
 ; The NMI interrupt is called every frame during V-blank (if enabled)
 nmi:
   pha ; push A
@@ -124,12 +154,19 @@ nmi:
   stx $2004
   stx $2004
   stx $2004
-@loop:	 	
+
+  lda #$00
+  sta $2005  ; Set Scroll X to 0
+  sta $2005  ; Set Scroll Y to 0
+  
+@loop:	
   lda clock_draw_buffer, x
   sta $2004
   inx
   cpx #$10
   bne @loop
+
+
 
   inc frame_ready ; signal that frame is ready for main loop
 
