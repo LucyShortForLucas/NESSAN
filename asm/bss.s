@@ -10,6 +10,8 @@
 
 .export current_scene
 
+.export list_pickup
+
 .segment "BSS"
 
 ;; System variables
@@ -20,3 +22,5 @@ clock_draw_buffer: .res 16
 
 ; player variables for turning back
 player_backup: .res 1
+
+list_pickup: .res 10 ; 0th element for how many are active, max 3 coins: 1th for x, 2st for y, 3nd for type, then next coin...

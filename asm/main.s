@@ -31,6 +31,8 @@
 .include "consts.s"
 
 
+.import draw_enemy
+.import draw_player
 
 .importzp player_x, player_y, enemy_x, enemy_y
 
@@ -157,6 +159,7 @@ nmi:
   stx $2004
   stx $2004
   stx $2004
+  
 @loop:	 	
   lda clock_draw_buffer, x
   sta $2004
@@ -164,6 +167,12 @@ nmi:
   cpx #$10
   bne @loop
 
+
+  ; draw player
+  jsr draw_player
+  ; draw enemy
+  jsr draw_enemy
+  
   inc frame_ready ; signal that frame is ready for main loop
 
   pla ; pull Y
