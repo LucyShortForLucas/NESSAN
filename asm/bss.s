@@ -5,7 +5,11 @@
 ;;
 
 .export clock_draw_buffer
+.export player_backup
 
 .segment "BSS"
 
 clock_draw_buffer: .res 16
+
+; player variables for turning back
+player_backup: .res 1

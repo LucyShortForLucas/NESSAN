@@ -13,6 +13,12 @@
 
 .importzp frame_ready
 
+.import move_player_input
+.import draw_enemy
+.import draw_player
+
+.importzp player_x, player_y, enemy_x, enemy_y
+
 
 .include "demoMacro.s"
 .include "inputMacro.s"
@@ -86,6 +92,18 @@ sta clock_y
 lda #%00000111 
 sta clock_dirty
 
+; setup player
+lda #50
+sta player_x
+lda #50
+sta player_y
+
+; setup enemy
+lda #100
+sta enemy_x
+lda #80
+sta enemy_y
+
 ; Main loop
 main:
   lda frame_ready 
@@ -96,12 +114,21 @@ main:
   UpdateTime ; macro
 
   FetchInput
-  MoveClock
-  ClockValueButtons
+  
+  ;MoveClock
+  ;ClockValueButtons
 
-  UpdateClockBufferX
-  UpdateClockBufferY
-  UpdateClockBufferValue
+  ;UpdateClockBufferX
+  ;UpdateClockBufferY
+  ;UpdateClockBufferValue
+
+  ; move player based on input and check if it collides with one enemy
+  jsr move_player_input
+
+  ; draw player
+  jsr draw_player
+  ; draw enemy
+  jsr draw_enemy
 
   jmp main ; loop forever
 
