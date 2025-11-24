@@ -1,7 +1,17 @@
+
+
+
+
+; import engine functions
+.import famistudio_update
+.import famistudio_init
+.import famistudio_music_play
+
+.import music_data_coinheist ; import song
+
 ;;
 ;; This module holds the entry-point, main game loop, and NMI interrupt
 ;;
-
 
 ;; exports and imports
 
@@ -30,6 +40,7 @@
 .include "systemMacro.s"
 .include "consts.s"
 
+.include "musicMacro.s"
 
 .import draw_enemy
 .import draw_player
@@ -44,7 +55,7 @@ reset:
   sei		; disable IRQs
   cld		; disable decimal mode
   ldx #$40
-  stx $4017	; disable APU frame IRQ
+ ; stx $4017	; disable APU frame IRQ
   ldx #$ff 	; Set up stack
   txs		;  .
   inx		; now X = 0
@@ -58,8 +69,8 @@ vblankwait1:
   bpl vblankwait1
 
 clear_memory:
-  lda #$00
-  sta $0000, x
+  lda #$00 ; make accumulator empty
+  sta $0000, x ; make each memory empty with accumulator
   sta $0100, x
   sta $0200, x
   sta $0300, x
@@ -95,7 +106,6 @@ vblankwait2:
   lda #%00010000	; Enable Sprites
   sta $2001
 
-
 ; Setup initial variables
 
 lda #50
@@ -116,6 +126,13 @@ lda #100
 sta enemy_x
 lda #80
 sta enemy_y
+
+; Setup music
+  InitializeSongs
+
+  LDA #00 ; pick the first song 
+  ChooseSongFromAccumulator
+
 
 ; Main loop
 main:
@@ -159,7 +176,6 @@ nmi:
   stx $2004
   stx $2004
   stx $2004
-  
 @loop:	 	
   lda clock_draw_buffer, x
   sta $2004
@@ -180,4 +196,7 @@ nmi:
   pla ; pull X
   tax
   pla ; pull A
-  rti ; resume code
+
+  jsr famistudio_update ; Updates the music 
+  
+  rti ; resume code 
