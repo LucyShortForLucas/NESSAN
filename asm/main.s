@@ -4,26 +4,37 @@
 
 
 ;; exports and imports
+
+; Interrupt adresses
 .export nmi
 .export reset
 
-.import hello
+; drawing
 .import palettes
 .import clock_draw_buffer
 
-.importzp frame_ready
+; flags
+.import current_scene
+.import frame_ready
 
-.import move_player_input
-.import draw_enemy
-.import draw_player
+; Scenes
+.import start_screen_scene
+.import demo_scene
+
+; demo
+.importzp clock_x
+.importzp clock_y
+.importzp clock_dirty
+
+;; includes
+.include "systemMacro.s"
+.include "consts.s"
+
+
 
 .importzp player_x, player_y, enemy_x, enemy_y
 
 
-.include "demoMacro.s"
-.include "inputMacro.s"
-
-; Main code segment for the program
 .segment "CODE"
 
 ; reset is the Entry-point of the entire project
@@ -112,23 +123,18 @@ main:
   sta frame_ready
 
   UpdateTime ; macro
-
   FetchInput
-  
-  ;MoveClock
-  ;ClockValueButtons
 
-  ;UpdateClockBufferX
-  ;UpdateClockBufferY
-  ;UpdateClockBufferValue
+  ;; Scene Select
+  lda current_scene
+  bne @skipStartScene ; $00 is always start screen
+  jsr start_screen_scene
+  @skipStartScene:
 
-  ; move player based on input and check if it collides with one enemy
-  jsr move_player_input
-
-  ; draw player
-  jsr draw_player
-  ; draw enemy
-  jsr draw_enemy
+  cmp #SCENE_GAME
+  bne @skipGameScene
+  jsr demo_scene
+  @skipGameScene:
 
   jmp main ; loop forever
 

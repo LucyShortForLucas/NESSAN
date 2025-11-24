@@ -5,12 +5,12 @@
 ;;
 
 .exportzp frame_counter
-.exportzp frame_ready
 .exportzp second_counter
 .exportzp clock_dirty
 .exportzp clock_x
 .exportzp clock_y
 .exportzp math_buffer
+.exportzp rand
 .exportzp inputs
 
 ;testing
@@ -21,18 +21,18 @@
 
 .segment "ZEROPAGE" ; zero-page memory, fast access: Use sparingly!
 
-frame_ready: .res 1 ; set to a value != 0 when frame logic is ready to be processed
-
+;; System variables
 math_buffer: .res 8
-
 frame_counter: .res 1
+inputs: .res 1
+rand: .res 2
+
+;; Demo variables
 second_counter: .res 2
 
 clock_x: .res 1
 clock_y: .res 1
 clock_dirty: .res 1 ; a flag set to determine which parts of the buffer must be updated. Bit 0: value, bit 1: x, bit 2:y
-
-inputs: .res 1
 
 player_x: .res 1
 player_y: .res 1

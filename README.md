@@ -8,6 +8,8 @@
 
 - use camelCare for file names
 
+- use ALL CAPS for constant names
+
 - asm instructions should be lowercase
 
 
@@ -32,6 +34,8 @@
 
 - Use .include ONLY for macro-only files
 
+- Constants go into consts.s
+
 
 ## Restrictions
 
@@ -43,4 +47,8 @@
 - Do not use unnamed labels. For temporary labels, use a 'cheap temporary' label instead (denoted with an @)
 
 
+## Git
 
+- When working on a different feature, create a new branch for it.
+
+- When finished with a branch, prefer Merge over Rebase

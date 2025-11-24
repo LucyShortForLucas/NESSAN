@@ -13,8 +13,7 @@
 PLAYER_TILE = 8
 ENEMY_TILE  = 9
 
-.include "inputMacro.s"
-
+.include "systemMacro.s"
 ; dimensions
 
 PLAYER_W = 8
