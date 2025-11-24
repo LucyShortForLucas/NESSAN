@@ -8,14 +8,15 @@
 .import player_backup
 .importzp player_x, player_y, enemy_x, enemy_y
 
+.importzp inputs
+
 .segment "CODE"
 
 PLAYER_TILE = 8
 ENEMY_TILE  = 9
 
-.include "systemMacro.s"
-; dimensions
 
+; dimensions
 PLAYER_W = 8
 PLAYER_H = 8
 ENEMY_W  = 8
