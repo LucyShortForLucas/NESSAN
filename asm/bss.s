@@ -16,3 +16,9 @@ frame_ready: .res 1 ; set to a value != 0 when frame logic is ready to be proces
 current_scene: .res 1
 
 clock_draw_buffer: .res 16
+
+; aabb collision buffers based on size. 2 bytes per box: topleft x, y
+collision_aabb_2x2: .res 12
+collision_aabb_2x3: .res 6
+collision_aabb_3x3: .res 8
+collision_aabb_9x2: .res 8
