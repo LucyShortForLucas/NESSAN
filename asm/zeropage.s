@@ -10,7 +10,7 @@
 .exportzp clock_x
 .exportzp clock_y
 .exportzp math_buffer
-.exportzp seed
+.exportzp rand
 .exportzp inputs
 
 .segment "ZEROPAGE" ; zero-page memory, fast access: Use sparingly!
@@ -19,7 +19,7 @@
 math_buffer: .res 8
 frame_counter: .res 1
 inputs: .res 1
-seed: .res 2
+rand: .res 2
 
 ;; Demo variables
 second_counter: .res 2

@@ -5,8 +5,10 @@
 .export prng
 
 ;;
-;; A subroutine that, when called, fills [rand+0, rand+1] with pseudorandom bytes
+;; A subroutine that, when called, fills [rand+0, rand+1] with pseudorandom bytes. 
+;; DO NOT write to these bytes, you'll fuck up the rng
 ;;
+
 prng:
 	ldy #8     ; iteration count
 	lda rand+0

@@ -3,7 +3,7 @@
 .import current_scene
 
 .export start_screen_scene
-.importzp seed
+.importzp rand
 
 .include "consts.s"
 
@@ -14,9 +14,9 @@ start_screen_scene:
     lda #SCENE_GAME ; Move to game after Start is pressed
     sta current_scene
     
-    inc seed ; increment seed by 1 every frame, giving us a 'random' frame on game start
+    inc rand ; increment seed by 1 every frame, giving us a 'random' frame on game start
     bne @no_overflow
-    inc seed+1
+    inc rand+1
     @no_overflow:
 
     @skip:
