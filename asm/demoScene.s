@@ -4,6 +4,9 @@
 .importzp frame_counter
 .importzp second_counter
 
+.import move_player_input
+.import draw_enemy
+.import draw_player
 
 .import clock_draw_buffer
 .importzp clock_dirty
@@ -290,13 +293,20 @@ skip_select:
 .segment "CODE"
 
 demo_scene:
-  MoveClock
-  ClockValueButtons
+    MoveClock
+    ClockValueButtons
 
-  UpdateClockBufferX
-  UpdateClockBufferY
-  UpdateClockBufferValue
+    UpdateClockBufferX
+    UpdateClockBufferY
+    UpdateClockBufferValue
 
-  jsr prng
+    ; move player based on input and check if it collides with one enemy
+    jsr move_player_input
 
-  rts
+    ; draw player
+    jsr draw_player
+    ; draw enemy
+    jsr draw_enemy
+    jsr prng
+
+    rts

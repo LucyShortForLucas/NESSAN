@@ -30,7 +30,11 @@
 .include "systemMacro.s"
 .include "consts.s"
 
-;; Main code segment for the program
+
+
+.importzp player_x, player_y, enemy_x, enemy_y
+
+
 .segment "CODE"
 
 ; reset is the Entry-point of the entire project
@@ -98,6 +102,18 @@ sta clock_y
 
 lda #%00000111 
 sta clock_dirty
+
+; setup player
+lda #50
+sta player_x
+lda #50
+sta player_y
+
+; setup enemy
+lda #100
+sta enemy_x
+lda #80
+sta enemy_y
 
 ; Main loop
 main:
