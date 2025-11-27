@@ -10,6 +10,11 @@
 
 .export current_scene
 
+.export collision_aabb_2x2
+.export collision_aabb_2x3
+.export collision_aabb_3x3
+.export collision_aabb_9x2
+
 .segment "BSS"
 
 ;; System variables
@@ -23,6 +28,6 @@ player_backup: .res 1
 
 ; aabb collision buffers based on size. 2 bytes per box: topleft x, y
 collision_aabb_2x2: .res 12
-collision_aabb_2x3: .res 6
-collision_aabb_3x3: .res 8
+collision_aabb_2x3: .res 8
+collision_aabb_3x3: .res 6
 collision_aabb_9x2: .res 8

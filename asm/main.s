@@ -21,6 +21,12 @@
 .import start_screen_scene
 .import demo_scene
 
+.import collision_aabb_2x2
+.import collision_aabb_2x3
+.import collision_aabb_3x3
+.import collision_aabb_9x2
+
+
 ; demo
 .importzp clock_x
 .importzp clock_y
@@ -29,7 +35,6 @@
 ;; includes
 .include "systemMacro.s"
 .include "consts.s"
-
 
 
 .importzp player_x, player_y, enemy_x, enemy_y
@@ -94,26 +99,8 @@ vblankwait2:
   sta $2001
 
 
-; Setup initial variables
+InitVariables ; Setup initial variables
 
-lda #50
-sta clock_x
-sta clock_y
-
-lda #%00000111 
-sta clock_dirty
-
-; setup player
-lda #50
-sta player_x
-lda #50
-sta player_y
-
-; setup enemy
-lda #100
-sta enemy_x
-lda #80
-sta enemy_y
 
 ; Main loop
 main:
