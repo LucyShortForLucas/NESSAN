@@ -68,10 +68,10 @@
     stx math_buffer+3
     ;; lo-cell of dividend already holds quotient
 
-    jsr division_16 ; modulo 10, result now holds the thousands-digit
-    ldx math_buffer+2 ; lo-byte of remainder
-    stx clock_draw_buffer+1
-
+    jsr division_16 ; modulo 10, result now holds the thousands-digit (Remainder 0-9 in math_buffer+2/3)
+    lda math_buffer+2 ; lo-byte of remainder (0-9)
+    clc
+    adc #$30 ; Add offset 
 
      ; hundreds digit
     ldx #$64 ; divisor lo-byte
@@ -99,9 +99,11 @@
     stx math_buffer+3
     ;; lo-cell of dividend already holds quotient
 
-    jsr division_16 ; modulo 10, result now holds the thousands-digit
-    ldx math_buffer+2 ; lo-byte of remainder
-    stx clock_draw_buffer+5
+    jsr division_16 ; modulo 10, result now holds the hundreds-digit
+    lda math_buffer+2 ; lo-byte of remainder (0-9)
+    clc
+    adc #$30 ; Add offset 
+    sta clock_draw_buffer+5
 
 
      ; tens digit
@@ -130,9 +132,11 @@
     stx math_buffer+3
     ;; lo-cell of dividend already holds quotient
 
-    jsr division_16 ; modulo 10, result now holds the thousands-digit
-    ldx math_buffer+2 ; lo-byte of remainder
-    stx clock_draw_buffer+9
+    jsr division_16 ; modulo 10, result now holds the tens-digit
+    lda math_buffer+2 ; lo-byte of remainder (0-9)
+    clc
+    adc #$30 ; Add offset 
+    sta clock_draw_buffer+9
 
 
     ; ones digit
@@ -149,9 +153,11 @@
     ldx second_counter+1  ; dividend lo-cell hi-byte
     stx math_buffer+5
 
-    jsr division_16 ; modulo 10, result now holds the thousands-digit
-    ldx math_buffer+2 ; lo-byte of remainder
-    stx clock_draw_buffer+13
+    jsr division_16 ; modulo 10, result now holds the ones-digit
+    lda math_buffer+2 ; lo-byte of remainder (0-9)
+    clc
+    adc #$30 ; Add offset 
+    sta clock_draw_buffer+13
 
 
     lda clock_dirty ; unset bit 1 (value has been updated)
@@ -301,5 +307,22 @@ skip_b:
     sta clock_dirty
 skip_select:
 
+.endscope
+.endmacro
+
+.macro DrawClock
+.scope
+  ; Y is assumed to hold the next available OAM index when this macro is called.
+  ; X is used as the source index for the clock_draw_buffer.
+  
+  ldx #$00          ; Initialize X as the source index (0-15)
+@loop: 
+  lda clock_draw_buffer, x ; Load sprite byte from source (Y, Tile, Attr, X)
+  sta $0200, y      ; Store sprite byte in Shadow OAM at offset Y
+  inx               ; Advance source index (X++)
+  iny               ; Advance destination index (Y++)
+  cpx #$10          ; Check if we copied 16 bytes (4 sprites * 4 bytes/sprite)
+  bne @loop
+  ; Y is now incremented by 16 and points to the next available OAM slot.
 .endscope
 .endmacro

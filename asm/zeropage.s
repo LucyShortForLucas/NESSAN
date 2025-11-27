@@ -13,6 +13,12 @@
 .exportzp math_buffer
 .exportzp inputs
 
+.exportzp coin_x
+.exportzp coin_y
+.exportzp coin_x2
+.exportzp coin_y2
+
+
 .segment "ZEROPAGE" ; zero-page memory, fast access: Use sparingly!
 
 frame_ready: .res 1 ; set to a value != 0 when frame logic is ready to be processed
@@ -27,3 +33,8 @@ clock_y: .res 1
 clock_dirty: .res 1 ; a flag set to determine which parts of the buffer must be updated. Bit 0: value, bit 1: x, bit 2:y
 
 inputs: .res 1
+
+coin_x: .res 1
+coin_y: .res 1
+coin_x2: .res 1
+coin_y2: .res 1

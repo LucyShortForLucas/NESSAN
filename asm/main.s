@@ -7,12 +7,21 @@
 .export nmi
 .export reset
 
-.import background
+
 .import palettes
 .import clock_draw_buffer
 
 .importzp frame_ready
 
+.import CoinFrame1
+.importzp coin_x
+.importzp coin_y
+.import CoinFrame2
+.importzp coin_x2
+.importzp coin_y2
+
+
+.include "graphicsMacro.s"
 .include "demoMacro.s"
 .include "inputMacro.s"
 
@@ -69,37 +78,7 @@ vblankwait2:
   cpx #$20
   bne @loop
 
-; load full background into $2000 nametable
-  lda $2002             ; Reset PPU latch
-  lda #$20
-  sta $2006             ; Set PPU address to $2000
-  lda #$00
-  sta $2006
-
-  ldx #$00
-@load_chunk_1:
-  lda background, x     ; Load from 0-255
-  sta $2007
-  inx
-  bne @load_chunk_1
-
-@load_chunk_2:
-  lda background + 256, x ; Load from 256-511
-  sta $2007
-  inx
-  bne @load_chunk_2
-
-@load_chunk_3:
-  lda background + 512, x ; Load from 512-767
-  sta $2007
-  inx
-  bne @load_chunk_3
-
-@load_chunk_4:
-  lda background + 768, x ; Load from 768-1023
-  sta $2007
-  inx
-  bne @load_chunk_4
+DrawBackground ; Draw background
 
 ; enable rendering
   lda #%10000000	; Enable NMI
@@ -110,6 +89,16 @@ vblankwait2:
 
 ; Setup initial variables
 
+lda #$60          ; X = 96 (Center-left position)
+sta coin_x
+lda #$60          ; Y = 96 (Center vertical position)
+sta coin_y
+
+lda #$20          ; X = 96 (Center-left position)
+sta coin_x2
+lda #$20          ; Y = 96 (Center vertical position)
+sta coin_y2
+
 lda #50
 sta clock_x
 sta clock_y
@@ -117,24 +106,44 @@ sta clock_y
 lda #%00000111 
 sta clock_dirty
 
-; Main loop
+; main 
 main:
   lda frame_ready 
-  beq main ; wait until NMI sets frame_ready
+  beq main        ; Wait for NMI
   lda #$00
   sta frame_ready
 
-  UpdateTime ; macro
+  ; Clear Shadow OAM 
+  ; We move all sprites off-screen (Y = $FF) by default
+  ldx #$00
+  lda #$FF
+@clear_oam:
+  sta $0200, x ; set Y coordinate to FF (offscreen)
+  inx
+  inx
+  inx
+  inx          ; Skip to next sprite (4 bytes per sprite)
+  bne @clear_oam
 
+  ; Update Game Logic
+  UpdateTime 
   FetchInput
   MoveClock
   ClockValueButtons
 
+  ; Update Clock Draw Buffer
   UpdateClockBufferX
   UpdateClockBufferY
   UpdateClockBufferValue
 
-  jmp main ; loop forever
+  ; Draw Sprites 
+  ldy #$00
+
+  DrawMetasprite coin_x, coin_y, CoinFrame1
+  DrawMetasprite coin_x2, coin_y2, CoinFrame2
+  DrawClock 
+  
+  jmp main ; Loop
 
 ; The NMI interrupt is called every frame during V-blank (if enabled)
 nmi:
@@ -156,17 +165,18 @@ nmi:
   stx $2004
 
   lda #$00
-  sta $2005  ; Set Scroll X to 0
-  sta $2005  ; Set Scroll Y to 0
   
-@loop:	
-  lda clock_draw_buffer, x
-  sta $2004
-  inx
-  cpx #$10
-  bne @loop
+  ; OAM DMA 
+  ; This copies all 256 bytes from CPU RAM $0200 to PPU OAM
+  lda #$00
+  sta $2003   ; Set OAM address to 0
+  lda #$02    ; High byte of $0200
+  sta $4014   ; Trigger DMA transfer (pauses CPU for 513 cycles)
 
-
+  ; Scroll Split
+  lda #$00
+  sta $2005   ; Set Scroll X
+  sta $2005   ; Set Scroll Y
 
   inc frame_ready ; signal that frame is ready for main loop
 
@@ -176,3 +186,4 @@ nmi:
   tax
   pla ; pull A
   rti ; resume code
+
