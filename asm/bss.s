@@ -27,7 +27,9 @@ clock_draw_buffer: .res 16
 player_backup: .res 1
 
 ; aabb collision buffers based on size. 2 bytes per box: topleft x, y
-collision_aabb_2x2: .res 12
-collision_aabb_2x3: .res 8
-collision_aabb_3x3: .res 6
-collision_aabb_9x2: .res 8
+;
+; Each buffer has 1 extra byte at the front that holds the number of actual colliders that currently exist in the buffer
+collision_aabb_2x2: .res 13
+collision_aabb_2x3: .res 9
+collision_aabb_3x3: .res 7
+collision_aabb_9x2: .res 9

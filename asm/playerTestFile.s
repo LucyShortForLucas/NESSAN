@@ -3,6 +3,7 @@
 .export move_player_input
 
 .import aabb_collision
+.import wall_collisions
 .importzp math_buffer
 
 .import player_backup

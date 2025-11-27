@@ -12,6 +12,7 @@
 .exportzp math_buffer
 .exportzp rand
 .exportzp inputs
+.exportzp ptr
 
 ;testing
 .exportzp player_x
@@ -26,6 +27,7 @@ math_buffer: .res 8
 frame_counter: .res 1
 inputs: .res 1
 rand: .res 2
+ptr: .res 2 ; a temporary 2 byte space to store pointers
 
 ;; Demo variables
 second_counter: .res 2

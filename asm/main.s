@@ -35,7 +35,7 @@
 ;; includes
 .include "systemMacro.s"
 .include "consts.s"
-
+.include "inits.s"
 
 .importzp player_x, player_y, enemy_x, enemy_y
 
