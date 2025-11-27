@@ -39,7 +39,7 @@
 ;; includes
 .include "systemMacro.s"
 .include "consts.s"
-.importzp frame_ready
+;;.importzp frame_ready
 
 .import CoinFrame1
 .importzp coin_x
@@ -50,8 +50,6 @@
 
 ; Macros
 .include "graphicsMacro.s"
-.include "demoMacro.s"
-.include "inputMacro.s"
 .include "musicMacro.s"
 
 ;; Main code segment for the program
@@ -171,17 +169,17 @@ main:
   @skipStartScene:
 
   cmp #SCENE_GAME
-  bne @skipGameScene
+  ;; bne @skipGameScene
   jsr demo_scene
-  @skipGameScene:
+  ;; @skipGameScene:
 
   ; Draw Sprites 
   ldy #$00
 
   DrawMetasprite coin_x, coin_y, CoinFrame1
   DrawMetasprite coin_x2, coin_y2, CoinFrame2
-  DrawClock 
-  
+  DrawClock
+
   jmp main ; Loop
 
 ; The NMI interrupt is called every frame during V-blank (if enabled)

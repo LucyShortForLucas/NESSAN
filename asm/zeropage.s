@@ -34,8 +34,6 @@ clock_x: .res 1
 clock_y: .res 1
 clock_dirty: .res 1 ; a flag set to determine which parts of the buffer must be updated. Bit 0: value, bit 1: x, bit 2:y
 
-inputs: .res 1
-
 coin_x: .res 1
 coin_y: .res 1
 coin_x2: .res 1

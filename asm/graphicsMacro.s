@@ -80,3 +80,20 @@ ldx #$00            ; Reset Data Index (X reads from ROM)
     bne @loop           ; If not, do it again
 .endscope
 .endmacro
+
+.macro DrawClock
+.scope
+  ; Y is assumed to hold the next available OAM index when this macro is called.
+  ; X is used as the source index for the clock_draw_buffer.
+  
+  ldx #$00          ; Initialize X as the source index (0-15)
+@loop: 
+  lda clock_draw_buffer, x ; Load sprite byte from source (Y, Tile, Attr, X)
+  sta $0200, y      ; Store sprite byte in Shadow OAM at offset Y
+  inx               ; Advance source index (X++)
+  iny               ; Advance destination index (Y++)
+  cpx #$10          ; Check if we copied 16 bytes (4 sprites * 4 bytes/sprite)
+  bne @loop
+  ; Y is now incremented by 16 and points to the next available OAM slot.
+.endscope
+.endmacro
