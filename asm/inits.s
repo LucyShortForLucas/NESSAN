@@ -28,6 +28,8 @@ sta enemy_y
 
 
 ; setup main level collisions
+; These are in "tile coordinates", where each coordinate represents the top-left corner of an 8x8 tile.
+; the entire screen has a size of 32x30 tiles
 
 ; 9x2
 lda #18 
