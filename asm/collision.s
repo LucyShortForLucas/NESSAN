@@ -75,7 +75,7 @@ wall_collider_types: ; This table describes the properties of the varies collide
 ; Sets the Carry bit if ANY collider was hit, unsets it otherwise
 
 wall_collisions:
-    ldy #0
+    ldx #0
 
 type_loop: ; 
     cpx #WALL_COLLIDER_TYPES*4
@@ -96,7 +96,7 @@ type_loop: ;
 
     ldy #0 ; must use indirect indexed adressing with y = 0, because regular indirect adressing ONLY works with JMP (for some arcane reason that is beyond me)
     lda (ptr), y          ; load count
-    asl
+    asl ; double the count (2 bytes per item so effective byte count is doubled)
     tay
 
     inc ptr            ; skip count byte
@@ -108,10 +108,16 @@ type_loop: ;
     beq type_loop
 
     lda (ptr),y
-    sta math_buffer+5
+    asl
+    asl
+    asl ; mulitply by 8
+    sta math_buffer+5 ; load true y
     dey
     lda (ptr),y
-    sta math_buffer+4
+    asl
+    asl
+    asl ; mulitply by 8
+    sta math_buffer+4 ; load true x
 
     jsr aabb_collision
     bcs @return ; Hit found, return. Carry is already set by collision check

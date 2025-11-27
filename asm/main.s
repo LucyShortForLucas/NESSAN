@@ -12,6 +12,8 @@
 ; drawing
 .import palettes
 .import clock_draw_buffer
+.import wall_collisions
+.importzp math_buffer
 
 ; flags
 .import current_scene
@@ -26,6 +28,8 @@
 .import collision_aabb_3x3
 .import collision_aabb_9x2
 
+.import draw_player
+.import draw_enemy
 
 ; demo
 .importzp clock_x
@@ -123,6 +127,23 @@ main:
   jsr demo_scene
   @skipGameScene:
 
+
+  lda #8
+  sta math_buffer
+  lda #16
+  sta math_buffer+1
+  sta math_buffer+2
+  sta math_buffer+3
+  jsr wall_collisions
+
+  lda #30
+  sta math_buffer
+  lda #80
+  sta math_buffer+1
+  sta math_buffer+2
+  sta math_buffer+3
+  jsr wall_collisions
+
   jmp main ; loop forever
 
 
@@ -150,6 +171,11 @@ nmi:
   inx
   cpx #$10
   bne @loop
+
+      ; draw player
+    jsr draw_player
+    ; draw enemy
+    jsr draw_enemy
 
   inc frame_ready ; signal that frame is ready for main loop
 

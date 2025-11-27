@@ -76,7 +76,7 @@ move_player_input:
 
   ; move player based on input
   lda inputs
-  and #%00001000 ; up
+  and #%000001000 ; up
   beq @skip_up
   dec player_y
 @skip_up:
@@ -90,7 +90,7 @@ move_player_input:
   sta math_buffer+1 ; a_Y
   
   ; check collison
-  jsr aabb_collision
+  jsr wall_collisions
   bcc @no_hit_y
 
 
@@ -121,7 +121,7 @@ move_player_input:
   lda player_x
   sta math_buffer+0 ; a_X
 ; check collison
-  jsr aabb_collision
+  jsr wall_collisions
   bcc @no_hit_x
 ; collision detected, reset player position x
   lda player_backup

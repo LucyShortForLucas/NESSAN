@@ -303,10 +303,4 @@ demo_scene:
     ; move player based on input and check if it collides with one enemy
     jsr move_player_input
 
-    ; draw player
-    jsr draw_player
-    ; draw enemy
-    jsr draw_enemy
-    jsr prng
-
     rts
