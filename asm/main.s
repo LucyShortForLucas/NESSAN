@@ -127,23 +127,6 @@ main:
   jsr demo_scene
   @skipGameScene:
 
-
-  lda #8
-  sta math_buffer
-  lda #16
-  sta math_buffer+1
-  sta math_buffer+2
-  sta math_buffer+3
-  jsr wall_collisions
-
-  lda #30
-  sta math_buffer
-  lda #80
-  sta math_buffer+1
-  sta math_buffer+2
-  sta math_buffer+3
-  jsr wall_collisions
-
   jmp main ; loop forever
 
 
