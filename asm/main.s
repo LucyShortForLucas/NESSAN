@@ -1,16 +1,44 @@
+
+
+
+
+; import engine functions
+.import famistudio_update
+.import famistudio_init
+.import famistudio_music_play
+
+.import music_data_coinheist ; import song
+
 ;;
 ;; This module holds the entry-point, main game loop, and NMI interrupt
 ;;
 
-
 ;; exports and imports
+
+; Interrupt adresses
 .export nmi
 .export reset
 
-
+; drawing
 .import palettes
 .import clock_draw_buffer
 
+; flags
+.import current_scene
+.import frame_ready
+
+; Scenes
+.import start_screen_scene
+.import demo_scene
+
+; demo
+.importzp clock_x
+.importzp clock_y
+.importzp clock_dirty
+
+;; includes
+.include "systemMacro.s"
+.include "consts.s"
 .importzp frame_ready
 
 .import CoinFrame1
@@ -20,12 +48,13 @@
 .importzp coin_x2
 .importzp coin_y2
 
-
+; Macros
 .include "graphicsMacro.s"
 .include "demoMacro.s"
 .include "inputMacro.s"
+.include "musicMacro.s"
 
-; Main code segment for the program
+;; Main code segment for the program
 .segment "CODE"
 
 ; reset is the Entry-point of the entire project
@@ -33,7 +62,7 @@ reset:
   sei		; disable IRQs
   cld		; disable decimal mode
   ldx #$40
-  stx $4017	; disable APU frame IRQ
+ ; stx $4017	; disable APU frame IRQ
   ldx #$ff 	; Set up stack
   txs		;  .
   inx		; now X = 0
@@ -47,8 +76,8 @@ vblankwait1:
   bpl vblankwait1
 
 clear_memory:
-  lda #$00
-  sta $0000, x
+  lda #$00 ; make accumulator empty
+  sta $0000, x ; make each memory empty with accumulator
   sta $0100, x
   sta $0200, x
   sta $0300, x
@@ -86,7 +115,6 @@ DrawBackground ; Draw background
   lda #%00011110  ; Enable Background and Sprites
   sta $2001
 
-
 ; Setup initial variables
 
 lda #$60          ; X = 96 (Center-left position)
@@ -106,7 +134,14 @@ sta clock_y
 lda #%00000111 
 sta clock_dirty
 
-; main 
+; Setup music
+  InitializeSongs
+
+  LDA #00 ; pick the first song 
+  ChooseSongFromAccumulator
+
+
+; Main loop
 main:
   lda frame_ready 
   beq main        ; Wait for NMI
@@ -128,13 +163,17 @@ main:
   ; Update Game Logic
   UpdateTime 
   FetchInput
-  MoveClock
-  ClockValueButtons
 
-  ; Update Clock Draw Buffer
-  UpdateClockBufferX
-  UpdateClockBufferY
-  UpdateClockBufferValue
+  ;; Scene Select
+  lda current_scene
+  bne @skipStartScene ; $00 is always start screen
+  jsr start_screen_scene
+  @skipStartScene:
+
+  cmp #SCENE_GAME
+  bne @skipGameScene
+  jsr demo_scene
+  @skipGameScene:
 
   ; Draw Sprites 
   ldy #$00
@@ -185,5 +224,7 @@ nmi:
   pla ; pull X
   tax
   pla ; pull A
-  rti ; resume code
 
+  jsr famistudio_update ; Updates the music 
+  
+  rti ; resume code 
