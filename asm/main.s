@@ -41,10 +41,10 @@
 .include "consts.s"
 ;;.importzp frame_ready
 
-.import CoinFrame1
 .importzp coin_x
 .importzp coin_y
-.import CoinFrame2
+.importzp count_down_x
+.importzp count_down_y
 .importzp coin_x2
 .importzp coin_y2
 
@@ -120,10 +120,15 @@ sta coin_x
 lda #$60          ; Y = 96 (Center vertical position)
 sta coin_y
 
-lda #$20          ; X = 96 (Center-left position)
+lda #$20          
 sta coin_x2
-lda #$20          ; Y = 96 (Center vertical position)
+lda #$20         
 sta coin_y2
+
+lda #$6D          
+sta count_down_x
+lda #$E3         
+sta count_down_y
 
 lda #50
 sta clock_x
@@ -131,6 +136,8 @@ sta clock_y
 
 lda #%00000111 
 sta clock_dirty
+
+SetClock #02, #30  ; Start clock at 2:30
 
 ; Setup music
   InitializeSongs
@@ -173,12 +180,14 @@ main:
   jsr demo_scene
   ;; @skipGameScene:
 
+  UpdateClock
   ; Draw Sprites 
   ldy #$00
 
-  DrawMetasprite coin_x, coin_y, CoinFrame1
-  DrawMetasprite coin_x2, coin_y2, CoinFrame2
+  ; DrawPlayer coin_x2, coin_y2
+  DrawPlayer coin_x, coin_y
   DrawClock
+  DrawClock2 count_down_x, count_down_y
 
   jmp main ; Loop
 

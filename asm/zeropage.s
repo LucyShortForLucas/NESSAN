@@ -15,8 +15,14 @@
 
 .exportzp coin_x
 .exportzp coin_y
+.exportzp count_down_x
+.exportzp count_down_y
 .exportzp coin_x2
 .exportzp coin_y2
+
+.exportzp clock_min       
+.exportzp clock_sec      
+.exportzp clock_frames    
 
 
 .segment "ZEROPAGE" ; zero-page memory, fast access: Use sparingly!
@@ -34,7 +40,14 @@ clock_x: .res 1
 clock_y: .res 1
 clock_dirty: .res 1 ; a flag set to determine which parts of the buffer must be updated. Bit 0: value, bit 1: x, bit 2:y
 
+; positions
 coin_x: .res 1
 coin_y: .res 1
+count_down_x: .res 1
+count_down_y: .res 1
 coin_x2: .res 1
 coin_y2: .res 1
+
+clock_min: .res 1
+clock_sec: .res 1
+clock_frames: .res 1 
