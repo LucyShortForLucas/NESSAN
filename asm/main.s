@@ -189,16 +189,6 @@ main:
   jsr demo_scene
   @skipGameScene:
 
-  ; Draw Sprites 
-  ldy #$00
-
-  jsr move_player_input
-
-  DrawMetasprite coin_x, coin_y, CoinFrame1
-  DrawMetasprite coin_x2, coin_y2, CoinFrame2
-  DrawClock
-  DrawPlayer
-
   jmp main ; Loop
 
 ; The NMI interrupt is called every frame during V-blank (if enabled)
@@ -219,8 +209,6 @@ nmi:
   stx $2004
   stx $2004
   stx $2004
-
-  lda #$00
   
   ; OAM DMA 
   ; This copies all 256 bytes from CPU RAM $0200 to PPU OAM

@@ -67,6 +67,7 @@ wall_collider_types: ; This table describes the properties of the varies collide
     .byte $10, $10, <collision_aabb_2x2, >collision_aabb_2x2
     .byte $10, $18, <collision_aabb_2x3, >collision_aabb_2x3
     .byte $18, $18, <collision_aabb_3x3, >collision_aabb_3x3
+    .byte $48, $10, <collision_aabb_9x2, >collision_aabb_9x2
 
 
 
@@ -75,9 +76,29 @@ wall_collider_types: ; This table describes the properties of the varies collide
 ; Sets the Carry bit if ANY collider was hit, unsets it otherwise
 
 wall_collisions:
+    lda math_buffer + 0 ; check x out of bounds
+    cmp #8 ; check left bound
+    bcc @set_and_return
+    cmp #240
+    bcs @set_and_return
+
+    lda math_buffer + 1 ; check x out of bounds
+    cmp #16 ; check left bound
+    bcc @set_and_return
+    cmp #216
+    bcs @set_and_return
+
+    jmp @no_return
+
+@set_and_return:
+    sec
+    rts
+
+@no_return:
+
     ldx #0
 
-type_loop: ; 
+type_loop: ; choose collider type
     cpx #WALL_COLLIDER_TYPES*4
     beq @return_clear_carry ; All colliders finished, none hit.
 
@@ -98,10 +119,6 @@ type_loop: ;
     lda (ptr), y          ; load count
     asl ; double the count (2 bytes per item so effective byte count is doubled)
     tay
-
-    inc ptr            ; skip count byte
-    bne @no_overflow
-    inc ptr+1
 @no_overflow:
 
 @coll_loop:
