@@ -2,6 +2,8 @@
 .export background
 .export CoinFrame1
 .export CoinFrame2
+.export PlayerFrame1
+.export PlayerFrame2
 .export palettes
 
 .segment "RODATA" ; 
@@ -366,13 +368,21 @@ background:
 
 
   ; Bottom Border (Rows 28-29)
-  .repeat 16
+  .repeat 6
     .byte $01, $02
   .endrepeat
-  .repeat 16
-    .byte $03, $04
+  .byte $07, $0B, $0B, $0B, $0B, $0B, $0B, $08
+  .repeat 6
+   .byte $01, $02
   .endrepeat
 
+  .repeat 6
+    .byte $03, $04
+  .endrepeat
+    .byte $09, $0C, $0C, $0C, $0C, $0C, $0C, $0A
+   .repeat 6
+    .byte $03, $04
+  .endrepeat
 
   ; ATTRIBUTE TABLE (64 bytes) 
   .repeat 64
@@ -393,18 +403,32 @@ CoinFrame2:
     .byte $08, $26, $01, $00  ; Bottom Left
     .byte $08, $27, $01, $08  ; Bottom Right
 
+PlayerFrame1:
+      ; Y-off, Tile, Attr, X-off
+      .byte $00, $18, $02, $00  ; Top Left
+      .byte $00, $19, $02, $08  ; Top Right
+      .byte $08, $1A, $02, $00  ; Bottom Left
+      .byte $08, $1B, $02, $08  ; Bottom Right
+
+PlayerFrame2:
+      ; Y-off, Tile, Attr, X-off
+      .byte $00, $1C, $02, $00  ; Top Left
+      .byte $00, $1D, $02, $08  ; Top Right
+      .byte $08, $1E, $02, $00  ; Bottom Left
+      .byte $08, $1F, $02, $08  ; Bottom Right
+
 palettes:
   ; Background Palette
-  .byte $0f, $00, $10, $20
+  .byte $0f, $00, $10, $30
   .byte $0f, $00, $00, $00
   .byte $0f, $00, $00, $00
   .byte $0f, $00, $00, $00
 
   ; Sprite Palette
-  .byte $0f, $00, $10, $20
+  .byte $0f, $00, $10, $30
   .byte $0f, $28, $38, $30
-  .byte $0f, $00, $00, $00
-  .byte $0f, $00, $00, $00
+  .byte $0f, $11, $21, $30
+  .byte $0f, $16, $26, $30
 
 ; Character memory
 .segment "CHARS"

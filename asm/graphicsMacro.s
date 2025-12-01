@@ -1,8 +1,15 @@
 .import background
+.import palettes
 .import CoinFrame1
 .import CoinFrame2
-.import palettes
+.import PlayerFrame1
+.import PlayerFrame2
 
+.importzp clock_min       
+.importzp clock_sec       
+.importzp clock_frames    
+
+; -- Drawing Macros --
 
 .macro DrawBackground
 .scope
@@ -67,7 +74,7 @@ ldx #$00            ; Reset Data Index (X reads from ROM)
     inx
     iny
 
-    ; Byte 4: X Position
+    ; Byte 4: X Position 
     lda data_lbl, x     ; Load X Offset from your data
     clc
     adc x_pos           ; Add the Coin's actual World X
@@ -78,6 +85,37 @@ ldx #$00            ; Reset Data Index (X reads from ROM)
     ; Check Loop
     cpx #$10            ; Check if we wrote 16 bytes (4 tiles x 4 bytes)
     bne @loop           ; If not, do it again
+.endscope
+.endmacro
+
+.macro DrawAnimatedMetasprite2Frames x_pos, y_pos, frame1, frame2, speed
+.scope
+    ; Check the frame counter
+    lda frame_counter       
+    and #speed              
+    bne DoFrame2       
+
+DoFrame1:
+    DrawMetasprite x_pos, y_pos, frame1
+    jmp Done       
+
+DoFrame2:
+    DrawMetasprite x_pos, y_pos, frame2
+
+Done:
+.endscope
+.endmacro
+
+
+.macro DrawCoin x_pos, y_pos ; Easy macro to draw the coin with animation
+.scope
+    DrawAnimatedMetasprite2Frames x_pos, y_pos, CoinFrame1, CoinFrame2, $20
+.endscope
+.endmacro
+
+.macro DrawPlayer x_pos, y_pos
+.scope
+    DrawAnimatedMetasprite2Frames x_pos, y_pos, PlayerFrame1, PlayerFrame2, $20
 .endscope
 .endmacro
 
@@ -98,20 +136,182 @@ ldx #$00            ; Reset Data Index (X reads from ROM)
 .endscope
 .endmacro
 
-.macro DrawPlayer 
-.scope 
-  lda player_y
-  sta $0200, y  
-  lda #PLAYER_TILE
-  iny
-  sta $0200, y  
-  lda # 0
-  iny
-  sta $0200, y  
-  lda player_x
-  iny
-  sta $0200, y  
+.macro DrawClock2 x_pos, y_pos
+.scope
+    ; Draw Minutes
+    lda clock_min
+    ldx #0
+CalcMinTens:
+    cmp #10
+    bcc DrawMinTens     ; If A < 10, we have our digits
+    sbc #10
+    inx                 ; X counts how many "tens"
+    jmp CalcMinTens
+    
+DrawMinTens:
+    pha                 ; Push Ones (A) to stack to save for later
+
+    ; Draw Tens (X)
+    txa                 ; Move X to A to draw
+    clc
+    adc #$30            ; Add Base Tile Offset ($30)
+    sta $0201, y        ; Tile ID
+    lda #$01            ; Palette
+    sta $0202, y
+    lda x_pos
+    sta $0203, y        ; X Pos
+    lda y_pos
+    sta $0200, y        ; Y Pos
+    
+    iny                 ; Move OAM index to next sprite (4 bytes)
+    iny
+    iny
+    iny
+
+DrawMinOnes:
+    pla                 ; Pull Ones (A) back from stack
+    clc
+    adc #$30            ; Add Base Tile Offset ($30)
+    sta $0201, y
+    lda #$01
+    sta $0202, y
+    lda x_pos
+    clc
+    adc #8              ; Shift Right 8 pixels
+    sta $0203, y
+    lda y_pos
+    sta $0200, y
+
+    iny
+    iny
+    iny
+    iny
+
+    ; Draw Colon
+    lda #$3A            ; Colon Tile ID
+    sta $0201, y
+    lda #$01
+    sta $0202, y
+    lda x_pos
+    clc
+    adc #16             ; Shift Right 16 pixels
+    sta $0203, y
+    lda y_pos
+    sta $0200, y
+
+    iny
+    iny
+    iny
+    iny
+
+    ; Draw Seconds
+    lda clock_sec
+    ldx #0
+CalcSecTens:
+    cmp #10
+    bcc DrawSecTens
+    sbc #10
+    inx
+    jmp CalcSecTens
+
+DrawSecTens:
+    pha                 ; Push Ones to stack
+
+    ; Draw Tens (X)
+    txa
+    clc
+    adc #$30            ; Add Base Tile Offset ($30)
+    sta $0201, y
+    lda #$01
+    sta $0202, y
+    lda x_pos
+    clc
+    adc #24             ; Shift Right 24 pixels
+    sta $0203, y
+    lda y_pos
+    sta $0200, y
+
+    iny
+    iny
+    iny
+    iny
+
+DrawSecOnes:
+    pla                 ; Pull Ones from stack
+    clc
+    adc #$30            ; Add Base Tile Offset ($30)
+    sta $0201, y
+    lda #$01
+    sta $0202, y
+    lda x_pos
+    clc
+    adc #32             ; Shift Right 32 pixels
+    sta $0203, y
+    lda y_pos
+    sta $0200, y
+
+    iny
+    iny
+    iny
+    iny
 
 .endscope
 .endmacro
+
+; ---------------------------------------------------
+; -- Other essential macros for the drawing macros --
+; ---------------------------------------------------
+
+; Usage: SetClock #02, #30  (2 minutes, 30 seconds)
+.macro SetClock minutes, seconds
+.scope
+    lda minutes
+    sta clock_min
+    lda seconds
+    sta clock_sec
+    lda #50             ; PAL
+    sta clock_frames
+.endscope
+.endmacro
+
+.macro UpdateClock
+.scope
+    ; Check if Clock is already 00:00 (Stop at zero)
+    lda clock_min
+    ora clock_sec       ; OR checks if both are zero
+    beq Done            ; If 0, do nothing
+
+    ; Decrement Frames
+    dec clock_frames
+    bne Done            ; If frames != 0, we are safe to exit
+
+    ; One Second Passed: Reset Frames (PAL)
+    lda #50
+    sta clock_frames
+
+    ; Decrement Seconds
+    dec clock_sec
+    lda clock_sec
+    cmp #$FF            ; Did we go below 0? (0 -> -1)
+    bne Done            ; If no underflow, we are done
+
+    ; One Minute Passed: Reset Seconds to 59
+    lda #59
+    sta clock_sec
+
+    ; Decrement Minutes
+    dec clock_min
+    lda clock_min
+    cmp #$FF            ; Did we go below 0?
+    bne Done
+
+    ; Hard Stop (If we went -1:-1, force 00:00)
+    lda #0
+    sta clock_min
+    sta clock_sec
+
+Done:
+.endscope
+.endmacro
+
 

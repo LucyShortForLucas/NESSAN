@@ -11,3 +11,7 @@ APU_DM_CONTROL = $4010 ; APU Delta Modulation Control (W)
 
 PLAYER_TILE = 8
 ENEMY_TILE  = 9
+; Songs enum
+SONG_START = $00
+SONG_GAME = $01
+SONG_END = $02

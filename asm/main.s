@@ -5,8 +5,8 @@
 ; import engine functions
 .import famistudio_update
 .import famistudio_init
-.import famistudio_music_play
-
+;.import famistudio_music_play (is handled in "initializeScene.s")
+ 
 .import music_data_coinheist ; import song
 
 ;;
@@ -32,6 +32,7 @@
 
 ; Scenes
 .import start_screen_scene
+.import initialize_scene_start
 .import demo_scene
 
 .import collision_aabb_2x2
@@ -56,10 +57,10 @@
 
 ;;.importzp frame_ready
 
-.import CoinFrame1
 .importzp coin_x
 .importzp coin_y
-.import CoinFrame2
+.importzp count_down_x
+.importzp count_down_y
 .importzp coin_x2
 .importzp coin_y2
 
@@ -134,10 +135,15 @@ sta coin_x
 lda #$60          ; Y = 96 (Center vertical position)
 sta coin_y
 
-lda #$20          ; X = 96 (Center-left position)
-sta coin_x2
-lda #$20          ; Y = 96 (Center vertical position)
-sta coin_y2
+lda #$20          
+sta player_x
+lda #$20         
+sta player_y
+
+lda #$6D          
+sta count_down_x
+lda #$E3         
+sta count_down_y
 
 lda #50
 sta clock_x
@@ -146,49 +152,63 @@ sta clock_y
 lda #%00000111 
 sta clock_dirty
 
+SetClock #02, #30  ; Start clock at 2:30
+
 ; Setup music
-  InitializeSongs
+InitializeSongs
 
-  LDA #00 ; pick the first song 
-  ChooseSongFromAccumulator
-
+; Setup Start screen
+jsr initialize_scene_start
 
 ; Main loop
 main:
   lda frame_ready 
   beq main        ; Wait for NMI
-  lda #$00
-  sta frame_ready
+    lda #$00
+    sta frame_ready
 
-  ; Clear Shadow OAM 
-  ; We move all sprites off-screen (Y = $FF) by default
-  ldx #$00
-  lda #$FF
-@clear_oam:
-  sta $0200, x ; set Y coordinate to FF (offscreen)
-  inx
-  inx
-  inx
-  inx          ; Skip to next sprite (4 bytes per sprite)
+    ; Clear Shadow OAM 
+    ; We move all sprites off-screen (Y = $FF) by default
+    ldx #$00
+    lda #$FF
+
+  @clear_oam:
+      sta $0200, x ; set Y coordinate to FF (offscreen)
+      inx
+      inx
+      inx
+      inx          ; Skip to next sprite (4 bytes per sprite)
   bne @clear_oam
 
-  ; Update Game Logic
-  UpdateTime 
-  FetchInput
+    ; Update Game Logic
+    UpdateTime 
+    FetchInput
 
   jsr famistudio_update ; Updates the music 
 
-  ;; Scene Select
-  lda current_scene
-  bne @skipStartScene ; $00 is always start screen
-  jsr start_screen_scene
-  @skipStartScene:
+    ;; Scene Select
+    lda current_scene
+    bne @skipStartScene ; $00 is always start screen
+      jsr start_screen_scene
+    @skipStartScene:
 
-  cmp #SCENE_GAME
-  bne @skipGameScene
-  jsr demo_scene
-  @skipGameScene:
+    cmp #SCENE_GAME ; set flags
+    bne @skipGameScene
+      jsr demo_scene
+    @skipGameScene:
 
+<<<<<<< HEAD
+=======
+    ; Draw Sprites 
+    jsr move_player_input
+    ldy #$00
+
+
+    DrawPlayer player_x, player_y
+    DrawClock
+  DrawClock2 count_down_x, count_down_y
+
+>>>>>>> refs/remotes/origin/main
   jmp main ; Loop
 
 ; The NMI interrupt is called every frame during V-blank (if enabled)
