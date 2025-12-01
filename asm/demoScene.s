@@ -20,12 +20,15 @@
 .importzp coin_y
 .importzp player_x
 .importzp player_y
+.importzp count_down_x
+.importzp count_down_y
 
 .import division_16
 .import prng
 
 .export demo_scene
 
+.include "playerMacro.s"
 .include "graphicsMacro.s"
 .include "consts.s"
 
@@ -315,15 +318,16 @@ demo_scene:
     UpdateClockBufferY
     UpdateClockBufferValue
 
+    UpdateClock
 
     ; move player based on input and check if it collides with one enemy
-    jsr move_player_input
-
+    ; jsr move_player_input
+    PlayerMovementUpdate
     ; Draw Sprites 
     ldy #$00
     DrawMetasprite coin_x, coin_y, CoinFrame1
     DrawMetasprite coin_x2, coin_y2, CoinFrame2
-    DrawClock
+    DrawClock2 count_down_x, count_down_y
     DrawPlayer player_x, player_y
 
     rts

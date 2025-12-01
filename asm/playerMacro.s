@@ -1,8 +1,6 @@
 .import player_backup
-
-; Define dimensions if they aren't already defined
-PLAYER_W = 8
-PLAYER_H = 8
+.importzp player_dir
+.import wall_collisions
 
 .macro PlayerMovementUpdate
 .scope
