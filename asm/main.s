@@ -66,6 +66,7 @@
 ; Macros
 .include "graphicsMacro.s"
 .include "musicMacro.s"
+.include "playerMacro.s"
 
 .segment "CODE"
 
@@ -197,11 +198,10 @@ main:
   @skipGameScene:
 
   UpdateClock
+  PlayerMovementUpdate
+
   ; Draw Sprites 
   ldy #$00
-
-  jsr move_player_input
-
   DrawPlayer player_x, player_y
   DrawClock
   DrawClock2 count_down_x, count_down_y

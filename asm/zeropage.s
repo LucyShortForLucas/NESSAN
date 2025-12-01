@@ -31,7 +31,7 @@
 .exportzp clock_sec      
 .exportzp clock_frames    
 
-.exportzp oam_ready
+.exportzp player_dir
 
 .segment "ZEROPAGE" ; zero-page memory, fast access: Use sparingly!
 
@@ -64,3 +64,5 @@ clock_sec: .res 1
 clock_frames: .res 1 ; remove  these later when doing proper map buffer
 enemy_x:  .res 1
 enemy_y:  .res 1
+
+player_dir: .res 1

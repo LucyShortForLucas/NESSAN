@@ -2,12 +2,20 @@
 .import palettes
 .import CoinFrame1
 .import CoinFrame2
-.import PlayerFrame1
-.import PlayerFrame2
+
+.import PlayerRight1
+.import PlayerRight2
+.import PlayerLeft1
+.import PlayerLeft2
+.import PlayerDown1
+.import PlayerDown2
+.import PlayerUp1
+.import PlayerUp2
 
 .importzp clock_min       
 .importzp clock_sec       
 .importzp clock_frames    
+.importzp player_dir
 
 ; -- Drawing Macros --
 
@@ -106,6 +114,79 @@ Done:
 .endscope
 .endmacro
 
+.macro DrawPlayer x_pos, y_pos
+.scope
+    ; Check if Player is Moving
+    lda inputs
+    and #%00001111      
+    bne CheckDirs       ; If not zero (moving), short jump to CheckDirs
+    jmp IsIdle          ; If zero (idle), long jump to IsIdle
+
+    ; Moving State
+CheckDirs:
+    lda player_dir
+    cmp #1
+    bne NotUp           ; If not Up, skip to next check
+    jmp AnimUp          ; long jump to Animation
+NotUp:
+    cmp #2
+    bne NotLeft
+    jmp AnimLeft
+NotLeft:
+    cmp #3
+    bne NotRight
+    jmp AnimRight
+NotRight:
+    jmp AnimDown        ; Default to Down 
+
+    ; animation stuff
+AnimDown:
+    DrawAnimatedMetasprite2Frames x_pos, y_pos, PlayerDown1, PlayerDown2, $08
+    jmp Done
+AnimUp:
+    DrawAnimatedMetasprite2Frames x_pos, y_pos, PlayerUp1, PlayerUp2, $08
+    jmp Done
+AnimLeft:
+    DrawAnimatedMetasprite2Frames x_pos, y_pos, PlayerLeft1, PlayerLeft2, $08
+    jmp Done
+AnimRight:
+    DrawAnimatedMetasprite2Frames x_pos, y_pos, PlayerRight1, PlayerRight2, $08
+    jmp Done
+
+    ; Idle State
+IsIdle:
+    lda player_dir
+    cmp #1
+    bne IdleNotUp
+    jmp IdleUp
+IdleNotUp:
+    cmp #2
+    bne IdleNotLeft
+    jmp IdleLeft
+IdleNotLeft:
+    cmp #3
+    bne IdleNotRight
+    jmp IdleRight
+IdleNotRight:
+    jmp IdleDown
+
+    ; idle stuff
+IdleDown:
+    DrawMetasprite x_pos, y_pos, PlayerDown1
+    jmp Done
+IdleUp:
+    DrawMetasprite x_pos, y_pos, PlayerUp1
+    jmp Done
+IdleLeft:
+    DrawMetasprite x_pos, y_pos, PlayerLeft1
+    jmp Done
+IdleRight:
+    DrawMetasprite x_pos, y_pos, PlayerRight1
+
+Done:
+.endscope
+.endmacro
+
 
 .macro DrawCoin x_pos, y_pos ; Easy macro to draw the coin with animation
 .scope
@@ -113,11 +194,6 @@ Done:
 .endscope
 .endmacro
 
-.macro DrawPlayer x_pos, y_pos
-.scope
-    DrawAnimatedMetasprite2Frames x_pos, y_pos, PlayerFrame1, PlayerFrame2, $20
-.endscope
-.endmacro
 
 .macro DrawClock
 .scope

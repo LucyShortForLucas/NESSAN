@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8" ?>
-<NESTileSet selectedPaletee="2" palette="62,24,40,56;30,0,16,32;29,22,38,32;52,36,20,4">
+<NESTileSet selectedPaletee="1" palette="62,24,40,56;30,0,16,32;29,22,38,32;52,36,20,4">
 <PatternTables>
 <PatternTable name="MyTiles" >
 <Pattern data="00000000000000000000000000000000" />
