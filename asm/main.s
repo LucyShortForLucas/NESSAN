@@ -23,6 +23,7 @@
 .import palettes
 .import clock_draw_buffer
 .import wall_collisions
+.import move_player_input
 .importzp math_buffer
 
 ; flags
@@ -175,6 +176,8 @@ main:
   UpdateTime 
   FetchInput
 
+  jsr famistudio_update ; Updates the music 
+
   ;; Scene Select
   lda current_scene
   bne @skipStartScene ; $00 is always start screen
@@ -182,16 +185,19 @@ main:
   @skipStartScene:
 
   cmp #SCENE_GAME
-  ;; bne @skipGameScene
+  bne @skipGameScene
   jsr demo_scene
-  ;; @skipGameScene:
+  @skipGameScene:
 
   ; Draw Sprites 
   ldy #$00
 
+  jsr move_player_input
+
   DrawMetasprite coin_x, coin_y, CoinFrame1
   DrawMetasprite coin_x2, coin_y2, CoinFrame2
   DrawClock
+  DrawPlayer
 
   jmp main ; Loop
 
@@ -236,6 +242,6 @@ nmi:
   tax
   pla ; pull A
 
-  jsr famistudio_update ; Updates the music 
+
   
   rti ; resume code 

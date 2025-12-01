@@ -97,3 +97,21 @@ ldx #$00            ; Reset Data Index (X reads from ROM)
   ; Y is now incremented by 16 and points to the next available OAM slot.
 .endscope
 .endmacro
+
+.macro DrawPlayer 
+.scope 
+  lda player_y
+  sta $0200, y  
+  lda #PLAYER_TILE
+  iny
+  sta $0200, y  
+  lda # 0
+  iny
+  sta $0200, y  
+  lda player_x
+  iny
+  sta $0200, y  
+
+.endscope
+.endmacro
+

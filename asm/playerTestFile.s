@@ -1,4 +1,3 @@
-.export draw_player
 .export draw_enemy
 .export move_player_input
 
@@ -11,9 +10,8 @@
 
 .segment "CODE"
 
-PLAYER_TILE = 8
-ENEMY_TILE  = 9
 
+.include "consts.s"
 .include "systemMacro.s"
 ; dimensions
 
@@ -21,21 +19,6 @@ PLAYER_W = 8
 PLAYER_H = 8
 ENEMY_W  = 8
 ENEMY_H  = 8
-
-; draw_player_enemy
-; draws player and enemy sprites at their respective positions
-draw_player:
-  ; player
-  lda player_y
-  sta $2004
-  lda #PLAYER_TILE
-  sta $2004
-  lda # 0
-  sta $2004
-  lda player_x
-  sta $2004
-
-  rts
 
 draw_enemy:
   ; enemy
