@@ -23,6 +23,7 @@ current_scene: .res 1
 
 clock_draw_buffer: .res 16
 
+<<<<<<< HEAD
 ; player variables for turning back
 player_backup: .res 1
 
@@ -33,3 +34,6 @@ collision_aabb_2x2: .res 13
 collision_aabb_2x3: .res 9
 collision_aabb_3x3: .res 7
 collision_aabb_9x2: .res 9
+=======
+; end state
+>>>>>>> sceneSwitcher
