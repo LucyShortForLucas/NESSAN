@@ -31,6 +31,7 @@
 .exportzp clock_sec      
 .exportzp clock_frames    
 
+.exportzp oam_ready
 
 .segment "ZEROPAGE" ; zero-page memory, fast access: Use sparingly!
 

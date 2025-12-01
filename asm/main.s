@@ -135,9 +135,9 @@ lda #$60          ; Y = 96 (Center vertical position)
 sta coin_y
 
 lda #$20          
-sta coin_x2
+sta player_x
 lda #$20         
-sta coin_y2
+sta player_y
 
 lda #$6D          
 sta count_down_x
@@ -202,9 +202,8 @@ main:
 
   jsr move_player_input
 
-  DrawPlayer coin_x, coin_y
+  DrawPlayer player_x, player_y
   DrawClock
-  DrawPlayer
   DrawClock2 count_down_x, count_down_y
 
   jmp main ; Loop
