@@ -15,10 +15,7 @@
 .include "systemMacro.s"
 ; dimensions
 
-PLAYER_W = 8
-PLAYER_H = 8
-ENEMY_W  = 8
-ENEMY_H  = 8
+
 
 draw_enemy:
   ; enemy
