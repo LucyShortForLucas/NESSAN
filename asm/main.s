@@ -192,23 +192,11 @@ main:
       jsr start_screen_scene
     @skipStartScene:
 
-    cmp #SCENE_GAME ; set flags
-    bne @skipGameScene
-      jsr demo_scene
-    @skipGameScene:
+  cmp #SCENE_GAME
+  bne @skipGameScene
+  jsr demo_scene
+  @skipGameScene:
 
-<<<<<<< HEAD
-=======
-    ; Draw Sprites 
-    jsr move_player_input
-    ldy #$00
-
-
-    DrawPlayer player_x, player_y
-    DrawClock
-  DrawClock2 count_down_x, count_down_y
-
->>>>>>> refs/remotes/origin/main
   jmp main ; Loop
 
 ; The NMI interrupt is called every frame during V-blank (if enabled)

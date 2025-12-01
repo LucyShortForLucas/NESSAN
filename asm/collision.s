@@ -79,13 +79,13 @@ wall_collisions:
     lda math_buffer + 0 ; check x out of bounds
     cmp #8 ; check left bound
     bcc @set_and_return
-    cmp #240
+    cmp #242-math_buffer+2
     bcs @set_and_return
 
     lda math_buffer + 1 ; check x out of bounds
-    cmp #16 ; check left bound
+    cmp #16 ; check up bound
     bcc @set_and_return
-    cmp #216
+    cmp #216 - math_buffer+3
     bcs @set_and_return
 
     jmp @no_return

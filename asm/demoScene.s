@@ -324,6 +324,6 @@ demo_scene:
     DrawMetasprite coin_x, coin_y, CoinFrame1
     DrawMetasprite coin_x2, coin_y2, CoinFrame2
     DrawClock
-    DrawPlayer
+    DrawPlayer player_x, player_y
 
     rts
