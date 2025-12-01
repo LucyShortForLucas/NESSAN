@@ -5,8 +5,8 @@
 ; import engine functions
 .import famistudio_update
 .import famistudio_init
-.import famistudio_music_play
-
+;.import famistudio_music_play (is handled in "initializeScene.s")
+ 
 .import music_data_coinheist ; import song
 
 ;;
@@ -29,6 +29,7 @@
 
 ; Scenes
 .import start_screen_scene
+.import initialize_scene_start
 .import demo_scene
 
 ; demo
@@ -133,52 +134,52 @@ lda #%00000111
 sta clock_dirty
 
 ; Setup music
-  InitializeSongs
+InitializeSongs
 
-  LDA #00 ; pick the first song 
-  ChooseSongFromAccumulator
-
+; Setup Start screen
+jsr initialize_scene_start
 
 ; Main loop
 main:
   lda frame_ready 
   beq main        ; Wait for NMI
-  lda #$00
-  sta frame_ready
+    lda #$00
+    sta frame_ready
 
-  ; Clear Shadow OAM 
-  ; We move all sprites off-screen (Y = $FF) by default
-  ldx #$00
-  lda #$FF
-@clear_oam:
-  sta $0200, x ; set Y coordinate to FF (offscreen)
-  inx
-  inx
-  inx
-  inx          ; Skip to next sprite (4 bytes per sprite)
+    ; Clear Shadow OAM 
+    ; We move all sprites off-screen (Y = $FF) by default
+    ldx #$00
+    lda #$FF
+
+  @clear_oam:
+      sta $0200, x ; set Y coordinate to FF (offscreen)
+      inx
+      inx
+      inx
+      inx          ; Skip to next sprite (4 bytes per sprite)
   bne @clear_oam
 
-  ; Update Game Logic
-  UpdateTime 
-  FetchInput
+    ; Update Game Logic
+    UpdateTime 
+    FetchInput
 
-  ;; Scene Select
-  lda current_scene
-  bne @skipStartScene ; $00 is always start screen
-  jsr start_screen_scene
-  @skipStartScene:
+    ;; Scene Select
+    lda current_scene
+    bne @skipStartScene ; $00 is always start screen
+      jsr start_screen_scene
+    @skipStartScene:
 
-  cmp #SCENE_GAME
-  ;; bne @skipGameScene
-  jsr demo_scene
-  ;; @skipGameScene:
+    cmp #SCENE_GAME ; set flags
+    bne @skipGameScene
+      jsr demo_scene
+    @skipGameScene:
 
-  ; Draw Sprites 
-  ldy #$00
+    ; Draw Sprites 
+    ldy #$00
 
-  DrawMetasprite coin_x, coin_y, CoinFrame1
-  DrawMetasprite coin_x2, coin_y2, CoinFrame2
-  DrawClock
+    DrawMetasprite coin_x, coin_y, CoinFrame1
+    DrawMetasprite coin_x2, coin_y2, CoinFrame2
+    DrawClock
 
   jmp main ; Loop
 

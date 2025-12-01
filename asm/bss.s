@@ -16,3 +16,5 @@ frame_ready: .res 1 ; set to a value != 0 when frame logic is ready to be proces
 current_scene: .res 1
 
 clock_draw_buffer: .res 16
+
+; end state

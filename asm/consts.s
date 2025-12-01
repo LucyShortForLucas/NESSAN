@@ -7,3 +7,8 @@ SCENE_ENDSCREEN = $02
 APU_Status = $4015 ; APU Status/Sound channel (R/W)
 APU_Counter = $4017 ; Controls timing 
 APU_DM_CONTROL = $4010 ; APU Delta Modulation Control (W)
+
+; Songs enum
+SONG_START = $00
+SONG_GAME = $01
+SONG_END = $02
