@@ -22,6 +22,9 @@
 ; drawing
 .import palettes
 .import clock_draw_buffer
+.import wall_collisions
+.import move_player_input
+.importzp math_buffer
 
 ; flags
 .import current_scene
@@ -31,6 +34,14 @@
 .import start_screen_scene
 .import demo_scene
 
+.import collision_aabb_2x2
+.import collision_aabb_2x3
+.import collision_aabb_3x3
+.import collision_aabb_9x2
+
+.import draw_player
+.import draw_enemy
+
 ; demo
 .importzp clock_x
 .importzp clock_y
@@ -39,6 +50,10 @@
 ;; includes
 .include "systemMacro.s"
 .include "consts.s"
+.include "inits.s"
+
+.importzp player_x, player_y, enemy_x, enemy_y
+
 ;;.importzp frame_ready
 
 .importzp coin_x
@@ -52,7 +67,6 @@
 .include "graphicsMacro.s"
 .include "musicMacro.s"
 
-;; Main code segment for the program
 .segment "CODE"
 
 ; reset is the Entry-point of the entire project
@@ -113,7 +127,7 @@ DrawBackground ; Draw background
   lda #%00011110  ; Enable Background and Sprites
   sta $2001
 
-; Setup initial variables
+InitVariables ; Setup initial variables
 
 lda #$60          ; X = 96 (Center-left position)
 sta coin_x
@@ -169,6 +183,8 @@ main:
   UpdateTime 
   FetchInput
 
+  jsr famistudio_update ; Updates the music 
+
   ;; Scene Select
   lda current_scene
   bne @skipStartScene ; $00 is always start screen
@@ -176,17 +192,19 @@ main:
   @skipStartScene:
 
   cmp #SCENE_GAME
-  ;; bne @skipGameScene
+  bne @skipGameScene
   jsr demo_scene
-  ;; @skipGameScene:
+  @skipGameScene:
 
   UpdateClock
   ; Draw Sprites 
   ldy #$00
 
-  ; DrawPlayer coin_x2, coin_y2
+  jsr move_player_input
+
   DrawPlayer coin_x, coin_y
   DrawClock
+  DrawPlayer
   DrawClock2 count_down_x, count_down_y
 
   jmp main ; Loop
@@ -232,6 +250,6 @@ nmi:
   tax
   pla ; pull A
 
-  jsr famistudio_update ; Updates the music 
+
   
   rti ; resume code 

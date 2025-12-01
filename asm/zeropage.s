@@ -12,6 +12,13 @@
 .exportzp math_buffer
 .exportzp rand
 .exportzp inputs
+.exportzp ptr
+
+;testing
+.exportzp player_x
+.exportzp player_y
+.exportzp enemy_x
+.exportzp enemy_y
 
 .exportzp coin_x
 .exportzp coin_y
@@ -32,6 +39,7 @@ math_buffer: .res 8
 frame_counter: .res 1
 inputs: .res 1
 rand: .res 2
+ptr: .res 2 ; a temporary 2 byte space to store pointers
 
 ;; Demo variables
 second_counter: .res 2
@@ -41,6 +49,8 @@ clock_y: .res 1
 clock_dirty: .res 1 ; a flag set to determine which parts of the buffer must be updated. Bit 0: value, bit 1: x, bit 2:y
 
 ; positions
+player_x: .res 1
+player_y: .res 1
 coin_x: .res 1
 coin_y: .res 1
 count_down_x: .res 1
@@ -50,4 +60,6 @@ coin_y2: .res 1
 
 clock_min: .res 1
 clock_sec: .res 1
-clock_frames: .res 1 
+clock_frames: .res 1 ; remove  these later when doing proper map buffer
+enemy_x:  .res 1
+enemy_y:  .res 1
