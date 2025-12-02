@@ -10,8 +10,10 @@
 .export PlayerLeft2
 .export PlayerDown1
 .export PlayerDown2
+.export PlayerDown3
 .export PlayerUp1
 .export PlayerUp2
+.export PlayerUp3
 
 .export palettes
 
@@ -428,31 +430,38 @@ PlayerRight2:
 
 PlayerLeft1:
       ; Y-off, Tile, Attr, X-off
-      .byte $00, $60, $42, $08  ; Top Left
-      .byte $00, $61, $42, $00  ; Top Right
-      .byte $08, $62, $42, $08  ; Bottom Left
-      .byte $08, $63, $42, $00  ; Bottom Right
+      .byte $00, $80, $02, $00  ; Top Left
+      .byte $00, $81, $02, $08  ; Top Right
+      .byte $08, $82, $02, $00  ; Bottom Left
+      .byte $08, $83, $02, $08  ; Bottom Right
 
 PlayerLeft2:
       ; Y-off, Tile, Attr, X-off
-      .byte $00, $64, $42, $08  ; Top Left
-      .byte $00, $65, $42, $00  ; Top Right
-      .byte $08, $66, $42, $08  ; Bottom Left
-      .byte $08, $67, $42, $00  ; Bottom Right
+      .byte $00, $84, $02, $00  ; Top Left
+      .byte $00, $85, $02, $08  ; Top Right
+      .byte $08, $86, $02, $00  ; Bottom Left
+      .byte $08, $87, $02, $08  ; Bottom Right
 
 PlayerDown1:
-      ; Y-off, Tile, Attr, X-off
-      .byte $00, $70, $02, $00  ; Top Left
-      .byte $00, $71, $02, $08  ; Top Right
-      .byte $08, $72, $02, $00  ; Bottom Left
-      .byte $08, $73, $02, $08  ; Bottom Right
-
-PlayerDown2:
       ; Y-off, Tile, Attr, X-off
       .byte $00, $74, $02, $00  ; Top Left
       .byte $00, $75, $02, $08  ; Top Right
       .byte $08, $76, $02, $00  ; Bottom Left
       .byte $08, $77, $02, $08  ; Bottom Right
+
+PlayerDown2:
+      ; Y-off, Tile, Attr, X-off
+      .byte $00, $78, $02, $00  ; Top Left
+      .byte $00, $79, $02, $08  ; Top Right
+      .byte $08, $7A, $02, $00  ; Bottom Left
+      .byte $08, $7B, $02, $08  ; Bottom Right
+
+PlayerDown3:
+      ; Y-off, Tile, Attr, X-off
+      .byte $00, $7C, $02, $00  ; Top Left
+      .byte $00, $7D, $02, $08  ; Top Right
+      .byte $08, $7E, $02, $00  ; Bottom Left
+      .byte $08, $7F, $02, $08  ; Bottom Right
 
 PlayerUp1:
       ; Y-off, Tile, Attr, X-off
@@ -467,6 +476,13 @@ PlayerUp2:
       .byte $00, $6D, $02, $08  ; Top Right
       .byte $08, $6E, $02, $00  ; Bottom Left
       .byte $08, $6F, $02, $08  ; Bottom Right
+
+PlayerUp3:
+      ; Y-off, Tile, Attr, X-off
+      .byte $00, $70, $02, $00  ; Top Left
+      .byte $00, $71, $02, $08  ; Top Right
+      .byte $08, $72, $02, $00  ; Bottom Left
+      .byte $08, $73, $02, $08  ; Bottom Right
 
 palettes:
   ; Background Palette

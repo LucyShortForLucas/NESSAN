@@ -9,8 +9,10 @@
 .import PlayerLeft2
 .import PlayerDown1
 .import PlayerDown2
+.import PlayerDown3
 .import PlayerUp1
 .import PlayerUp2
+.import PlayerUp3
 
 .importzp clock_min       
 .importzp clock_sec       
@@ -114,6 +116,41 @@ Done:
 .endscope
 .endmacro
 
+.macro DrawAnimatedMetasprite4Frames x_pos, y_pos, frame1, frame2, frame3, frame4, speed
+.scope
+    lda frame_counter 
+    and #(speed * 2)    ; Double it bc we have 4 frames now
+    bne DoFrame3     ; If it's 1, go to frames 3 & 4
+
+DoFrame1:
+    ; Frames 1 or 2 
+    lda frame_counter
+    and #speed
+    bne DoFrame2       ; If it's 1, Frame 2
+    
+    DrawMetasprite x_pos, y_pos, frame1
+    jmp Done
+
+DoFrame2:
+    DrawMetasprite x_pos, y_pos, frame2
+    jmp Done
+
+DoFrame3:
+    ; Frames 3 or 4
+    lda frame_counter
+    and #speed
+    bne DoFrame4       ; If it's 1, Frame 4
+
+    DrawMetasprite x_pos, y_pos, frame3
+    jmp Done
+
+DoFrame4:
+    DrawMetasprite x_pos, y_pos, frame4
+
+Done:
+.endscope
+.endmacro
+
 .macro DrawPlayer x_pos, y_pos
 .scope
     ; Check if Player is Moving
@@ -141,10 +178,10 @@ NotRight:
 
     ; animation stuff
 AnimDown:
-    DrawAnimatedMetasprite2Frames x_pos, y_pos, PlayerDown1, PlayerDown2, $08
+    DrawAnimatedMetasprite4Frames x_pos, y_pos, PlayerDown1, PlayerDown2, PlayerDown1, PlayerDown3, $08
     jmp Done
 AnimUp:
-    DrawAnimatedMetasprite2Frames x_pos, y_pos, PlayerUp1, PlayerUp2, $08
+    DrawAnimatedMetasprite4Frames x_pos, y_pos, PlayerUp1, PlayerUp2, PlayerUp1, PlayerUp3, $08
     jmp Done
 AnimLeft:
     DrawAnimatedMetasprite2Frames x_pos, y_pos, PlayerLeft1, PlayerLeft2, $08
