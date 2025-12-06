@@ -1,12 +1,9 @@
-.import player_backup
-.importzp player_dir
+
 .import wall_collisions
 
-.macro PlayerMovementUpdate
+.macro PlayerMovementUpdate player_x, player_y, inputs, player_backup, player_dir
 .scope
-    ; ---------------------------
-    ; Y-AXIS MOVEMENT
-    ; ---------------------------
+    ; Y-Axis 
 
     ; 1. Backup Y (in case we hit a wall)
     lda player_y
@@ -48,11 +45,15 @@
     lda player_backup
     sta player_y
 
+    ; Update Sprite if it wall
+    lda player_dir
+    clc
+    adc #4
+    sta player_dir
+
 @end_y:
 
-    ; ---------------------------
-    ; X-AXIS MOVEMENT
-    ; ---------------------------
+    ; X-Axis 
 
     ; 1. Backup X
     lda player_x
@@ -94,8 +95,12 @@
     lda player_backup
     sta player_x
 
+    ; Update Sprite if it wall
+    lda player_dir
+    clc
+    adc #4
+    sta player_dir
+
 @end_x:
-    ; Note: Removed 'rts' because macros should just insert code, 
-    ; the 'rts' belongs in the subroutine that calls this macro.
 .endscope
 .endmacro

@@ -14,11 +14,6 @@ sta clock_y
 lda #%00000111 
 sta clock_dirty
 
-; setup player
-lda #20
-sta player_x
-lda #20
-sta player_y
 
 ; setup enemy
 lda #100

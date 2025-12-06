@@ -47,13 +47,16 @@
 .importzp clock_x
 .importzp clock_y
 .importzp clock_dirty
+.importzp score1_x
+.importzp score1_y
 
 ;; includes
 .include "systemMacro.s"
 .include "consts.s"
 .include "inits.s"
 
-.importzp player_x, player_y, enemy_x, enemy_y
+.importzp blue_player_x, blue_player_y, enemy_x, enemy_y
+.importzp red_player_x, red_player_y
 
 ;;.importzp frame_ready
 
@@ -137,9 +140,15 @@ lda #$60          ; Y = 96 (Center vertical position)
 sta coin_y
 
 lda #$20          
-sta player_x
+sta blue_player_x
 lda #$20         
-sta player_y
+sta blue_player_y
+
+lda #$30          
+sta red_player_x
+lda #$20         
+sta red_player_y
+
 
 lda #$6D          
 sta count_down_x
@@ -149,6 +158,11 @@ sta count_down_y
 lda #50
 sta clock_x
 sta clock_y
+
+lda #$20
+sta score1_x
+lda #$10
+sta score1_y
 
 lda #%00000111 
 sta clock_dirty

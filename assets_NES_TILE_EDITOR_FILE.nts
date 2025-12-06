@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8" ?>
-<NESTileSet selectedPaletee="3" palette="62,24,40,56;30,0,16,32;29,22,38,32;61,17,33,48">
+<NESTileSet selectedPaletee="1" palette="62,24,40,56;30,0,16,32;29,22,38,32;61,17,33,48">
 <PatternTables>
 <PatternTable name="MyTiles" >
 <Pattern data="00000000000000000000000000000000" />
@@ -20,20 +20,20 @@
 <Pattern data="c0c0c0c0c0c0c0c0ffffffffffffffff" />
 <Pattern data="0303030303030303fcfcfcfcfcfcfcfc" />
 <Pattern data="0000000000000000ffffffffffffffff" />
+<Pattern data="00ff66ff66ff6600ff000000000000ff" />
+<Pattern data="0066ff66ff66ff00ff000000000000ff" />
+<Pattern data="547e7e54547e7e548181818181818181" />
+<Pattern data="2a7e7e2a2a7e7e2a8181818181818181" />
+<Pattern data="007f707f5c5f5654ff80808080808081" />
+<Pattern data="00fe0efe3afa6a2aff01010101010181" />
+<Pattern data="54565f5c7f707f0081808080808080ff" />
+<Pattern data="2a6afa3afe0efe0081010101010101ff" />
 <Pattern data="00000000000000000000000000000000" />
 <Pattern data="00000000000000000000000000000000" />
 <Pattern data="00000000000000000000000000000000" />
 <Pattern data="00000000000000000000000000000000" />
 <Pattern data="00000000000000000000000000000000" />
 <Pattern data="00000000000000000000000000000000" />
-<Pattern data="00000011131b1d0e00030f0f0f070301" />
-<Pattern data="000000e0f0f0e00000c0f0f8f8f8f8f0" />
-<Pattern data="03020203000000000005070002000000" />
-<Pattern data="c04040c00000000000a0e00040000000" />
-<Pattern data="0000000011131b1d0000030f0f0f0703" />
-<Pattern data="00000000e0f0f0e00000c0f0f8f8f8f8" />
-<Pattern data="0e0202030100000001050b0000000000" />
-<Pattern data="004040c000000000f0a0c00080000000" />
 <Pattern data="00000003060c080800000003070f0f0e" />
 <Pattern data="000000c000001010000000c0e0f06060" />
 <Pattern data="08080800010000000e0e0f0702000000" />

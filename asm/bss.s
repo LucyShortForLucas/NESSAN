@@ -5,7 +5,8 @@
 ;;
 
 .export clock_draw_buffer
-.export player_backup
+.export blue_player_backup
+.export red_player_backup
 .export frame_ready
 
 .export current_scene
@@ -24,7 +25,8 @@ current_scene: .res 1
 clock_draw_buffer: .res 16
 
 ; player variables for turning back
-player_backup: .res 1
+blue_player_backup: .res 2
+red_player_backup: .res 2
 
 ; aabb collision buffers based on size. 2 bytes per box: topleft x, y
 ;
