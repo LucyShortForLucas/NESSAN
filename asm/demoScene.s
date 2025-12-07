@@ -308,6 +308,13 @@ demo_scene:
     UpdateClockBufferValue
 
     ; move player based on input and check if it collides with one enemy
+    ; Draw Sprites 
     jsr move_player_input
+   
+    ldy #$00
 
-    rts
+
+    DrawPlayer player_x, player_y
+    DrawClock
+  DrawClock2 count_down_x, count_down_y
+rts
