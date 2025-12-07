@@ -5,8 +5,8 @@
 .import wall_collisions
 .importzp math_buffer
 
-.import player_backup
-.importzp player_x, player_y, enemy_x, enemy_y
+.import blue_player_backup
+.importzp blue_player_x, blue_player_y, enemy_x, enemy_y
 
 .segment "CODE"
 
@@ -15,10 +15,7 @@
 .include "systemMacro.s"
 ; dimensions
 
-PLAYER_W = 8
-PLAYER_H = 8
-ENEMY_W  = 8
-ENEMY_H  = 8
+
 
 draw_enemy:
   ; enemy
@@ -37,7 +34,7 @@ draw_enemy:
 move_player_input:    
 
   ; load all stuff into math_buffer for collision check
-  lda player_x
+  lda blue_player_x
   sta math_buffer+0 ; a_X
 
   lda #PLAYER_W
@@ -54,22 +51,22 @@ move_player_input:
   sta math_buffer+7 ; b_height
 
   ; load into backup before changing Y
-  lda player_y
-  sta player_backup
+  lda blue_player_y
+  sta blue_player_backup
 
   ; move player based on input
   lda inputs
   and #%000001000 ; up
   beq @skip_up
-  dec player_y
+  dec blue_player_y
 @skip_up:
   lda inputs
   and #%00000100 ; down
   beq @skip_down
-  inc player_y
+  inc blue_player_y
 @skip_down:
   ; load Y into math_buffer as we just changed it
-  lda player_y
+  lda blue_player_y
   sta math_buffer+1 ; a_Y
   
   ; check collison
@@ -78,36 +75,36 @@ move_player_input:
 
 
 ; collision detected, reset player position y
-  lda player_backup
-  sta player_y
+  lda blue_player_backup
+  sta blue_player_y
 ; also reset the math buffer as we use it again for X
-  lda player_backup
+  lda blue_player_backup
   sta math_buffer+1 ; a_Y
 
 @no_hit_y:
   ; load into backup before changing X
-  lda player_x
-  sta player_backup
+  lda blue_player_x
+  sta blue_player_backup
 
   ; move player based on input
   lda inputs
   and #%00000010 ; left
   beq @skip_left
-  dec player_x
+  dec blue_player_x
 @skip_left:
   lda inputs
   and #%00000001 ; right
   beq @skip_right
-  inc player_x
+  inc blue_player_x
 @skip_right:
 
-  lda player_x
+  lda blue_player_x
   sta math_buffer+0 ; a_X
 ; check collison
   jsr wall_collisions
   bcc @no_hit_x
 ; collision detected, reset player position x
-  lda player_backup
-  sta player_x
+  lda blue_player_backup
+  sta blue_player_x
 @no_hit_x:
   rts

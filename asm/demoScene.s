@@ -14,12 +14,29 @@
 .importzp clock_y
 .importzp math_buffer
 .importzp inputs
+.importzp coin_x2
+.importzp coin_y2
+.importzp coin_x
+.importzp coin_y
+.importzp blue_player_x, blue_player_y
+.importzp red_player_x, red_player_y
+.importzp count_down_x
+.importzp count_down_y
+.importzp score1_x
+.importzp score1_y
+.importzp score1
+.importzp blue_player_dir, red_player_dir
+.import blue_player_backup, red_player_backup
+
 
 .import division_16
 .import prng
 
 .export demo_scene
 
+.include "playerMacro.s"
+.include "graphicsMacro.s"
+.include "consts.s"
 
 .macro UpdateClockBufferValue
 .scope
@@ -307,14 +324,19 @@ demo_scene:
     UpdateClockBufferY
     UpdateClockBufferValue
 
+    UpdateClock
+    UpdateScore score1, 1
+
     ; move player based on input and check if it collides with one enemy
+    ; jsr move_player_input
+    PlayerMovementUpdate blue_player_x, blue_player_y, inputs, blue_player_backup, blue_player_dir
+    PlayerMovementUpdate red_player_x, red_player_y, inputs+1, red_player_backup, red_player_dir
     ; Draw Sprites 
-    jsr move_player_input
-   
     ldy #$00
+    DrawCoin coin_x, coin_y
+    DrawClock count_down_x, count_down_y
+    DrawBluePlayer blue_player_x, blue_player_y
+    DrawRedPlayer red_player_x, red_player_y
+    DrawScore score1_x, score1_y, score1
 
-
-    DrawPlayer player_x, player_y
-    DrawClock
-  DrawClock2 count_down_x, count_down_y
-rts
+    rts
