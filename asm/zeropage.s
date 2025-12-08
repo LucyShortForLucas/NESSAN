@@ -45,7 +45,7 @@
 ;; System variables
 math_buffer: .res 8
 frame_counter: .res 1
-inputs: .res 1
+inputs: .res 2
 rand: .res 2
 ptr: .res 2 ; a temporary 2 byte space to store pointers
 
