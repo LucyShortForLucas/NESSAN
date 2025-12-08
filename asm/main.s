@@ -1,9 +1,14 @@
 ; import engine functions
 .import famistudio_update
 .import famistudio_init
+
+.import famistudio_sfx_init
+;.import famistudio_sfx_play
 ;.import famistudio_music_play (is handled in "initializeScene.s")
  
+; Music initialization
 .import music_data_coinheist ; import song
+.import sounds
 
 ;;
 ;; This module holds the entry-point, main game loop, and NMI interrupt
@@ -179,6 +184,7 @@ sta score_blue_y
 lda #%00000111 
 sta clock_dirty
 
+; Set Clock
 SetClock #02, #30  ; Start clock at 2:30
 
 ; Setup music
@@ -199,6 +205,7 @@ main:
     ldx #$00
     lda #$FF
 
+
   @clear_oam:
       sta $0200, x ; set Y coordinate to FF (offscreen)
       inx 
@@ -212,7 +219,6 @@ main:
     FetchInput
 
   jsr famistudio_update ; Updates the music 
-
     ;; Scene Select
     lda current_scene
     bne @skipStartScene ; $00 is always start screen
