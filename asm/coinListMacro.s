@@ -28,15 +28,15 @@
 
 @coinCollisionLoop: ; loop over each item and check collision
     lda list_pickup, x
-    sta math_buffer+4
+    sta math_buffer+4 ; set x
     lda list_pickup+1, x
-    sta math_buffer+5
+    sta math_buffer+5 ; set y
     jsr aabb_collision ; gets carry  bit if hit
     bcs @coinHit
     dex 
     dex 
     dex ; -3 for next 
-    bpl @coinCollisionLoop ; branch if negative, aka no more to loop
+    bpl @coinCollisionLoop ; branch if not negative, aka more to loop
     ; no hit :(
     clc 
     jmp @endCoinCollision
