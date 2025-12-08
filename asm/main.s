@@ -36,16 +36,32 @@
 .importzp clock_y
 .importzp clock_dirty
 
+; mathbuffer (used by coinlist for now)
+.importzp math_buffer
+
+; coin list
+.import list_pickup
+.import aabb_collision
+.import HandleCoinCollection
+.import ConvertIndexToPosition
+
+; import player drawing
+.import draw_enemy
+
+; import enemy drawing
+.import draw_player
+
+; temp player variables
+.importzp player_x, player_y, enemy_x, enemy_y
+
 ;; includes
 .include "systemMacro.s"
 .include "consts.s"
 
 .include "musicMacro.s"
 
-.import draw_enemy
-.import draw_player
+.include "coinListMacro.s"
 
-.importzp player_x, player_y, enemy_x, enemy_y
 
 
 .segment "CODE"
@@ -127,6 +143,30 @@ sta enemy_x
 lda #80
 sta enemy_y
 
+lda #3
+sta list_pickup
+
+lda #50
+sta list_pickup+1
+lda #100
+sta list_pickup+2
+lda #1
+sta list_pickup+3
+
+lda #180
+sta list_pickup+4
+lda #10
+sta list_pickup+5
+lda #2
+sta list_pickup+6
+
+lda #200
+sta list_pickup+7
+lda #200
+sta list_pickup+8
+lda #3
+sta list_pickup+9
+
 ; Setup music
   InitializeSongs
 
@@ -153,6 +193,11 @@ main:
   cmp #SCENE_GAME
   bne @skipGameScene
   jsr demo_scene
+
+  CheckForCoinCollision ; check if we hit a coin!
+  bcc @skipGameScene ; branch if not...
+  jsr HandleCoinCollection ; We're touching a coin! handle it!
+  
   @skipGameScene:
 
   jmp main ; loop forever
@@ -188,6 +233,17 @@ nmi:
   jsr draw_player
   ; draw enemy
   jsr draw_enemy
+  
+  DrawCoins
+
+  ldx #$00
+  stx $2004
+  ldx #$00
+  stx $2004
+  ldx #$00
+  stx $2004
+  ldx #$00
+  stx $2004
   
   inc frame_ready ; signal that frame is ready for main loop
 
