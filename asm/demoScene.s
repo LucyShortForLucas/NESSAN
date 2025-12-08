@@ -5,10 +5,12 @@
 .importzp second_counter
 
 .import move_player_input
-.import draw_enemy
-.import draw_player
+
+.import spawn_new_pickup
+.import pickup_timer
 
 .import clock_draw_buffer
+.import pickup_timer
 .importzp clock_dirty
 .importzp clock_x
 .importzp clock_y
@@ -22,21 +24,29 @@
 .importzp red_player_x, red_player_y
 .importzp count_down_x
 .importzp count_down_y
-.importzp score1_x
-.importzp score1_y
-.importzp score1
+
+.importzp score_red_x, score_blue_x
+.importzp score_red_y, score_blue_y
+.importzp score_red, score_blue
+
 .importzp blue_player_dir, red_player_dir
 .import blue_player_backup, red_player_backup
 
+.import list_pickup
+.import ConvertIndexToPosition
 
 .import division_16
 .import prng
+.import HandleCoinCollection
+.import aabb_collision
 
 .export demo_scene
 
 .include "playerMacro.s"
 .include "graphicsMacro.s"
 .include "consts.s"
+.include "coinListMacro.s"
+.include "spawnPickupMacro.s"
 
 .macro UpdateClockBufferValue
 .scope
@@ -320,23 +330,67 @@ demo_scene:
     MoveClock
     ClockValueButtons
 
+    HandlePickupSpawn ; Reduce the pickup spawn timer and check if a new one must be spawned
+
+    CheckForCoinCollision red_player_x, red_player_y ; check if we hit a coin!
+    bcc skipRedCoinHandling ; branch if not...
+    jsr HandleCoinCollection ; We're touching a coin! handle it!
+    UpdateScore score_red, 1
+skipRedCoinHandling:
+    CheckForCoinCollision blue_player_x, blue_player_y ; check if we hit a coin!
+
+    bcc skipBlueCoinHandling ; branch if not...
+    jsr HandleCoinCollection ; We're touching a coin! handle it!
+    UpdateScore score_blue, 1
+skipBlueCoinHandling:
+
+
     UpdateClockBufferX
     UpdateClockBufferY
     UpdateClockBufferValue
 
     UpdateClock
-    UpdateScore score1, 1
 
     ; move player based on input and check if it collides with one enemy
     ; jsr move_player_input
     PlayerMovementUpdate blue_player_x, blue_player_y, inputs, blue_player_backup, blue_player_dir
     PlayerMovementUpdate red_player_x, red_player_y, inputs+1, red_player_backup, red_player_dir
-    ; Draw Sprites 
-    ldy #$00
-    DrawCoin coin_x, coin_y
+    ; Draw Sprites
+    ; Loop over all
+    
+    ldy #$00 ; do NOT forget to load y with 0 before drawing sprites!
+
+
+    lda list_pickup ; load amount into pickup
+    bne @startCoinDraw ; if 0 then we're done! nothing to check!
+    jmp @endCoinDraw ; skip drawing coins
+@startCoinDraw:
+    jsr ConvertIndexToPosition
+@loopDrawLoop: ; loop over each item
+    lda list_pickup, x ; x
+    sta math_buffer+0
+    lda list_pickup+1, x ; y
+    sta math_buffer+1
+    stx math_buffer+2
+    jsr DrawCoinJSR
+    ldx math_buffer+2
+    dex 
+    dex 
+    dex ; -3 for next item
+    bmi @endCoinDraw ; branch IF negative, aka no more to loop over
+    jmp @loopDrawLoop
+@endCoinDraw:   
+
     DrawClock count_down_x, count_down_y
     DrawBluePlayer blue_player_x, blue_player_y
     DrawRedPlayer red_player_x, red_player_y
-    DrawScore score1_x, score1_y, score1
+    DrawScore score_red_x, score_red_y, score_red
+    DrawScore score_blue_x, score_blue_y, score_blue
+    rts 
 
-    rts
+
+    
+; subroutine to draw coin due to the size of macros
+DrawCoinJSR:
+    DrawCoin
+    rts 

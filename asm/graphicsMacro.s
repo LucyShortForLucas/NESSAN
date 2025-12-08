@@ -56,9 +56,9 @@ LoadFourthQuarter:
 .endscope
 .endmacro
 
-.macro DrawCoin x_pos, y_pos
+.macro DrawCoin
 .scope
-    DrawAnimatedMetasprite2Frames x_pos, y_pos, CoinFrame1, CoinFrame2, $20
+    DrawAnimatedMetasprite2Frames math_buffer+0, math_buffer+1, CoinFrame1, CoinFrame2, $20
 .endscope
 .endmacro
 
@@ -469,7 +469,7 @@ ClockFinished:
 .macro UpdateScore score_var, increment
 .scope
     lda score_var
-    clc
+    clc 
     adc #increment
     sta score_var
     

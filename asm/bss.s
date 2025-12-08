@@ -11,10 +11,14 @@
 
 .export current_scene
 
+.export list_pickup
+
 .export collision_aabb_2x2
 .export collision_aabb_2x3
 .export collision_aabb_3x3
 .export collision_aabb_9x2
+
+.export pickup_timer
 
 .segment "BSS"
 
@@ -35,3 +39,8 @@ collision_aabb_2x2: .res 13
 collision_aabb_2x3: .res 9
 collision_aabb_3x3: .res 7
 collision_aabb_9x2: .res 9
+
+
+list_pickup: .res 10 ; 0th element for how many are active, max 3 coins: 1th for x, 2st for y, 3nd for type, then next coin...
+
+pickup_timer: .res 1

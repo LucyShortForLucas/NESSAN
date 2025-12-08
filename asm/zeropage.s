@@ -19,15 +19,16 @@
 .exportzp blue_player_y
 .exportzp red_player_x
 .exportzp red_player_y
-.exportzp enemy_x
-.exportzp enemy_y
 
 .exportzp coin_x
 .exportzp coin_y
 .exportzp count_down_x
 .exportzp count_down_y
-.exportzp score1_x
-.exportzp score1_y
+
+.exportzp score_red_x
+.exportzp score_red_y
+.exportzp score_blue_x
+.exportzp score_blue_y
 
 .exportzp clock_min       
 .exportzp clock_sec      
@@ -36,15 +37,15 @@
 .exportzp blue_player_dir
 .exportzp red_player_dir
 
-.exportzp score1
-.exportzp score2
+.exportzp score_red
+.exportzp score_blue
 
 .segment "ZEROPAGE" ; zero-page memory, fast access: Use sparingly!
 
 ;; System variables
 math_buffer: .res 8
 frame_counter: .res 1
-inputs: .res 1
+inputs: .res 2
 rand: .res 2
 ptr: .res 2 ; a temporary 2 byte space to store pointers
 
@@ -65,17 +66,18 @@ coin_x: .res 1
 coin_y: .res 1
 count_down_x: .res 1
 count_down_y: .res 1
-score1_x: .res 1
-score1_y: .res 1
 
 clock_min: .res 1
 clock_sec: .res 1
 clock_frames: .res 1 ; remove  these later when doing proper map buffer
-enemy_x:  .res 1
-enemy_y:  .res 1
 
 blue_player_dir: .res 1
 red_player_dir: .res 1
 
-score1: .res 1
-score2: .res 1
+score_red: .res 1
+score_red_x: .res 1
+score_red_y: .res 1
+
+score_blue: .res 1
+score_blue_x: .res 1
+score_blue_y: .res 1

@@ -3,6 +3,7 @@
 ;; 
 
 .segment "CODE"
+.include "coinListMacro.s"
 
 .macro InitVariables
 
@@ -14,12 +15,6 @@ sta clock_y
 lda #%00000111 
 sta clock_dirty
 
-
-; setup enemy
-lda #100
-sta enemy_x
-lda #80
-sta enemy_y
 
 
 ; setup main level collisions
