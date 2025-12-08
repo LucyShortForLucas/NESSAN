@@ -3,6 +3,7 @@
 ;; 
 
 .segment "CODE"
+.include "coinListMacro.s"
 
 .macro InitVariables
 
@@ -14,17 +15,6 @@ sta clock_y
 lda #%00000111 
 sta clock_dirty
 
-; setup player
-lda #20
-sta player_x
-lda #20
-sta player_y
-
-; setup enemy
-lda #100
-sta enemy_x
-lda #80
-sta enemy_y
 
 
 ; setup main level collisions
@@ -128,5 +118,34 @@ lda #25
 sta collision_aabb_2x3 + 7; x
 lda #17
 sta collision_aabb_2x3 + 8 ; y
+
+
+; setup list pickups
+lda #3 ; add 3 items
+sta list_pickup
+
+; load coin 1
+lda #100
+sta list_pickup+1
+lda #100
+sta list_pickup+2
+lda #1
+sta list_pickup+3
+
+; load coin 2
+lda #180
+sta list_pickup+4
+lda #100
+sta list_pickup+5
+lda #2
+sta list_pickup+6
+
+; load coin 3
+lda #100
+sta list_pickup+7
+lda #200
+sta list_pickup+8
+lda #3
+sta list_pickup+9
 
 .endmacro

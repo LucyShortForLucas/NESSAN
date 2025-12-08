@@ -5,10 +5,13 @@
 ;;
 
 .export clock_draw_buffer
-.export player_backup
+.export blue_player_backup
+.export red_player_backup
 .export frame_ready
 
 .export current_scene
+
+.export list_pickup
 
 .export collision_aabb_2x2
 .export collision_aabb_2x3
@@ -24,7 +27,8 @@ current_scene: .res 1
 clock_draw_buffer: .res 16
 
 ; player variables for turning back
-player_backup: .res 1
+blue_player_backup: .res 2
+red_player_backup: .res 2
 
 ; aabb collision buffers based on size. 2 bytes per box: topleft x, y
 ;
@@ -33,3 +37,6 @@ collision_aabb_2x2: .res 13
 collision_aabb_2x3: .res 9
 collision_aabb_3x3: .res 7
 collision_aabb_9x2: .res 9
+
+
+list_pickup: .res 10 ; 0th element for how many are active, max 3 coins: 1th for x, 2st for y, 3nd for type, then next coin...

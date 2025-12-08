@@ -36,20 +36,31 @@
 .import collision_aabb_3x3
 .import collision_aabb_9x2
 
-.import draw_player
-.import draw_enemy
-
 ; demo
 .importzp clock_x
 .importzp clock_y
 .importzp clock_dirty
+.importzp score_red_x
+.importzp score_red_y
+.importzp score_blue_x
+.importzp score_blue_y
+
+; mathbuffer (used by coinlist for now)
+.importzp math_buffer
+
+; coin list
+.import list_pickup
+.import aabb_collision
+.import HandleCoinCollection
+.import ConvertIndexToPosition
 
 ;; includes
 .include "systemMacro.s"
 .include "consts.s"
 .include "inits.s"
 
-.importzp player_x, player_y, enemy_x, enemy_y
+.importzp blue_player_x, blue_player_y
+.importzp red_player_x, red_player_y
 
 ;;.importzp frame_ready
 
@@ -63,6 +74,10 @@
 ; Macros
 .include "graphicsMacro.s"
 .include "musicMacro.s"
+
+
+
+.include "playerMacro.s"
 
 .segment "CODE"
 
@@ -132,9 +147,15 @@ lda #$60          ; Y = 96 (Center vertical position)
 sta coin_y
 
 lda #$20          
-sta player_x
+sta blue_player_x
 lda #$20         
-sta player_y
+sta blue_player_y
+
+lda #$30          
+sta red_player_x
+lda #$20         
+sta red_player_y
+
 
 lda #$6D          
 sta count_down_x
@@ -144,6 +165,16 @@ sta count_down_y
 lda #50
 sta clock_x
 sta clock_y
+
+lda #$D0
+sta score_red_x
+lda #$02
+sta score_red_y
+
+lda #$20
+sta score_blue_x
+lda #$02
+sta score_blue_y
 
 lda #%00000111 
 sta clock_dirty
@@ -170,9 +201,9 @@ main:
 
   @clear_oam:
       sta $0200, x ; set Y coordinate to FF (offscreen)
-      inx
-      inx
-      inx
+      inx 
+      inx 
+      inx 
       inx          ; Skip to next sprite (4 bytes per sprite)
   bne @clear_oam
 
@@ -191,6 +222,7 @@ main:
   cmp #SCENE_GAME
   bne @skipGameScene
   jsr demo_scene
+  
   @skipGameScene:
 
   jmp main ; Loop
@@ -198,9 +230,9 @@ main:
 ; The NMI interrupt is called every frame during V-blank (if enabled)
 nmi:
   pha ; push A
-  txa
+  txa 
   pha ; push X
-  tya
+  tya 
   pha ; push Y
 
   ldx #$00 	; Set SPR-RAM address to 0
