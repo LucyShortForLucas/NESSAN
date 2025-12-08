@@ -4,6 +4,7 @@
 .import ConvertIndexToPosition
 
 .segment "CODE"
+.import prng
 
 ; input: mathbuffer as index
 ; no output

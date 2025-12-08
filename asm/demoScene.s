@@ -12,11 +12,36 @@
 .importzp clock_y
 .importzp math_buffer
 .importzp inputs
+.importzp coin_x2
+.importzp coin_y2
+.importzp coin_x
+.importzp coin_y
+.importzp blue_player_x, blue_player_y
+.importzp red_player_x, red_player_y
+.importzp count_down_x
+.importzp count_down_y
+
+.importzp score_red_x, score_blue_x
+.importzp score_red_y, score_blue_y
+.importzp score_red, score_blue
+
+.importzp blue_player_dir, red_player_dir
+.import blue_player_backup, red_player_backup
+
+.import list_pickup
+.import ConvertIndexToPosition
 
 .import division_16
 .import prng
+.import HandleCoinCollection
+.import aabb_collision
 
 .export demo_scene
+
+.include "playerMacro.s"
+.include "graphicsMacro.s"
+.include "consts.s"
+.include "coinListMacro.s"
 
 .macro UpdateClockBufferValue
 .scope
@@ -52,10 +77,10 @@
     stx math_buffer+3
     ;; lo-cell of dividend already holds quotient
 
-    jsr division_16 ; modulo 10, result now holds the thousands-digit
-    ldx math_buffer+2 ; lo-byte of remainder
-    stx clock_draw_buffer+1
-
+    jsr division_16 ; modulo 10, result now holds the thousands-digit (Remainder 0-9 in math_buffer+2/3)
+    lda math_buffer+2 ; lo-byte of remainder (0-9)
+    clc
+    adc #$30 ; Add offset 
 
      ; hundreds digit
     ldx #$64 ; divisor lo-byte
@@ -83,9 +108,11 @@
     stx math_buffer+3
     ;; lo-cell of dividend already holds quotient
 
-    jsr division_16 ; modulo 10, result now holds the thousands-digit
-    ldx math_buffer+2 ; lo-byte of remainder
-    stx clock_draw_buffer+5
+    jsr division_16 ; modulo 10, result now holds the hundreds-digit
+    lda math_buffer+2 ; lo-byte of remainder (0-9)
+    clc
+    adc #$30 ; Add offset 
+    sta clock_draw_buffer+5
 
 
      ; tens digit
@@ -114,9 +141,11 @@
     stx math_buffer+3
     ;; lo-cell of dividend already holds quotient
 
-    jsr division_16 ; modulo 10, result now holds the thousands-digit
-    ldx math_buffer+2 ; lo-byte of remainder
-    stx clock_draw_buffer+9
+    jsr division_16 ; modulo 10, result now holds the tens-digit
+    lda math_buffer+2 ; lo-byte of remainder (0-9)
+    clc
+    adc #$30 ; Add offset 
+    sta clock_draw_buffer+9
 
 
     ; ones digit
@@ -133,9 +162,11 @@
     ldx second_counter+1  ; dividend lo-cell hi-byte
     stx math_buffer+5
 
-    jsr division_16 ; modulo 10, result now holds the thousands-digit
-    ldx math_buffer+2 ; lo-byte of remainder
-    stx clock_draw_buffer+13
+    jsr division_16 ; modulo 10, result now holds the ones-digit
+    lda math_buffer+2 ; lo-byte of remainder (0-9)
+    clc
+    adc #$30 ; Add offset 
+    sta clock_draw_buffer+13
 
 
     lda clock_dirty ; unset bit 1 (value has been updated)
@@ -294,13 +325,67 @@ demo_scene:
     MoveClock
     ClockValueButtons
 
+    
+
+    CheckForCoinCollision red_player_x, red_player_y ; check if we hit a coin!
+    bcc skipRedCoinHandling ; branch if not...
+    jsr HandleCoinCollection ; We're touching a coin! handle it!
+    UpdateScore score_red, 1
+skipRedCoinHandling:
+    CheckForCoinCollision blue_player_x, blue_player_y ; check if we hit a coin!
+
+    bcc skipBlueCoinHandling ; branch if not...
+    jsr HandleCoinCollection ; We're touching a coin! handle it!
+    UpdateScore score_blue, 1
+skipBlueCoinHandling:
+
+
     UpdateClockBufferX
     UpdateClockBufferY
     UpdateClockBufferValue
 
+    UpdateClock
+
     ; move player based on input and check if it collides with one enemy
-    jsr move_player_input
+    ; jsr move_player_input
+    PlayerMovementUpdate blue_player_x, blue_player_y, inputs, blue_player_backup, blue_player_dir
+    PlayerMovementUpdate red_player_x, red_player_y, inputs+1, red_player_backup, red_player_dir
+    ; Draw Sprites
+    ; Loop over all
+    
+    ldy #$00 ; do NOT forget to load y with 0 before drawing sprites!
 
-    jsr prng
 
-    rts
+    lda list_pickup ; load amount into pickup
+    bne @startCoinDraw ; if 0 then we're done! nothing to check!
+    jmp @endCoinDraw ; skip drawing coins
+@startCoinDraw:
+    jsr ConvertIndexToPosition
+@loopDrawLoop: ; loop over each item
+    lda list_pickup, x ; x
+    sta math_buffer+0
+    lda list_pickup+1, x ; y
+    sta math_buffer+1
+    stx math_buffer+2
+    jsr DrawCoinJSR
+    ldx math_buffer+2
+    dex 
+    dex 
+    dex ; -3 for next item
+    bmi @endCoinDraw ; branch IF negative, aka no more to loop over
+    jmp @loopDrawLoop
+@endCoinDraw:   
+
+    DrawClock count_down_x, count_down_y
+    DrawBluePlayer blue_player_x, blue_player_y
+    DrawRedPlayer red_player_x, red_player_y
+    DrawScore score_red_x, score_red_y, score_red
+    DrawScore score_blue_x, score_blue_y, score_blue
+    rts 
+
+
+    
+; subroutine to draw coin due to the size of macros
+DrawCoinJSR:
+    DrawCoin
+    rts 

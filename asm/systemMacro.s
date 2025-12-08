@@ -29,14 +29,24 @@
 .scope
     lda #$01       ; strobe ON
     sta $4016
-    sta inputs
-    lsr a
-    sta $4016
     
+    sta inputs      ; Player 1 variable
+    sta inputs+1    ; Player 2 variable
+    
+    lsr a           
+    sta $4016       
+
 @loop:
-    lda $4016
-    lsr a
-    rol inputs
-    bcc @loop
+    ; Read Player 1 (
+    lda $4016       
+    lsr a           
+    rol inputs      
+
+    ; Read Player 2 
+    lda $4017       
+    lsr a           
+    rol inputs+1    
+
+    bcc @loop 
 .endscope
 .endmacro
