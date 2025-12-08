@@ -1,7 +1,3 @@
-
-
-
-
 ; import engine functions
 .import famistudio_update
 .import famistudio_init

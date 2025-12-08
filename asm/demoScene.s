@@ -7,6 +7,7 @@
 .import move_player_input
 .import draw_enemy
 .import draw_player
+.import spawn_new_pickup
 
 .import clock_draw_buffer
 .importzp clock_dirty
@@ -318,6 +319,8 @@ demo_scene:
 
     ; move player based on input and check if it collides with one enemy
     jsr move_player_input
+
+    jsr spawn_new_pickup
 
     ; Draw Sprites 
     ldy #$00
