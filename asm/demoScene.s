@@ -7,8 +7,10 @@
 .import move_player_input
 
 .import spawn_new_pickup
+.import pickup_timer
 
 .import clock_draw_buffer
+.import pickup_timer
 .importzp clock_dirty
 .importzp clock_x
 .importzp clock_y
@@ -44,6 +46,7 @@
 .include "graphicsMacro.s"
 .include "consts.s"
 .include "coinListMacro.s"
+.include "spawnPickupMacro.s"
 
 .macro UpdateClockBufferValue
 .scope
@@ -327,7 +330,7 @@ demo_scene:
     MoveClock
     ClockValueButtons
 
-    
+    HandlePickupSpawn ; Reduce the pickup spawn timer and check if a new one must be spawned
 
     CheckForCoinCollision red_player_x, red_player_y ; check if we hit a coin!
     bcc skipRedCoinHandling ; branch if not...

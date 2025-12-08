@@ -4,6 +4,8 @@
 .importzp math_buffer
 
 .import wall_collisions
+.import ConvertIndexToPosition
+.import list_pickup
 
 .export prng
 .export spawn_new_pickup
@@ -39,7 +41,7 @@ prng:
 spawn_new_pickup: 
 	pha ; Push index onto stack
 
-	lda #16 ; Load pickup size
+	lda #12 ; Load pickup size
 	sta math_buffer+2
 	sta math_buffer+3
 
@@ -65,10 +67,14 @@ spawn_new_pickup:
 	jsr wall_collisions
 	bcs @try_place_loop
 
-	jsr prng ; New rand number for type
-	sec
-	sbc 
-
 	pla
+	jsr ConvertIndexToPosition ; Get pickup index in x register
+	lda rand
+	sta list_pickup, x
+	lda rand+1
+	sta list_pickup+1, x
+
+	lda #0
+	sta list_pickup+2, x
 
 	rts

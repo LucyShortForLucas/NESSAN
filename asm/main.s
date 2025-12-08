@@ -222,7 +222,6 @@ main:
   cmp #SCENE_GAME
   bne @skipGameScene
   jsr demo_scene
-  
   @skipGameScene:
 
   jmp main ; Loop
