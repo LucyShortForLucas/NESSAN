@@ -1,5 +1,7 @@
 
+; Backgrounds
 .import background
+
 .import palettes
 
 .import CoinFrame1, CoinFrame2
