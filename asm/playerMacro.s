@@ -1,7 +1,10 @@
 
 .import wall_collisions
+.import initialize_scene_end
 
-.macro PlayerMovementUpdate player_x, player_y, inputs, player_backup, player_dir
+.include "PickupMacro.s"
+
+.macro PlayerMovementUpdate player_x, player_y, inputs, player_backup, player_dir, player_pickup
 .scope
     ; Y-Axis 
 
@@ -102,5 +105,33 @@
     sta player_dir
 
 @end_x:
+
+    ; Do ability (if available)
+    lda inputs
+    and #%10000000      ; A button
+    beq end_ability
+
+    lda player_pickup 
+    beq end_ability ; skip on 0 (no pickup)
+
+    lda player_pickup ; fetch the pickup enum
+
+    cmp #PICKUP_GUN ; check for gun
+    bne skip_gun
+    ShootGun player_x, player_y, player_dir
+skip_gun:
+
+    cmp #PICKUP_DASH ; check for dash
+    bne skip_dash
+    ;;; TODO: Add dash macro
+skip_dash:
+
+    cmp #PICKUP_PASSTHROUGH ; check for passthrough
+    bne skip_Passthrough
+    ;;; TODO: Add Passthrough macro
+skip_Passthrough:
+
+end_ability:
+
 .endscope
 .endmacro
