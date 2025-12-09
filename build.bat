@@ -16,8 +16,27 @@ for %%f in (asm\*.s) do (
 )
 
 echo Linking...
-"%LD65%" -t nes -o build\demo.nes !FILELIST! --dbgfile build\demo.dbg
+"%LD65%" -t nes -o build\CoinHeist.nes !FILELIST! --dbgfile build\CoinHeist.dbg
 if errorlevel 1 exit /b 1
 
-echo Build complete: build\demo.nes
+echo Build complete: build\CoinHeist.nes
+
+set total = 0
+for /f "tokens=2,3" %%A in (asm\zeropage.s) do (
+    if "%%A"==".res" (
+        set /a total+=%%B
+    )
+)
+
+echo Total zero page bytes used: %total% / 256
+
+set total = 0
+for /f "tokens=2,3" %%A in (asm\bss.s) do (
+    if "%%A"==".res" (
+        set /a total+=%%B
+    )
+)
+
+echo Total bss bytes used: %total%
+
 endlocal
