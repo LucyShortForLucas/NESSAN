@@ -76,6 +76,7 @@ spawn_new_pickup:
     sta list_pickup+1, x
 
     ; 70% Coin, 10% each Ability
+	jsr prng
     lda rand             ; Load the random number (0-255)
 
     cmp #180             ; 70% of 256 is approx 179
@@ -94,15 +95,15 @@ spawn_new_pickup:
 
 @SetCoin:
     lda #0
-    sta list_pickup+2, x
-    rts
+    jmp @return
 
 @SetDash:
     lda #1
-    sta list_pickup+2, x
-    rts
+    jmp @return
 
 @SetGun:
     lda #2
+
+@return:
     sta list_pickup+2, x
     rts
