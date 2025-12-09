@@ -29,6 +29,8 @@ initialize_scene_game:
     LDA #01; load the value of game music (can make consts)
     ChooseSongFromAccumulatorSFX
 
+    lda #SCENE_GAME
+    sta current_scene
     ; Set Clock
 ;    SetClock #02, #30  ; Start clock at 2:30
 

@@ -40,6 +40,12 @@
 .exportzp score_red
 .exportzp score_blue
 
+.exportzp ability_red
+.exportzp ability_blue
+
+.exportzp ability_red_icon_x, ability_red_icon_y, ability_blue_icon_x, ability_blue_icon_y
+
+
 .segment "ZEROPAGE" ; zero-page memory, fast access: Use sparingly!
 
 ;; System variables
@@ -83,3 +89,11 @@ score_red_y: .res 1
 score_blue: .res 1
 score_blue_x: .res 1
 score_blue_y: .res 1
+
+ability_red: .res 1
+ability_blue: .res 1
+
+ability_red_icon_x: .res 1
+ability_red_icon_y: .res 1
+ability_blue_icon_x: .res 1
+ability_blue_icon_y: .res 1

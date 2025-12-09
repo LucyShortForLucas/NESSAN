@@ -16,8 +16,9 @@
 .export RedPlayerDown1, RedPlayerDown2, RedPlayerDown3
 .export RedPlayerUp1, RedPlayerUp2, RedPlayerUp3
 
-.export palettes
+.export AbilityDash, AbilityGun, AbilityPhase
 
+.export palettes
 
 .segment "RODATA" 
 startScreenMap:
@@ -73,11 +74,6 @@ startScreenMap:
 	.byte $00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00
 	.byte $00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00
 	.byte $00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00
-	.byte $00,$00,$00,$00,$3d,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00
-	.byte $00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$3d,$00,$00,$00
-	.byte $00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$3b,$32,$30,$32,$35,$00
-	.byte $4e,$45,$53,$53,$41,$4e,$00,$00,$00,$00,$00,$00,$00,$00,$3c,$00
-	.byte $00,$00,$00,$00,$00,$00,$00,$00,$3c,$00,$00,$00,$00,$00,$00,$00
 	.byte $00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00
 	.byte $00,$00,$00,$00,$00,$00,$00,$00,$00,$3d,$00,$00,$00,$00,$00,$00
 	.byte $00,$00,$00,$00,$00,$00,$00,$3c,$00,$00,$00,$00,$00,$00,$00,$00
@@ -153,390 +149,70 @@ endScreenMap:
 	.byte $00,$0f,$0f,$fc,$3f,$03,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00
 
 gameScreenMap:
-  ; Top Border (Rows 0-1) 
-  .byte $01, $02
-  .byte $07, $0B, $0B, $0B, $0B, $08
-  .repeat 8
-    .byte $01, $02
-  .endrepeat
-  .byte $07, $0B, $0B, $0B, $0B, $08
-  .byte $01, $02
-
-  .byte $03, $04
-  .byte $09, $0C, $0C, $0C, $0C, $0A
-  .repeat 8
-    .byte $03, $04
-  .endrepeat
-  .byte $09, $0C, $0C, $0C, $0C, $0A
-  .byte $03, $04
-
-  ; Row 2 
-  .byte $02
-  .repeat 30
-    .byte $05
-  .endrepeat
-  .byte $01
-
-  ; Row 3 
-  .byte $04
-  .repeat 30
-    .byte $05
-  .endrepeat
-  .byte $03
-
-  ; Row 4 
-  .byte $02
-  .repeat 30
-    .byte $05
-  .endrepeat
-  .byte $01
-
-  ; Row 5
-  .byte $04     
-  .byte $05, $16    
-  .repeat 9           
-    .byte $12
-  .endrepeat
-  .byte $17
-  .repeat 5           
-    .byte $05
-  .endrepeat
-  .repeat 9           
-    .byte $06
-  .endrepeat
-  .repeat 4            
-    .byte $05
-  .endrepeat
-  .byte $03             
-
-  ; Row 6
-  .byte $02            
-  .byte $05, $14
-  .repeat 9          
-    .byte $06
-  .endrepeat
-  .byte $15
-  .repeat 5             
-    .byte $05
-  .endrepeat
-  .repeat 9             
-    .byte $00
-  .endrepeat
-  .repeat 4             
-    .byte $05
-  .endrepeat
-  .byte $01             
-
-  ; Row 7
-  .byte $04
-  .byte $05, $14
-  .repeat 9           
-    .byte $00
-  .endrepeat
-  .byte $15
-  .repeat 18             
-    .byte $05
-  .endrepeat
-  .byte $01
-
-  ; Row 8
-  .byte $02
-  .byte $05, $18
-  .repeat 9
-     .byte $13
-  .endrepeat
-  .byte $19
-  .repeat 18
-     .byte $05
-  .endrepeat
-  .byte $01
-
-  ; Row 9
-  .byte $04
-  .byte $05, 05, $16, $12, $12, $17
-  .repeat 12
-     .byte $05
-  .endrepeat
-  .byte $01, $0D, $02
-  .repeat 9
-     .byte $05
-  .endrepeat
-  .byte $03
-
-  ; Row 10
-  .byte $02
-  .byte $05, $05, $14, $06, $06, $15
-  .repeat 12
-     .byte $05
-  .endrepeat
-  .byte $0F, $11 ,$10
-  .repeat 9
-     .byte $05
-  .endrepeat
-  .byte $01
-
-  ; Row 11
-  .byte $04 ; Left Border
-  .byte $05, $05, $14, $00, $00, $15, $05
-  .byte $01, $02 ; Top Part Box
-  .byte $01, $0D, $02 ; Top Part Box
-  .repeat 6
-     .byte $05 ; Path Tiles
-  .endrepeat
-  .byte $03, $0E, $04 ; Bottom Part Box
-  .repeat 4
-     .byte $05 ; Path Tiles
-  .endrepeat
-  .byte $06, $06 ; Two Void Tiles
-  .repeat 3
-     .byte $05 ; Path Tiles
-  .endrepeat
-  .byte $03 ; Right Border
-
-  ; Row 12
-  .byte $02 ; Left Border
-  .byte $05, $05, $14, $00, $00, $15, $05
-  .byte $03, $04 ; Bottom Part Box
-  .byte $0F, $11, $10 ; Middle Part Box 
-  .repeat 7
-     .byte $05 ; Path Tiles
-  .endrepeat
-  .byte $01, $02 ; Top Part Box
-  .repeat 4
-     .byte $05 ; Path Tiles
-  .endrepeat
-  .byte $00, $00 ; Void Tiles
-  .repeat 3
-     .byte $05 ; Path Tiles
-  .endrepeat
-  .byte $01 ; Right Border
-
-  ; Row 13
-  .byte $04
-  .byte $05, 05, $18, $13, $13, $19
-  .repeat 3
-     .byte $05
-  .endrepeat
-  .byte $03, $0E, $04, $01, $02
-  .repeat 5
-     .byte $05
-  .endrepeat
-  .byte $03, $04
-  .repeat 4
-     .byte $05
-  .endrepeat
-  .byte $00, $00
-  .repeat 3
-     .byte $05
-  .endrepeat
-  .byte $03
-
-  ; Row 14
-  .byte $02
-  .repeat 9
-     .byte $05
-  .endrepeat
-  .byte $14
-  .byte $06, $06, $03, $04
-  .repeat 16
-     .byte $05
-  .endrepeat
-  .byte $01
-
-  ; Row 15
-  .byte $04
-  .repeat 9
-     .byte $05
-  .endrepeat
-  .byte $14, $00, $00, $15
-  .repeat 17
-     .byte $05
-  .endrepeat
-  .byte $03
-
-  ; Row 16
-  .byte $02
-  .repeat 2
-     .byte $05
-  .endrepeat
-  .byte $06, $06
-  .repeat 5
-     .byte $05
-  .endrepeat
-  .byte $18, $13, $13 ,$19
-  .repeat 4
-     .byte $05
-  .endrepeat
-  .byte $01, $0D, $02
-  .repeat 10
-     .byte $05
-  .endrepeat
-  .byte $01
-
-  ; Row 17
-  .byte $04
-  .repeat 2
-     .byte $05
-  .endrepeat
-  .byte $00, $00
-  .repeat 13
-     .byte $05
-  .endrepeat
-  .byte $0F, $11, $10
-  .repeat 4
-     .byte $05
-  .endrepeat
-  .byte $06, $06
-  .repeat 4
-     .byte $05
-  .endrepeat
-  .byte $03
-
-  ; Row 18
-  .byte $02
-  .repeat 2
-     .byte $05
-  .endrepeat
-  .byte $00, $00
-  .repeat 4
-     .byte $05
-  .endrepeat
-  .byte $01, $02
-  .repeat 5
-     .byte $05
-  .endrepeat
-  .byte $01, $02
-  .byte $03, $0E, $04
-  .repeat 4
-     .byte $05
-  .endrepeat
-  .byte $00, $00
-  .repeat 4
-     .byte $05
-  .endrepeat
-  .byte $01
-
-  ; Row 19
-  .byte $04
-  .repeat 8
-     .byte $05
-  .endrepeat
-  .byte $03, $04
-  .repeat 5
-     .byte $05
-  .endrepeat
-  .byte $03, $04
-  .repeat 7
-     .byte $05
-  .endrepeat
-  .byte $00, $00
-  .repeat 4
-     .byte $05
-  .endrepeat
-  .byte $03
-
-  ; Row 20
-  .byte $02
-  .repeat 30
-    .byte $05
-  .endrepeat
-  .byte $01
-
-  ; Row 21 
-  .byte $04
-  .repeat 30
-    .byte $05
-  .endrepeat
-  .byte $03
-
-  ; Row 22
-  .byte $02
-  .repeat 17
-    .byte $05
-  .endrepeat
-  .repeat 9
-    .byte $06
-  .endrepeat
-  .repeat 4
-    .byte $05
-  .endrepeat
-  .byte $01
-
-  ; Row 23
-  .byte $04
-  .repeat 3
-    .byte $05
-  .endrepeat
-  .repeat 9
-    .byte $06
-  .endrepeat
-  .repeat 5
-    .byte $05
-  .endrepeat
-  .repeat 9
-    .byte $00
-  .endrepeat
-  .repeat 4
-    .byte $05
-  .endrepeat
-  .byte $03
-
-  ; Row 24 
-  .byte $02
-  .repeat 3
-    .byte $05
-  .endrepeat
-  .repeat 9
-    .byte $00
-  .endrepeat
-  .repeat 18
-    .byte $05
-  .endrepeat
-  .byte $01
-
-  ; Row 25 
-  .byte $04
-  .repeat 30
-    .byte $05
-  .endrepeat
-  .byte $03
-
-  ; Row 26 
-  .byte $02
-  .repeat 30
-    .byte $05
-  .endrepeat
-  .byte $01
-    
-  ; Row 27
-  .byte $04
-  .repeat 30
-    .byte $05
-  .endrepeat
-  .byte $03
-
-
-  ; Bottom Border (Rows 28-29)
-  .repeat 6
-    .byte $01, $02
-  .endrepeat
-  .byte $07, $0B, $0B, $0B, $0B, $0B, $0B, $08
-  .repeat 6
-   .byte $01, $02
-  .endrepeat
-
-  .repeat 6
-    .byte $03, $04
-  .endrepeat
-    .byte $09, $0C, $0C, $0C, $0C, $0C, $0C, $0A
-   .repeat 6
-    .byte $03, $04
-  .endrepeat
-
-  ; ATTRIBUTE TABLE (64 bytes) 
-  .repeat 64
-    .byte $00
-  .endrepeat
+	.byte $01,$02,$07,$0b,$0b,$0b,$0b,$08,$01,$02,$01,$02,$01,$02,$01,$02
+	.byte $01,$02,$01,$02,$01,$02,$01,$02,$07,$0b,$0b,$0b,$0b,$08,$01,$02
+	.byte $03,$04,$09,$0c,$0c,$0c,$0c,$0a,$03,$04,$03,$04,$03,$04,$03,$04
+	.byte $03,$04,$03,$04,$03,$04,$03,$04,$09,$0c,$0c,$0c,$0c,$0a,$03,$04
+	.byte $02,$05,$05,$05,$1a,$1b,$05,$05,$05,$05,$05,$05,$1f,$05,$05,$05
+	.byte $05,$05,$05,$05,$05,$05,$05,$05,$05,$05,$05,$1a,$1b,$05,$05,$01
+	.byte $04,$05,$05,$05,$1c,$1d,$1a,$1b,$05,$05,$05,$05,$05,$05,$05,$05
+	.byte $05,$05,$05,$05,$05,$05,$05,$05,$1e,$05,$05,$1c,$1d,$05,$05,$03
+	.byte $02,$05,$1e,$05,$05,$05,$1c,$1d,$05,$05,$05,$05,$05,$1a,$1b,$05
+	.byte $05,$16,$12,$12,$12,$12,$12,$12,$12,$12,$12,$17,$1a,$1b,$05,$01
+	.byte $04,$05,$16,$12,$12,$12,$12,$12,$12,$12,$12,$12,$17,$1c,$1d,$05
+	.byte $1f,$14,$06,$06,$06,$06,$06,$06,$06,$06,$06,$15,$1c,$1d,$05,$03
+	.byte $02,$05,$15,$06,$06,$06,$06,$06,$06,$06,$06,$06,$14,$05,$1a,$1b
+	.byte $05,$14,$00,$00,$00,$00,$00,$00,$00,$00,$00,$15,$05,$05,$05,$01
+	.byte $04,$05,$15,$00,$00,$00,$00,$00,$00,$00,$00,$00,$14,$05,$1c,$1d
+	.byte $05,$18,$13,$13,$13,$13,$13,$13,$13,$13,$13,$19,$1a,$1b,$05,$03
+	.byte $02,$05,$18,$13,$13,$13,$13,$13,$13,$13,$13,$13,$19,$05,$05,$05
+	.byte $05,$05,$05,$05,$05,$05,$05,$05,$05,$05,$05,$05,$1c,$1d,$05,$01
+	.byte $04,$05,$05,$16,$12,$12,$17,$05,$05,$1a,$1b,$05,$05,$05,$05,$05
+	.byte $05,$05,$05,$01,$0d,$02,$05,$05,$05,$05,$05,$05,$05,$05,$05,$03
+	.byte $02,$05,$05,$14,$06,$06,$15,$05,$05,$1c,$1d,$05,$05,$05,$05,$05
+	.byte $05,$05,$05,$0f,$11,$10,$1f,$05,$05,$16,$12,$12,$17,$05,$05,$01
+	.byte $04,$05,$05,$14,$00,$00,$15,$05,$01,$02,$01,$0d,$02,$1f,$05,$05
+	.byte $05,$05,$05,$03,$0e,$04,$1a,$1b,$05,$14,$06,$06,$15,$05,$05,$03
+	.byte $02,$05,$05,$14,$00,$00,$15,$05,$03,$04,$0f,$11,$10,$05,$05,$05
+	.byte $05,$05,$1a,$1b,$01,$02,$1c,$1d,$05,$14,$00,$00,$15,$05,$05,$01
+	.byte $04,$1a,$1b,$18,$13,$13,$19,$05,$1a,$1b,$03,$0e,$04,$01,$02,$05
+	.byte $05,$05,$1c,$1d,$03,$04,$05,$05,$05,$14,$00,$00,$15,$05,$1e,$03
+	.byte $02,$1c,$1d,$05,$05,$05,$05,$05,$1c,$1d,$14,$06,$06,$03,$04,$05
+	.byte $05,$05,$05,$05,$05,$05,$05,$05,$05,$18,$13,$13,$19,$1a,$1b,$01
+	.byte $04,$05,$16,$12,$12,$17,$05,$05,$05,$05,$14,$00,$00,$15,$05,$05
+	.byte $05,$05,$05,$05,$05,$05,$05,$05,$05,$05,$05,$05,$05,$1c,$1d,$03
+	.byte $02,$05,$14,$06,$06,$15,$05,$05,$05,$05,$18,$13,$13,$19,$05,$05
+	.byte $05,$05,$01,$0d,$02,$05,$05,$05,$16,$12,$12,$17,$05,$05,$05,$01
+	.byte $04,$05,$14,$00,$00,$15,$05,$05,$05,$05,$05,$05,$05,$05,$05,$05
+	.byte $05,$05,$0f,$11,$10,$05,$05,$05,$14,$06,$06,$15,$05,$05,$05,$03
+	.byte $02,$05,$14,$00,$00,$15,$05,$05,$05,$01,$02,$05,$05,$05,$05,$05
+	.byte $01,$02,$03,$0e,$04,$05,$05,$1f,$14,$00,$00,$15,$05,$05,$05,$01
+	.byte $04,$05,$18,$13,$13,$19,$05,$05,$05,$03,$04,$05,$05,$05,$05,$05
+	.byte $03,$04,$1a,$1b,$05,$05,$05,$05,$14,$00,$00,$15,$05,$05,$05,$03
+	.byte $02,$05,$05,$05,$05,$05,$1e,$05,$05,$05,$05,$05,$05,$05,$05,$05
+	.byte $05,$05,$1c,$1d,$05,$05,$05,$05,$18,$13,$13,$19,$05,$05,$05,$01
+	.byte $04,$1a,$1b,$05,$05,$05,$05,$05,$05,$05,$05,$05,$05,$05,$05,$05
+	.byte $05,$16,$12,$12,$12,$12,$12,$12,$12,$12,$12,$17,$05,$05,$05,$03
+	.byte $02,$1c,$1d,$16,$12,$12,$12,$12,$12,$12,$12,$12,$12,$17,$05,$05
+	.byte $05,$14,$06,$06,$06,$06,$06,$06,$06,$06,$06,$15,$1f,$05,$05,$01
+	.byte $04,$05,$05,$14,$06,$06,$06,$06,$06,$06,$06,$06,$06,$15,$1a,$1b
+	.byte $05,$14,$00,$00,$00,$00,$00,$00,$00,$00,$00,$15,$05,$05,$05,$03
+	.byte $02,$05,$05,$14,$00,$00,$00,$00,$00,$00,$00,$00,$00,$15,$1c,$1d
+	.byte $05,$18,$13,$13,$13,$13,$13,$13,$13,$13,$13,$19,$1a,$1b,$05,$01
+	.byte $04,$1e,$05,$18,$13,$13,$13,$13,$13,$13,$13,$13,$13,$19,$05,$05
+	.byte $05,$05,$05,$1a,$1b,$05,$05,$05,$05,$05,$05,$05,$1c,$1d,$05,$03
+	.byte $02,$05,$1a,$1b,$05,$05,$05,$05,$05,$05,$05,$05,$05,$1a,$1b,$05
+	.byte $05,$05,$05,$1c,$1d,$1a,$1b,$05,$05,$05,$05,$05,$05,$05,$05,$01
+	.byte $04,$05,$1c,$1d,$05,$05,$05,$05,$05,$05,$05,$05,$05,$05,$05,$1e
+	.byte $05,$05,$05,$05,$05,$1c,$1d,$05,$05,$05,$05,$05,$05,$05,$05,$03
+	.byte $01,$02,$07,$08,$01,$02,$01,$02,$01,$02,$01,$02,$07,$0b,$0b,$0b
+	.byte $0b,$0b,$0b,$08,$01,$02,$01,$02,$01,$02,$01,$02,$07,$08,$01,$02
+	.byte $03,$04,$09,$0a,$03,$04,$03,$04,$03,$04,$03,$04,$09,$0c,$0c,$0c
+	.byte $0c,$0c,$0c,$0a,$03,$04,$03,$04,$03,$04,$03,$04,$09,$0a,$03,$04
+	.byte $00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00
+	.byte $00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00
+	.byte $00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00
+	.byte $00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00
 
 ; SPRITE DATA
 ; Coin Animation Frames
@@ -696,18 +372,27 @@ RedPlayerUp3:
       .byte $08, $72, $03, $00  ; Bottom Left
       .byte $08, $73, $03, $08  ; Bottom Right
 
-palettes: ; the color order is always -> Black, Shadow, Main, Lighting
+AbilityDash:
+      .byte $00, $28, $02, $00
+
+AbilityGun:
+      .byte $00, $29, $00, $00
+
+AbilityPhase:
+      .byte $00, $2A, $00, $00
+
+palettes:
   ; Background Palette
-  .byte $0f, $00, $10, $30 ; Grey palette    
+  .byte $0f, $00, $10, $30
   .byte $0f, $00, $00, $00
-  .byte $0f, $17, $27, $37 ; Yellow palette (if doesnt work increment all with one, except the first) AND SEND MESSAGE
+  .byte $0f, $00, $00, $00
   .byte $0f, $00, $00, $00
 
   ; Sprite Palette
-  .byte $0f, $00, $10, $30 ; Grey palette
-  .byte $0f, $28, $38, $30 ; Yellow palette
-  .byte $0f, $11, $21, $30 ; Blue palette
-  .byte $0f, $16, $26, $30 ; Red palette
+  .byte $0f, $00, $10, $30
+  .byte $0f, $28, $38, $30
+  .byte $0f, $11, $21, $30
+  .byte $0f, $16, $26, $30
 
 ; Character memory
 .segment "CHARS"

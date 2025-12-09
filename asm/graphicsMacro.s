@@ -14,6 +14,8 @@
 .import RedPlayerDown1, RedPlayerDown2, RedPlayerDown3
 .import RedPlayerUp1, RedPlayerUp2, RedPlayerUp3
 
+.import AbilityDash, AbilityGun, AbilityPhase
+
 .importzp clock_min, clock_sec, clock_frames
 .importzp score1, score2
 .importzp blue_player_dir, red_player_dir
@@ -58,9 +60,63 @@ LoadFourthQuarter:
 .endscope
 .endmacro
 
+.macro DrawPickup
+.scope
+    lda list_pickup+2, x   ; Load the type
+
+    cmp #1
+    bne @CheckGun       ; If not 1, hop over
+    jmp Pickup_Dash     ; If is 1, jump to the label 
+
+@CheckGun:
+    cmp #2
+    bne @CheckPhase     ; If not 2, hop over
+    jmp Pickup_Gun      ; If is 2, jump
+
+@CheckPhase:
+    cmp #3
+    bne @DrawDefault    ; If not 3, hop over
+    jmp Pickup_Phase    ; If is 3, jump
+
+@DrawDefault:
+    DrawCoin
+    rts
+
+Pickup_Dash:
+    DrawDash
+    rts
+
+Pickup_Gun:
+    DrawGun
+    rts
+
+Pickup_Phase:
+    DrawPhase
+    rts
+.endscope
+.endmacro
+
 .macro DrawCoin
 .scope
     DrawAnimatedMetasprite2Frames math_buffer+0, math_buffer+1, CoinFrame1, CoinFrame2, $20
+.endscope
+.endmacro
+
+.macro DrawDash
+.scope
+    DrawSprite math_buffer+0, math_buffer+1, AbilityDash
+.endscope
+.endmacro
+
+.macro DrawGun
+.scope
+    DrawSprite math_buffer+0, math_buffer+1, AbilityGun
+.endscope
+.endmacro
+
+.macro DrawPhase
+.scope
+    DrawSprite math_buffer+0, math_buffer+1, AbilityPhase
 .endscope
 .endmacro
 
@@ -280,6 +336,39 @@ PlayerDone:
 .endscope
 .endmacro
 
+.macro DrawAbility x_pos, y_pos, ability_lbl
+.scope
+    lda ability_lbl     ; Load the ability value (0=Empty, 1=Dash, 2=Gun, 3=Phase)
+    beq Done            ; If 0, draw nothing and exit
+
+    ; Check specific abilities
+    cmp #1
+    beq RenderDash      ; If 1, go to Dash
+    
+    cmp #2
+    beq RenderGun       ; If 2, go to Gun
+    
+    cmp #3
+    beq RenderPhase     ; If 3, go to Phase
+    
+    jmp Done            ; Safety catch (if value is >3)
+
+RenderDash:
+    DrawSprite x_pos, y_pos, AbilityDash
+    jmp Done
+
+RenderGun:
+    DrawSprite x_pos, y_pos, AbilityGun
+    jmp Done
+
+RenderPhase:
+    DrawSprite x_pos, y_pos, AbilityPhase
+    jmp Done
+
+Done:
+.endscope
+.endmacro
+
 ; ==============================================================================
 ; HELPER DRAWING MACROS (CAN BE PUBLIC USE)
 ; ==============================================================================
@@ -314,6 +403,34 @@ CalculationDone:
     iny                  ; Advance OAM index (4 bytes)
     iny
     iny
+    iny
+.endscope
+.endmacro
+
+.macro DrawSprite x_pos, y_pos, data_lbl
+.scope
+    ; Y Position
+    lda data_lbl      ; Load byte 0 (Relative Y) from data
+    clc
+    adc y_pos         ; Add World Y position
+    sta $0200, y      ; Store in OAM buffer
+    iny               ; Move OAM index
+
+    ; Tile ID
+    lda data_lbl+1    ; Load byte 1 (Tile ID)
+    sta $0200, y
+    iny
+
+    ; Attributes
+    lda data_lbl+2    ; Load byte 2 (Attributes/Palette)
+    sta $0200, y
+    iny
+
+    ; X Position
+    lda data_lbl+3    ; Load byte 3 (Relative X)
+    clc
+    adc x_pos         ; Add World X position
+    sta $0200, y
     iny
 .endscope
 .endmacro

@@ -69,12 +69,40 @@ spawn_new_pickup:
 
 	pla
 	jsr ConvertIndexToPosition ; Get pickup index in x register
+
 	lda rand
-	sta list_pickup, x
-	lda rand+1
-	sta list_pickup+1, x
+    sta list_pickup, x
+    lda rand+1
+    sta list_pickup+1, x
 
-	lda #0
-	sta list_pickup+2, x
+    ; 70% Coin, 10% each Ability
+    lda rand             ; Load the random number (0-255)
 
-	rts
+    cmp #180             ; 70% of 256 is approx 179
+    bcc @SetCoin         ; If less than 180, it is a Coin
+
+    cmp #206             ; Next 10% (180 + 26)
+    bcc @SetDash         ; If between 180 and 205, it is Dash
+
+    cmp #231             ; Next 10% (206 + 25)
+    bcc @SetGun          ; If between 206 and 230, it is Gun
+
+    ; If we are here, it is > 230 (The last 10%)
+    lda #3               ; Set Phase
+    sta list_pickup+2, x
+    rts
+
+@SetCoin:
+    lda #0
+    sta list_pickup+2, x
+    rts
+
+@SetDash:
+    lda #1
+    sta list_pickup+2, x
+    rts
+
+@SetGun:
+    lda #2
+    sta list_pickup+2, x
+    rts

@@ -50,6 +50,11 @@
 .importzp score_blue_x
 .importzp score_blue_y
 
+.importzp ability_blue_icon_x
+.importzp ability_blue_icon_y
+.importzp ability_red_icon_x
+.importzp ability_red_icon_y
+
 ; mathbuffer (used by coinlist for now)
 .importzp math_buffer
 
@@ -180,6 +185,16 @@ lda #$20
 sta score_blue_x
 lda #$02
 sta score_blue_y
+
+lda #$14
+sta ability_blue_icon_x
+lda #$E3
+sta ability_blue_icon_y
+lda #$E4
+sta ability_red_icon_x
+lda #$E3
+sta ability_red_icon_y
+
 
 lda #%00000111 
 sta clock_dirty
