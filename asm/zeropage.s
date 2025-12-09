@@ -59,8 +59,10 @@ clock_dirty: .res 1 ; a flag set to determine which parts of the buffer must be 
 ; positions
 blue_player_x: .res 1
 blue_player_y: .res 1
+blue_player_pickup: .res 1
 red_player_x: .res 1
 red_player_y: .res 1    
+red_player_pickup: .res 1    
 
 coin_x: .res 1
 coin_y: .res 1
