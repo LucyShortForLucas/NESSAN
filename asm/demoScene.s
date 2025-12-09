@@ -100,8 +100,8 @@ skipBluePickupHandling:
     UpdateClock
 
     ; move player based on input and check if it collides with one enemy
-    PlayerMovementUpdate blue_player_x, blue_player_y, inputs, blue_player_backup, blue_player_dir
-    PlayerMovementUpdate red_player_x, red_player_y, inputs+1, red_player_backup, red_player_dir
+    PlayerMovementUpdate blue_player_x, blue_player_y, inputs, blue_player_backup, blue_player_dir, ability_blue
+    PlayerMovementUpdate red_player_x, red_player_y, inputs+1, red_player_backup, red_player_dir, ability_red
 
     
     ; Draw Sprites
