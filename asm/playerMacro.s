@@ -4,7 +4,7 @@
 
 .include "PickupMacro.s"
 
-.macro PlayerMovementUpdate player_x, player_y, inputs, player_backup, player_dir, player_pickup, passthroughVariable, respawn_timer, coin_count, respawn_x, respawn_y
+.macro PlayerMovementUpdate player_x, player_y, inputs, player_backup, player_dir, last_player_dir, player_pickup, passthroughVariable, respawn_timer, coin_count, respawn_x, respawn_y
 .scope 
 
     ; Y-Axis 
@@ -20,6 +20,8 @@
     dec player_y        ; Move Up
     lda #1              ; Set Dir UP
     sta player_dir
+    sta last_player_dir
+
 @check_down:
 
     ; 3. Check Input DOWN
@@ -29,6 +31,7 @@
     inc player_y        ; Move Down
     lda #0              ; Set Dir DOWN
     sta player_dir
+    sta last_player_dir
 
 @check_col_y:
     ; If passthrough is active, aka not 0, skip wall collisions
@@ -74,6 +77,7 @@
     dec player_x        ; Move Left
     lda #2              ; Set Dir LEFT
     sta player_dir
+    sta last_player_dir
 @check_right:
 
     ; 3. Check Input RIGHT
@@ -83,6 +87,7 @@
     inc player_x        ; Move Right
     lda #3              ; Set Dir RIGHT
     sta player_dir
+    sta last_player_dir
 
 @check_col_x:
 
@@ -119,17 +124,29 @@
     ; Do ability (if available)
     lda inputs
     and #%10000000      ; A button
-    beq end_ability
+    beq skip_ability
 
     lda player_pickup 
-    beq end_ability ; skip on 0 (no pickup)
+    beq skip_ability ; skip on 0 (no pickup)
+    jmp do_ability
+skip_ability:
+    jmp end_ability
+do_ability:
 
     lda player_pickup ; fetch the pickup enum
 
     cmp #PICKUP_GUN ; check for gun
     bne skip_gun
-    ShootGun player_x, player_y, player_dir
+    beq do_gun
+
 skip_gun:
+    jmp end_gun
+do_gun:
+
+    ShootGun player_x, player_y, last_player_dir
+    lda #0
+    sta player_pickup
+end_gun:
 
     cmp #PICKUP_DASH ; check for dash
     bne skip_dash

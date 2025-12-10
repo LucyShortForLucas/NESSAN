@@ -4,7 +4,117 @@
 .macro ShootGun x_coord, y_coord, direction
 .scope
 
-Kill blue_respawn_timer, score_blue, ability_blue, blue_player_x, blue_player_y, #24, #24
+    lda direction
+
+    ;; fill in bullet hitbox
+    cmp #DIR_DOWN
+    bne @skip_down
+
+    lda x_coord
+    sta math_buffer ; x
+
+    lda y_coord
+    clc
+    adc #$10 ; move 16 pixels down to avoid shooter
+    sta math_buffer+1 ; y
+
+    lda #$10
+    sta math_buffer+2 ; width
+
+    lda #$EF ; the entire screen height
+    sec 
+    sbc y_coord ; Make sure collider fits on screen
+    sta math_buffer+3 ; height
+
+@skip_down:
+
+    cmp #DIR_UP
+    bne @skip_up
+
+    lda x_coord
+    sta math_buffer ; x
+
+    lda #0
+    sta math_buffer+1 ; y
+
+    lda #$10
+    sta math_buffer+2 ; width
+
+    lda y_coord ; the entire screen height
+    sec
+    sbc #5 ; move up 5 pixels to avoid shooter
+    sta math_buffer+3 ; height
+
+@skip_up:
+
+    cmp #DIR_LEFT
+    bne @skip_left
+
+    lda #0
+    sta math_buffer ; x
+
+    lda y_coord
+    sta math_buffer+1 ; y
+
+    lda x_coord
+    sec
+    sbc #2 ; move left 2 pixels to avoid shooter
+    sta math_buffer+2 ; width
+
+    lda #$10 ; One tile height
+    sta math_buffer+3 ; height
+
+@skip_left:
+
+    cmp #DIR_RIGHT
+    bne @skip_right
+
+    lda x_coord
+    clc
+    adc #$10 ; move 16 pixels right to avoid shooter
+    sta math_buffer ; x
+
+    lda y_coord
+    sta math_buffer+1 ; y
+
+    lda #$EF ; entire screen width
+    sec
+    sbc x_coord ; make sure collider fits on screen
+    sta math_buffer+2 ; width
+
+    lda #$10 ; One tile height
+    sta math_buffer+3 ; height
+
+@skip_right:
+
+    ;; check bullet hitbox against player
+
+    ; common player vars
+    lda #PLAYER_W
+    sta math_buffer+6
+    lda #PLAYER_W
+    sta math_buffer+7
+
+    ; blue player
+    lda blue_player_x
+    sta math_buffer+4
+    lda blue_player_y
+    sta math_buffer+5
+
+    jsr aabb_collision
+    bcc blue_no_hit
+    Kill blue_respawn_timer, score_blue, ability_blue, blue_player_x, blue_player_y, #BLUE_PLAYER_SPAWN_X, #BLUE_PLAYER_SPAWN_Y
+blue_no_hit:
+
+    lda red_player_x
+    sta math_buffer+4
+    lda red_player_y
+    sta math_buffer+5
+
+    jsr aabb_collision
+    bcc red_no_hit
+    Kill red_respawn_timer, score_red, ability_red, red_player_x, red_player_y, #RED_PLAYER_SPAWN_X, #RED_PLAYER_SPAWN_Y
+red_no_hit:
 
 .endscope
 .endmacro

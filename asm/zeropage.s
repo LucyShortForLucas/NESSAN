@@ -50,6 +50,8 @@
 .exportzp ability_red_passtrough_timers
 .exportzp ability_blue_passtrough_timers
 
+.exportzp last_blue_player_dir
+.exportzp last_red_player_dir
 
 .segment "ZEROPAGE" ; zero-page memory, fast access: Use sparingly!
 
@@ -85,7 +87,9 @@ clock_sec: .res 1
 clock_frames: .res 1 ; remove  these later when doing proper map buffer
 
 blue_player_dir: .res 1
+last_blue_player_dir: .res 1
 red_player_dir: .res 1
+last_red_player_dir: .res 1
 
 score_red: .res 1
 score_red_x: .res 1

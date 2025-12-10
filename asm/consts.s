@@ -17,8 +17,8 @@ SONG_END = $02
 ; spawn postions player
 BLUE_PLAYER_SPAWN_X = $20
 BLUE_PLAYER_SPAWN_Y = $20
-RED_PLAYER_SPAWN_X = $30
-RED_PLAYER_SPAWN_Y = $20
+RED_PLAYER_SPAWN_X = $DD
+RED_PLAYER_SPAWN_Y = $CC
 
 
 PLAYER_W = 9
@@ -41,3 +41,9 @@ PASSTHROUGH_FRAME_COUNTER_MAX = 250 ; frames before passthrough depletes, assumi
 RESPAWN_FRAMES = 100
 COINS_LOST_ON_DEATH = 3
 
+; Direction enum
+
+DIR_DOWN = 0
+DIR_UP = 1
+DIR_LEFT = 2
+DIR_RIGHT = 3
