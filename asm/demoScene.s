@@ -24,6 +24,8 @@
 .importzp red_player_x, red_player_y
 .importzp count_down_x
 .importzp count_down_y
+.importzp blue_respawn_timer
+.importzp red_respawn_timer
 
 .importzp score_red_x, score_blue_x
 .importzp score_red_y, score_blue_y
@@ -60,6 +62,17 @@
 demo_scene:
     HandlePickupSpawn ; Reduce the pickup spawn timer and check if a new one must be spawned
 
+;; Red Player Update
+    lda red_respawn_timer
+    bne skip_red_update ; If timer is nonzero, reduce it by one and skip update
+    jmp do_red_update ; If timer is zero, skip decrement and update
+
+skip_red_update:
+    dec red_respawn_timer
+    jmp red_update_end
+
+do_red_update:
+
     lda ability_red_passtrough_timers
     bne skipRedPickupHandling ; check if it's 0, if so, skip grabbing all items
     
@@ -84,6 +97,22 @@ RedHitAbility:
 
 skipRedPickupHandling:
 
+    PlayerMovementUpdate red_player_x, red_player_y, inputs+1, red_player_backup, red_player_dir, ability_red
+
+red_update_end:
+
+
+;; Blue Player Update
+    lda blue_respawn_timer
+    bne skip_blue_update ; If timer is nonzero, reduce it by one and skip update
+    jmp do_blue_update ; If timer is zero, skip decrement and update
+
+skip_blue_update:
+    dec blue_respawn_timer
+    jmp blue_update_end
+
+do_blue_update:
+
     lda ability_blue_passtrough_timers
     bne skipBluePickupHandling ; check if it's 0, if so, skip grabbing all items
 
@@ -107,13 +136,12 @@ BlueHitAbility:
     jsr HandleCoinCollection
 
 skipBluePickupHandling:
+  PlayerMovementUpdate blue_player_x, blue_player_y, inputs, blue_player_backup, blue_player_dir, ability_blue
+
+blue_update_end:
+
 
     UpdateClock
-
-    ; move player based on input and check if it collides with one enemy
-    PlayerMovementUpdate blue_player_x, blue_player_y, inputs, blue_player_backup, blue_player_dir, ability_blue, ability_blue_passtrough_timers
-    PlayerMovementUpdate red_player_x, red_player_y, inputs+1, red_player_backup, red_player_dir, ability_red, ability_red_passtrough_timers
-
     
     ; Draw Sprites
     ldy #$00 ; do NOT forget to load y with 0 before drawing sprites!
@@ -142,8 +170,33 @@ skipBluePickupHandling:
 
     DrawClock count_down_x, count_down_y
 
+    lda blue_respawn_timer
+    cmp #35
+    bcc check_frame_blue ; Only draw if less than 35 frames left till respawn\
+    jmp skip_blue_draw ; jump over draw (too big for branch) 
+check_frame_blue:
+    and #%00000011
+    beq draw_blue ; If less than 35, flicker
+    jmp skip_blue_draw ; jump over draw (too big for branch)
+
+draw_blue:
     DrawBluePlayer blue_player_x, blue_player_y
+skip_blue_draw:
+
+
+  lda red_respawn_timer
+    cmp #35
+    bcc check_frame_red ; Only draw if less than 35 frames left till respawn\
+    jmp skip_red_draw ; jump over draw (too big for branch) 
+check_frame_red:
+    and #%00000011
+    beq draw_red ; If less than 35, flicker
+    jmp skip_red_draw ; jump over draw (too big for branch)
+
+draw_red:
     DrawRedPlayer red_player_x, red_player_y
+skip_red_draw:
+
 
     DrawScore score_red_x, score_red_y, score_red
     DrawScore score_blue_x, score_blue_y, score_blue
