@@ -220,11 +220,21 @@ PlayerDone:
 
 .macro DrawRedPlayer x_pos, y_pos
 .scope
+    ; Check if red player has invis frames
+    lda ability_red_passtrough_timers
+    beq DrawPlayer       ; If 0, ignore skipping check and draw
+    ; if not, check animation timer to see if we should draw or skip
+    lda ability_red_passtrough_timers+1
+    cmp #PASSTHROUGH_ANIMATION_MAX_DIV2
+    bpl DrawPlayer       ; If above threshold, draw!
+    jmp PlayerDone      ; else skip drawing entirely
+DrawPlayer:
+
     ; Check Idle or Moving
     lda inputs+1
     and #%00001111
     bne CheckCollision   
-    jmp HandleIdleState  
+    jmp HandleIdleState
 
 CheckCollision:
     ; Check Collision

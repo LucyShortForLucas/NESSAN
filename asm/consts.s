@@ -9,18 +9,20 @@ APU_Status = $4015 ; APU Status/Sound channel (R/W)
 APU_Counter = $4017 ; Controls timing 
 APU_DM_CONTROL = $4010 ; APU Delta Modulation Control (W)
 
-PLAYER_TILE = 8
-ENEMY_TILE  = 9
-
 ; Songs enum
 SONG_START = $00
 SONG_GAME = $01
 SONG_END = $02
 
+; spawn postions player
+BLUE_PLAYER_SPAWN_X = $20
+BLUE_PLAYER_SPAWN_Y = $20
+RED_PLAYER_SPAWN_X = $30
+RED_PLAYER_SPAWN_Y = $20
+
+
 PLAYER_W = 9
 PLAYER_H = 12
-ENEMY_W  = 8
-ENEMY_H  = 8
 
 MAX_PICKUPS = 3
 
@@ -38,3 +40,4 @@ PASSTHROUGH_FRAME_COUNTER_MAX = 250 ; frames before passthrough depletes, assumi
 
 RESPAWN_FRAMES = 100
 COINS_LOST_ON_DEATH = 3
+

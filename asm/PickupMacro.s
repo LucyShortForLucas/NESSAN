@@ -22,24 +22,40 @@ Kill blue_respawn_timer, score_blue, ability_blue, blue_player_x, blue_player_y,
 .endscope
 .endmacro
 
-.macro PhaseWallUpdate player_abilitySlot, passtroughTimer
+.macro PhaseWallUpdate player_abilitySlot, passtroughTimer, respawn_timer, coin_count, player_pickup, player_x, player_y, respawn_x, respawn_y
 .scope
     lda passtroughTimer
     ; If 0 skip everything
-    beq @skip_PhaseWallUpdate
+    beq skip_PhaseWallUpdate
 
     ; Decrement the main timer
     dec passtroughTimer
 
     ; if after decrement it's 0, remove the ability from the slot
-    bne @skip_remove_ability
+    bne skip_remove_ability
     lda #PICKUP_NONE
     sta player_abilitySlot
     lda #0
     sta passtroughTimer+1 ; reset animation timer
-    jmp @skip_PhaseWallUpdate
+    ; check if we're in a wall, if so, kill the player
+    ; prepare collision player
+    lda player_x
+    sta math_buffer+0
+    lda player_y
+    sta math_buffer+1
+    lda #PLAYER_W
+    sta math_buffer+2
+    lda #PLAYER_H
+    sta math_buffer+3
+    ; check collisions
+    jsr wall_collisions
+    ; if in wall, kill player
+    bcc skip_PhaseWallUpdate
+    ; kill player
+    Kill respawn_timer, coin_count, player_pickup, player_x, player_y, respawn_x, respawn_y
+    jmp skip_PhaseWallUpdate
 
-@skip_remove_ability:
+skip_remove_ability:
     ; Main code of the timers 
     
     ; increment the animation timer
@@ -55,11 +71,11 @@ Kill blue_respawn_timer, score_blue, ability_blue, blue_player_x, blue_player_y,
     lda passtroughTimer+1
     ; If animation timer overflows, reset it
     cmp #PASSTHROUGH_ANIMATION_MAX
-    bmi @skip_PhaseWallUpdate
+    bmi skip_PhaseWallUpdate
     lda #0
     sta passtroughTimer+1
 
 
-@skip_PhaseWallUpdate:
+skip_PhaseWallUpdate:
 .endscope
 .endmacro
