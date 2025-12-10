@@ -197,11 +197,13 @@ do_gun:
     ShootGun player_x, player_y, last_player_dir
     lda #0
     sta player_pickup
+    jmp end_ability      ; If match found we jump to end.   
 end_gun:
 
     cmp #PICKUP_DASH ; check for dash
     bne skip_dash
     DashInitialize dash_timer
+    jmp end_ability      ; If match found we jump to end.   
 skip_dash:
 
     cmp #PICKUP_PASSTHROUGH ; check for passthrough
