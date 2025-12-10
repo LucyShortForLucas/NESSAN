@@ -41,7 +41,21 @@ PASSTHROUGH_FRAME_COUNTER_MAX = 250 ; frames before passthrough depletes, assumi
 RESPAWN_FRAMES = 100
 COINS_LOST_ON_DEATH = 3
 
-; Direction enum
+DASH_DURATION = 20
+
+
+
+; Static start screen pointer
+Pointer_X_pos = 80
+Pointer_Y_pos = 136
+
+MiddleEndScreen_X_pos = 96
+MiddleEndScreen_Y_pos = 112
+
+; Enum endState
+endState_TimerUp = $00
+endState_Player1 = $01
+endState_Player2 = $02; Direction enum
 
 DIR_DOWN = 0
 DIR_UP = 1

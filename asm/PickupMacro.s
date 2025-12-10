@@ -189,3 +189,31 @@ skip_remove_ability:
 skip_PhaseWallUpdate:
 .endscope
 .endmacro
+
+
+.macro DashInitialize dashTimer
+.scope
+    lda dashTimer
+    bne @skip_init ; If already running, don't restart
+    
+    lda #DASH_DURATION        ; Set duration
+    sta dashTimer
+@skip_init:
+.endscope
+.endmacro
+
+.macro DashUpdate dashTimer, playerAbilitySlot
+.scope
+    lda dashTimer
+    beq @skip_timer_logic ; If 0, do nothing
+
+    dec dashTimer         ; tick down timer
+    bne @skip_timer_logic ; If not 0 yet, continue
+
+    ; Timer hit 0 then remove ability
+    lda #PICKUP_NONE
+    sta playerAbilitySlot
+
+@skip_timer_logic:
+.endscope
+.endmacro
