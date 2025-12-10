@@ -201,7 +201,7 @@ end_gun:
 
     cmp #PICKUP_DASH ; check for dash
     bne skip_dash
-    ;;; TODO: Add dash macro
+    DashInitialize dash_timer
 skip_dash:
 
     cmp #PICKUP_PASSTHROUGH ; check for passthrough
