@@ -76,6 +76,7 @@
 
 .macro GrabAbility ability_lbl
 .scope
+    lda math_buffer
     ldx math_buffer       ; CheckForCoinCollision stored the index here
     lda list_pickup+2, x  ; Load type from the list
     sta ability_lbl ; Store it in the player's ability variable

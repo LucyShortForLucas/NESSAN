@@ -60,6 +60,9 @@
 demo_scene:
     HandlePickupSpawn ; Reduce the pickup spawn timer and check if a new one must be spawned
 
+    lda ability_red_passtrough_timers
+    bne skipRedPickupHandling ; check if it's 0, if so, skip grabbing all items
+    
     CheckForCoinCollision red_player_x, red_player_y
     bcc skipRedPickupHandling
 
@@ -75,10 +78,14 @@ demo_scene:
 
 RedHitAbility:
     ; Ability
+
     GrabAbility ability_red
     jsr HandleCoinCollection
 
 skipRedPickupHandling:
+
+    lda ability_blue_passtrough_timers
+    bne skipBluePickupHandling ; check if it's 0, if so, skip grabbing all items
 
     CheckForCoinCollision blue_player_x, blue_player_y
     bcc skipBluePickupHandling
@@ -95,6 +102,7 @@ skipRedPickupHandling:
 
 BlueHitAbility:
     ; Ability
+
     GrabAbility ability_blue
     jsr HandleCoinCollection
 
