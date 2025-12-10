@@ -50,7 +50,8 @@
 .exportzp ability_red_passtrough_timers
 .exportzp ability_blue_passtrough_timers
 
-.exportzp dash_timer
+.exportzp dash_timer_blue
+.exportzp dash_timer_red
 
 .exportzp last_blue_player_dir
 .exportzp last_red_player_dir
@@ -116,4 +117,5 @@ ability_blue_passtrough_timers: .res 2
 blue_respawn_timer: .res 1
 red_respawn_timer: .res 1
 
-dash_timer: .res 1
+dash_timer_red: .res 1
+dash_timer_blue: .res 1

@@ -41,7 +41,7 @@
 .importzp ability_blue, ability_red
 
 .importzp ability_blue_passtrough_timers, ability_red_passtrough_timers
-.importzp dash_timer
+.importzp dash_timer_red, dash_timer_blue
 
 .import list_pickup
 .import ConvertIndexToPosition
@@ -100,7 +100,7 @@ RedHitAbility:
 
 skipRedPickupHandling:
 
-    PlayerMovementUpdate red_player_x, red_player_y, inputs+1, red_player_backup, red_player_dir, last_red_player_dir, ability_red, ability_red_passtrough_timers, red_respawn_timer, score_red, #RED_PLAYER_SPAWN_X, #RED_PLAYER_SPAWN_Y, dash_timer
+    PlayerMovementUpdate red_player_x, red_player_y, inputs+1, red_player_backup, red_player_dir, last_red_player_dir, ability_red, ability_red_passtrough_timers, red_respawn_timer, score_red, #RED_PLAYER_SPAWN_X, #RED_PLAYER_SPAWN_Y, dash_timer_red
 
 red_update_end:
 
@@ -139,7 +139,7 @@ BlueHitAbility:
     jsr HandleCoinCollection
 
 skipBluePickupHandling:
-  PlayerMovementUpdate blue_player_x, blue_player_y, inputs, blue_player_backup, blue_player_dir, last_blue_player_dir, ability_blue, ability_blue_passtrough_timers, blue_respawn_timer, score_blue, #BLUE_PLAYER_SPAWN_X, #BLUE_PLAYER_SPAWN_Y, dash_timer
+  PlayerMovementUpdate blue_player_x, blue_player_y, inputs, blue_player_backup, blue_player_dir, last_blue_player_dir, ability_blue, ability_blue_passtrough_timers, blue_respawn_timer, score_blue, #BLUE_PLAYER_SPAWN_X, #BLUE_PLAYER_SPAWN_Y, dash_timer_blue
 
 blue_update_end:
 
