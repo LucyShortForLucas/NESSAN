@@ -21,13 +21,14 @@ if errorlevel 1 exit /b 1
 
 echo Build complete: build\CoinHeist.nes
 
+set totalBoth = 0
 set total = 0
 for /f "tokens=2,3" %%A in (asm\zeropage.s) do (
     if "%%A"==".res" (
         set /a total+=%%B
     )
 )
-
+set /a totalBoth+=total
 echo Total zero page bytes used: %total% / 256
 
 set total = 0
@@ -36,7 +37,9 @@ for /f "tokens=2,3" %%A in (asm\bss.s) do (
         set /a total+=%%B
     )
 )
+set /a totalBoth+=total
 
 echo Total bss bytes used: %total%
+echo Total bytes used: %totalBoth%
 
 endlocal
