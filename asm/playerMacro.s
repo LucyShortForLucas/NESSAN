@@ -208,6 +208,7 @@ skip_dash:
     bne skip_Passthrough
     PhaseWallInitialize passthroughVariable
     jmp end_ability      ; If match found we jump to end.   
+skip_Passthrough:
 
 end_ability:
     ; Ability Updates
