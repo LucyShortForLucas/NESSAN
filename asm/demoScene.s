@@ -92,10 +92,8 @@ do_red_update:
 
 RedHitAbility:
     ; Ability
-    lda ability_red_passtrough_timers
-    bne skipRedPickupHandling ; check if it's 0, if so, skip grabbing all items
 
-    GrabAbility ability_red
+    GrabAbility ability_red, ability_red_passtrough_timers
     jsr HandleCoinCollection
 
 skipRedPickupHandling:
@@ -132,10 +130,8 @@ do_blue_update:
 
 BlueHitAbility:
     ; Ability
-    lda ability_blue_passtrough_timers
-    bne skipBluePickupHandling ; check if it's 0, if so, skip grabbing all items
 
-    GrabAbility ability_blue
+    GrabAbility ability_blue, ability_blue_passtrough_timers
     jsr HandleCoinCollection
 
 skipBluePickupHandling:

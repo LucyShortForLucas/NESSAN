@@ -74,11 +74,15 @@
 .endscope
 .endmacro
 
-.macro GrabAbility ability_lbl
+.macro GrabAbility ability_lbl, ability_passtrough_timers
 .scope
-    lda math_buffer
-    ldx math_buffer       ; CheckForCoinCollision stored the index here
+    ldx math_buffer
+    
+    lda ability_passtrough_timers
+    bne skipGrabAbilityPickupHandling ; check if it's not 0, if so, skip grabbing all items
+
     lda list_pickup+2, x  ; Load type from the list
     sta ability_lbl ; Store it in the player's ability variable
+skipGrabAbilityPickupHandling:
 .endscope
 .endmacro
