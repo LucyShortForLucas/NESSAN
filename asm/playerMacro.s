@@ -4,8 +4,9 @@
 
 .include "PickupMacro.s"
 
-.macro PlayerMovementUpdate player_x, player_y, inputs, player_backup, player_dir, player_pickup
-.scope
+.macro PlayerMovementUpdate player_x, player_y, inputs, player_backup, player_dir, player_pickup, passthroughVariable
+.scope 
+
     ; Y-Axis 
 
     ; 1. Backup Y (in case we hit a wall)
@@ -30,6 +31,10 @@
     sta player_dir
 
 @check_col_y:
+    ; If passthrough is active, aka not 0, skip wall collisions
+    lda passthroughVariable
+    bne @end_y
+
     ; 4. Prepare Collision Buffer
     lda player_x
     sta math_buffer+0   ; a_X
@@ -48,12 +53,12 @@
     lda player_backup
     sta player_y
 
+
     ; Update Sprite if it wall
     lda player_dir
-    clc
+    clc 
     adc #4
     sta player_dir
-
 @end_y:
 
     ; X-Axis 
@@ -80,6 +85,11 @@
     sta player_dir
 
 @check_col_x:
+
+    ; If passthrough is active, aka not 0, skip wall collisions
+    lda passthroughVariable
+    bne @end_x
+
     ; 4. Prepare Collision Buffer
     lda player_x        ; New X
     sta math_buffer+0   
@@ -128,10 +138,12 @@ skip_dash:
 
     cmp #PICKUP_PASSTHROUGH ; check for passthrough
     bne skip_Passthrough
-    ;;; TODO: Add Passthrough macro
+    PhaseWallInitialize passthroughVariable
 skip_Passthrough:
 
 end_ability:
 
+    ; update passthrough ability timer
+    PhaseWallUpdate player_pickup, passthroughVariable
 .endscope
 .endmacro

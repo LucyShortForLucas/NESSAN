@@ -21,6 +21,10 @@
 .importzp blue_player_dir, red_player_dir
 .importzp inputs, frame_counter
 
+.importzp ability_red_passtrough_timers, ability_blue_passtrough_timers
+
+.import PASSTHROUGH_ANIMATION_MAX_DOUBLE
+
 ; ==============================================================================
 ; PUBLIC USE DRAWING MACROS
 ; ==============================================================================
@@ -122,6 +126,15 @@ Pickup_Phase:
 
 .macro DrawBluePlayer x_pos, y_pos
 .scope
+    ; Check if blue player has invis frames
+    lda ability_blue_passtrough_timers
+    beq DrawPlayer       ; If 0, ignore skipping check and draw
+    ; if not, check animation timer to see if we should draw or skip
+    lda ability_blue_passtrough_timers+1
+    cmp #PASSTHROUGH_ANIMATION_MAX_DIV2
+    bpl DrawPlayer       ; If above threshold, draw!
+    jmp PlayerDone      ; else skip drawing entirely
+DrawPlayer:
     ; Check Idle or Moving
     lda inputs
     and #%00001111

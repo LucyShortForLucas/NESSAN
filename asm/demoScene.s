@@ -36,6 +36,8 @@
 
 .importzp ability_blue, ability_red
 
+.importzp ability_blue_passtrough_timers, ability_red_passtrough_timers
+
 .import list_pickup
 .import ConvertIndexToPosition
 
@@ -45,6 +47,7 @@
 .import aabb_collision
 
 .export demo_scene
+
 
 .include "playerMacro.s"
 .include "graphicsMacro.s"
@@ -100,8 +103,8 @@ skipBluePickupHandling:
     UpdateClock
 
     ; move player based on input and check if it collides with one enemy
-    PlayerMovementUpdate blue_player_x, blue_player_y, inputs, blue_player_backup, blue_player_dir, ability_blue
-    PlayerMovementUpdate red_player_x, red_player_y, inputs+1, red_player_backup, red_player_dir, ability_red
+    PlayerMovementUpdate blue_player_x, blue_player_y, inputs, blue_player_backup, blue_player_dir, ability_blue, ability_blue_passtrough_timers
+    PlayerMovementUpdate red_player_x, red_player_y, inputs+1, red_player_backup, red_player_dir, ability_red, ability_red_passtrough_timers
 
     
     ; Draw Sprites

@@ -45,6 +45,9 @@
 
 .exportzp ability_red_icon_x, ability_red_icon_y, ability_blue_icon_x, ability_blue_icon_y
 
+.exportzp ability_red_passtrough_timers
+.exportzp ability_blue_passtrough_timers
+
 
 .segment "ZEROPAGE" ; zero-page memory, fast access: Use sparingly!
 
@@ -97,3 +100,8 @@ ability_red_icon_x: .res 1
 ability_red_icon_y: .res 1
 ability_blue_icon_x: .res 1
 ability_blue_icon_y: .res 1
+
+; Ability timers for passthrough, can be moved to BSS if needed, called minimum 2x per frame
+; Byte 1 is main timer, byte 2 is animation timer
+ability_red_passtrough_timers: .res 2
+ability_blue_passtrough_timers: .res 2
