@@ -35,6 +35,7 @@
 .import start_screen_scene
 .import initialize_scene_start
 .import demo_scene
+.import end_screen_scene
 
 .import collision_aabb_2x2
 .import collision_aabb_2x3
@@ -82,11 +83,7 @@
 .importzp coin_y2
 
 ; Macros
-.include "graphicsMacro.s"
 .include "musicMacro.s"
-
-
-
 .include "playerMacro.s"
 
 .segment "CODE"
@@ -141,7 +138,6 @@ vblankwait2:
   cpx #$20
   bne @loop
 
-DrawBackground ; Draw background
 
 ; enable rendering
   lda #%10000000	; Enable NMI
@@ -199,9 +195,6 @@ sta ability_red_icon_y
 lda #%00000111 
 sta clock_dirty
 
-; Set Clock
-SetClock #02, #30  ; Start clock at 2:30
-
 ; Setup music
 InitializeSongs
 
@@ -219,8 +212,6 @@ main:
     ; We move all sprites off-screen (Y = $FF) by default
     ldx #$00
     lda #$FF
-
-
   @clear_oam:
       sta $0200, x ; set Y coordinate to FF (offscreen)
       inx 
@@ -245,6 +236,11 @@ main:
   jsr demo_scene
   @skipGameScene:
 
+   cmp #SCENE_ENDSCREEN
+  bne @skipEndScene
+  jsr end_screen_scene
+  @skipEndScene:
+
   jmp main ; Loop
 
 ; The NMI interrupt is called every frame during V-blank (if enabled)
@@ -265,7 +261,7 @@ nmi:
   stx $2004
   stx $2004
   stx $2004
-  
+
   ; OAM DMA 
   ; This copies all 256 bytes from CPU RAM $0200 to PPU OAM
   lda #$00

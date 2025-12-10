@@ -20,6 +20,8 @@
 
 .export pickup_timer
 
+.export endState
+
 .segment "BSS"
 
 ;; System variables
@@ -44,3 +46,5 @@ collision_aabb_9x2: .res 9
 list_pickup: .res 10 ; 0th element for how many are active, max 3 coins: 1th for x, 2st for y, 3nd for type, then next coin...
 
 pickup_timer: .res 1
+
+endState: .res 1 ; to check what type of ending you have

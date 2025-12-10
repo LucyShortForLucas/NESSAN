@@ -16,27 +16,40 @@
 
 .import AbilityDash, AbilityGun, AbilityPhase
 
+.import Pointer, EmptyPointer
+.import TimeUpText, PlayerWinText, WinText
+
 .importzp clock_min, clock_sec, clock_frames
 .importzp score1, score2
 .importzp blue_player_dir, red_player_dir
 .importzp inputs, frame_counter
 
+
 ; ==============================================================================
 ; PUBLIC USE DRAWING MACROS
 ; ==============================================================================
 
-.macro DrawBackground
+.macro DrawBackground background
 .scope
-    lda $2002            ; Reset PPU latch
-    lda #$20
-    sta $2006            ; Set address to $2000
-    lda #$00
-    sta $2006
+; Disable rendering so we can write to VRAM safely
+lda #$00
+sta $2001      
 
+WaitForVblank:
+    bit $2002
+    bpl WaitForVblank
+
+lda $2002    ; reset latch
+lda #$20
+sta $2006    ; high byte of address: $20xx
+lda #$00
+sta $2006    ; low byte: $2000
+
+; else write to ppudata
     ldx #$00
 LoadFirstQuarter:
     lda background, x
-    sta $2007
+    sta $2007 ; (PPUDATA)
     inx
     bne LoadFirstQuarter
 
@@ -57,6 +70,10 @@ LoadFourthQuarter:
     sta $2007
     inx
     bne LoadFourthQuarter
+
+; Re-enable rendering
+lda #%00011110  ; enable BG + sprites, maybe left-clip off etc.
+sta $2001
 .endscope
 .endmacro
 
@@ -599,5 +616,65 @@ ClockFinished:
     sta score_var
 
 ScoreUpdateDone:
+.endscope
+.endmacro
+
+; Yanto title codes
+
+.macro DrawSelectorPointer x_pos, y_pos ; make it flash
+.scope
+;  DrawSelectorPointer #80, #136    
+DrawSprite x_pos, y_pos, Pointer
+.endscope
+.endmacro
+
+.macro DrawPlayerWin
+.scope
+    ;DrawText #96, #112, PlayerWinText, $1C
+    ;DrawText #112, #136, WinText, $10
+    DrawText #112, #112, WinText, $10
+.endscope
+.endmacro
+
+.macro DrawTimeUp 
+.scope
+    DrawText #96, #112, TimeUpText, $1C
+.endscope
+.endmacro
+
+.macro DrawText x_pos, y_pos, data_lbl, count 
+.scope
+    ldx #$00             ; Reset data index
+TextLoop:
+    ; Y Position
+    lda data_lbl, x
+    clc
+    adc y_pos            ; Add World Y
+    sta $0200, y
+    inx
+    iny
+
+    ; Tile ID
+    lda data_lbl, x
+    sta $0200, y
+    inx
+    iny
+
+    ; Attributes
+    lda data_lbl, x
+    sta $0200, y
+    inx
+    iny
+
+    ; X Position
+    lda data_lbl, x
+    clc
+    adc x_pos            ; Add World X
+    sta $0200, y
+    inx
+    iny
+
+    cpx #count             ; check if max amount of letters is reached
+    bne TextLoop
 .endscope
 .endmacro
