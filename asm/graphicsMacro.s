@@ -402,7 +402,7 @@ RenderDash:
     jmp Done
 
 RenderGun:
-    DrawSprite x_pos, y_pos, AbilityDashIconRed
+    DrawSprite x_pos, y_pos, AbilityGunIconRed
     jmp Done
 
 RenderPhase:
