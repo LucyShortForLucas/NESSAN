@@ -156,14 +156,14 @@ sta coin_x
 lda #$60          ; Y = 96 (Center vertical position)
 sta coin_y
 
-lda #$20          
+lda #BLUE_PLAYER_SPAWN_X          
 sta blue_player_x
-lda #$20         
+lda #BLUE_PLAYER_SPAWN_Y         
 sta blue_player_y
 
-lda #$30          
+lda #RED_PLAYER_SPAWN_X
 sta red_player_x
-lda #$20         
+lda #RED_PLAYER_SPAWN_Y    
 sta red_player_y
 
 

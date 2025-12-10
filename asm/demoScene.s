@@ -97,7 +97,7 @@ RedHitAbility:
 
 skipRedPickupHandling:
 
-    PlayerMovementUpdate red_player_x, red_player_y, inputs+1, red_player_backup, red_player_dir, ability_red, ability_red_passtrough_timers
+    PlayerMovementUpdate red_player_x, red_player_y, inputs+1, red_player_backup, red_player_dir, ability_red, ability_red_passtrough_timers, red_respawn_timer, score_red, #RED_PLAYER_SPAWN_X, #RED_PLAYER_SPAWN_Y
 
 red_update_end:
 
@@ -136,7 +136,7 @@ BlueHitAbility:
     jsr HandleCoinCollection
 
 skipBluePickupHandling:
-  PlayerMovementUpdate blue_player_x, blue_player_y, inputs, blue_player_backup, blue_player_dir, ability_blue, ability_blue_passtrough_timers
+  PlayerMovementUpdate blue_player_x, blue_player_y, inputs, blue_player_backup, blue_player_dir, ability_blue, ability_blue_passtrough_timers, blue_respawn_timer, score_blue, #BLUE_PLAYER_SPAWN_X, #BLUE_PLAYER_SPAWN_Y
 
 blue_update_end:
 

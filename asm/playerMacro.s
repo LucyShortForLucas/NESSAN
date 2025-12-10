@@ -4,7 +4,7 @@
 
 .include "PickupMacro.s"
 
-.macro PlayerMovementUpdate player_x, player_y, inputs, player_backup, player_dir, player_pickup, passthroughVariable
+.macro PlayerMovementUpdate player_x, player_y, inputs, player_backup, player_dir, player_pickup, passthroughVariable, respawn_timer, coin_count, respawn_x, respawn_y
 .scope 
 
     ; Y-Axis 
@@ -144,6 +144,6 @@ skip_Passthrough:
 end_ability:
 
     ; update passthrough ability timer
-    PhaseWallUpdate player_pickup, passthroughVariable
+    PhaseWallUpdate player_pickup, passthroughVariable, respawn_timer, coin_count, player_pickup, player_x, player_y, respawn_x, respawn_y
 .endscope
 .endmacro
