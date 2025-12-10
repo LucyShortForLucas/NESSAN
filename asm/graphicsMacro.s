@@ -23,6 +23,10 @@
 
 .importzp ability_red_passtrough_timers, ability_blue_passtrough_timers
 
+.import AbilityDashIconRed, AbilityGunIconRed, AbilityPhaseIconRed
+.import AbilityDashIconBlue, AbilityGunIconBlue, AbilityPhaseIconBlue
+.import AbilityDashFrame1, AbilityGunFrame1, AbilityPhaseFrame1, AbilityDashFrame2, AbilityGunFrame2, AbilityPhaseFrame2
+
 .import PASSTHROUGH_ANIMATION_MAX_DOUBLE
 
 ; ==============================================================================
@@ -108,19 +112,19 @@ Pickup_Phase:
 
 .macro DrawDash
 .scope
-    DrawSprite math_buffer+0, math_buffer+1, AbilityDash
+    DrawAnimatedMetasprite2Frames math_buffer+0, math_buffer+1, AbilityDashFrame1, AbilityDashFrame2, $20
 .endscope
 .endmacro
 
 .macro DrawGun
 .scope
-    DrawSprite math_buffer+0, math_buffer+1, AbilityGun
+    DrawAnimatedMetasprite2Frames math_buffer+0, math_buffer+1, AbilityGunFrame1, AbilityGunFrame2, $20
 .endscope
 .endmacro
 
 .macro DrawPhase
 .scope
-    DrawSprite math_buffer+0, math_buffer+1, AbilityPhase
+    DrawAnimatedMetasprite2Frames math_buffer+0, math_buffer+1, AbilityPhaseFrame1, AbilityPhaseFrame2, $20
 .endscope
 .endmacro
 
@@ -349,7 +353,7 @@ PlayerDone:
 .endscope
 .endmacro
 
-.macro DrawAbility x_pos, y_pos, ability_lbl
+.macro DrawAbilityRed x_pos, y_pos, ability_lbl
 .scope
     lda ability_lbl     ; Load the ability value (0=Empty, 1=Dash, 2=Gun, 3=Phase)
     beq Done            ; If 0, draw nothing and exit
@@ -367,15 +371,48 @@ PlayerDone:
     jmp Done            ; Safety catch (if value is >3)
 
 RenderDash:
-    DrawSprite x_pos, y_pos, AbilityDash
+    DrawSprite x_pos, y_pos, AbilityDashIconRed
     jmp Done
 
 RenderGun:
-    DrawSprite x_pos, y_pos, AbilityGun
+    DrawSprite x_pos, y_pos, AbilityDashIconRed
     jmp Done
 
 RenderPhase:
-    DrawSprite x_pos, y_pos, AbilityPhase
+    DrawSprite x_pos, y_pos, AbilityPhaseIconRed
+    jmp Done
+
+Done:
+.endscope
+.endmacro
+
+.macro DrawAbilityBlue x_pos, y_pos, ability_lbl
+.scope
+    lda ability_lbl     ; Load the ability value (0=Empty, 1=Dash, 2=Gun, 3=Phase)
+    beq Done            ; If 0, draw nothing and exit
+
+    ; Check specific abilities
+    cmp #1
+    beq RenderDash      ; If 1, go to Dash
+    
+    cmp #2
+    beq RenderGun       ; If 2, go to Gun
+    
+    cmp #3
+    beq RenderPhase     ; If 3, go to Phase
+    
+    jmp Done            ; Safety catch (if value is >3)
+
+RenderDash:
+    DrawSprite x_pos, y_pos, AbilityDashIconBlue
+    jmp Done
+
+RenderGun:
+    DrawSprite x_pos, y_pos, AbilityGunIconBlue
+    jmp Done
+
+RenderPhase:
+    DrawSprite x_pos, y_pos, AbilityPhaseIconBlue
     jmp Done
 
 Done:

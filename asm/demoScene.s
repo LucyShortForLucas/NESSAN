@@ -201,8 +201,8 @@ skip_red_draw:
     DrawScore score_red_x, score_red_y, score_red
     DrawScore score_blue_x, score_blue_y, score_blue
 
-    DrawAbility ability_blue_icon_x, ability_blue_icon_y, ability_blue
-    DrawAbility ability_red_icon_x, ability_red_icon_y, ability_red
+    DrawAbilityBlue ability_blue_icon_x, ability_blue_icon_y, ability_blue
+    DrawAbilityRed ability_red_icon_x, ability_red_icon_y, ability_red
     rts 
 
 ; Subroutine to draw the pickups

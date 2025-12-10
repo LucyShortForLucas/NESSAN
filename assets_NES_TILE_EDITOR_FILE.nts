@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8" ?>
-<NESTileSet selectedPaletee="3" palette="62,24,40,56;30,0,16,32;29,22,38,32;61,17,33,48">
+<NESTileSet selectedPaletee="1" palette="62,24,40,56;30,0,16,32;29,22,38,32;61,17,33,48">
 <PatternTables>
 <PatternTable name="MyTiles" >
 <Pattern data="00000000000000000000000000000000" />
@@ -43,9 +43,9 @@
 <Pattern data="00000001010000000101010000000000" />
 <Pattern data="00808080800000008000000000000000" />
 <Pattern data="000800604204080000080c7e7c080000" />
-<Pattern data="00000000000000000000000000000000" />
-<Pattern data="00000000000000000000000000000000" />
-<Pattern data="00000000000000000000000000000000" />
+<Pattern data="00f000fc2028200000f87f0048584000" />
+<Pattern data="003040400e7e0000003c5a5a70005a00" />
+<Pattern data="00001000540010000000001038100000" />
 <Pattern data="00000000000000000000000000000000" />
 <Pattern data="00000000000000000000000000000000" />
 <Pattern data="00000000000000000000000000000000" />
@@ -186,30 +186,30 @@
 <Pattern data="00000000000000000000000000000000" />
 <Pattern data="00000000000000000000000000000000" />
 <Pattern data="00000000000000000000000000000000" />
-<Pattern data="00000000000000000000000000000000" />
-<Pattern data="00000000000000000000000000000000" />
-<Pattern data="00000000000000000000000000000000" />
-<Pattern data="00000000000000000000000000000000" />
-<Pattern data="00000000000000000000000000000000" />
-<Pattern data="00000000000000000000000000000000" />
-<Pattern data="00000000000000000000000000000000" />
-<Pattern data="00000000000000000000000000000000" />
-<Pattern data="00000000000000000000000000000000" />
-<Pattern data="00000000000000000000000000000000" />
-<Pattern data="00000000000000000000000000000000" />
-<Pattern data="00000000000000000000000000000000" />
-<Pattern data="00000000000000000000000000000000" />
-<Pattern data="00000000000000000000000000000000" />
-<Pattern data="00000000000000000000000000000000" />
-<Pattern data="00000000000000000000000000000000" />
-<Pattern data="00000000000000000000000000000000" />
-<Pattern data="00000000000000000000000000000000" />
-<Pattern data="00000000000000000000000000000000" />
-<Pattern data="00000000000000000000000000000000" />
-<Pattern data="00000000000000000000000000000000" />
-<Pattern data="00000000000000000000000000000000" />
-<Pattern data="00000000000000000000000000000000" />
-<Pattern data="00000000000000000000000000000000" />
+<Pattern data="00000001011f202f00000001011f202f" />
+<Pattern data="0000e010486402820000e010486472fa" />
+<Pattern data="28201f01010000002f201f0101000000" />
+<Pattern data="1a32644810e00000e242040810e00000" />
+<Pattern data="00003f405c405f4200003f405f4f4044" />
+<Pattern data="0000c03c0202f2040000c03c82fa0284" />
+<Pattern data="321212100f000000351414100f000000" />
+<Pattern data="b820c08000000000b820c08000000000" />
+<Pattern data="00000f102728282800000f1027292929" />
+<Pattern data="0000f008040404040000f008e4949494" />
+<Pattern data="20202f20221d00002f2f202d221d0000" />
+<Pattern data="0474f40444b80000f48404b444b80000" />
+<Pattern data="000000000000000f000000000000000f" />
+<Pattern data="000000004060008000000000406070f8" />
+<Pattern data="08000000000000000f00000000000000" />
+<Pattern data="1830604000000000e040000000000000" />
+<Pattern data="000000001c001f02000000001f0f0004" />
+<Pattern data="000000000000f0000000000080f80080" />
+<Pattern data="02020200000000000504040000000000" />
+<Pattern data="80000000000000008000000000000000" />
+<Pattern data="00000000070808080000000007090909" />
+<Pattern data="000000000000000000000000e0909090" />
+<Pattern data="00000f00000000000f0f000d00000000" />
+<Pattern data="0070f00000000000f08000b000000000" />
 <Pattern data="00000000000000000000000000000000" />
 <Pattern data="00000000000000000000000000000000" />
 <Pattern data="00000000000000000000000000000000" />
@@ -1490,8 +1490,450 @@
 <Tile data='0,0,0,0' palette='0' />
 </Tiles>
 </MapTileCollection>
+<MapTileCollection patternTable='0'>
+<Tiles>
+<Tile data='0,0,0,0' palette='0' />
+<Tile data='0,0,0,0' palette='0' />
+</Tiles>
+</MapTileCollection>
 </MapTileCollections>
 <Screens>
+<Screen mapTileCollection='0'>
+<Row>
+<Cell data='0'/>
+<Cell data='0'/>
+<Cell data='0'/>
+<Cell data='0'/>
+<Cell data='0'/>
+<Cell data='0'/>
+<Cell data='0'/>
+<Cell data='0'/>
+<Cell data='0'/>
+<Cell data='0'/>
+<Cell data='0'/>
+<Cell data='0'/>
+<Cell data='0'/>
+<Cell data='0'/>
+<Cell data='0'/>
+<Cell data='0'/>
+</Row>
+<Row>
+<Cell data='0'/>
+<Cell data='0'/>
+<Cell data='0'/>
+<Cell data='0'/>
+<Cell data='0'/>
+<Cell data='0'/>
+<Cell data='0'/>
+<Cell data='0'/>
+<Cell data='0'/>
+<Cell data='0'/>
+<Cell data='0'/>
+<Cell data='0'/>
+<Cell data='0'/>
+<Cell data='0'/>
+<Cell data='0'/>
+<Cell data='0'/>
+</Row>
+<Row>
+<Cell data='0'/>
+<Cell data='0'/>
+<Cell data='0'/>
+<Cell data='0'/>
+<Cell data='0'/>
+<Cell data='0'/>
+<Cell data='0'/>
+<Cell data='0'/>
+<Cell data='0'/>
+<Cell data='0'/>
+<Cell data='0'/>
+<Cell data='0'/>
+<Cell data='0'/>
+<Cell data='0'/>
+<Cell data='0'/>
+<Cell data='0'/>
+</Row>
+<Row>
+<Cell data='0'/>
+<Cell data='0'/>
+<Cell data='0'/>
+<Cell data='0'/>
+<Cell data='0'/>
+<Cell data='0'/>
+<Cell data='0'/>
+<Cell data='0'/>
+<Cell data='0'/>
+<Cell data='0'/>
+<Cell data='0'/>
+<Cell data='0'/>
+<Cell data='0'/>
+<Cell data='0'/>
+<Cell data='0'/>
+<Cell data='0'/>
+</Row>
+<Row>
+<Cell data='0'/>
+<Cell data='0'/>
+<Cell data='0'/>
+<Cell data='0'/>
+<Cell data='0'/>
+<Cell data='0'/>
+<Cell data='0'/>
+<Cell data='0'/>
+<Cell data='1'/>
+<Cell data='0'/>
+<Cell data='0'/>
+<Cell data='0'/>
+<Cell data='0'/>
+<Cell data='0'/>
+<Cell data='0'/>
+<Cell data='0'/>
+</Row>
+<Row>
+<Cell data='0'/>
+<Cell data='0'/>
+<Cell data='0'/>
+<Cell data='0'/>
+<Cell data='0'/>
+<Cell data='0'/>
+<Cell data='1'/>
+<Cell data='0'/>
+<Cell data='0'/>
+<Cell data='0'/>
+<Cell data='0'/>
+<Cell data='0'/>
+<Cell data='0'/>
+<Cell data='0'/>
+<Cell data='0'/>
+<Cell data='0'/>
+</Row>
+<Row>
+<Cell data='0'/>
+<Cell data='0'/>
+<Cell data='0'/>
+<Cell data='0'/>
+<Cell data='0'/>
+<Cell data='0'/>
+<Cell data='0'/>
+<Cell data='0'/>
+<Cell data='0'/>
+<Cell data='0'/>
+<Cell data='0'/>
+<Cell data='0'/>
+<Cell data='0'/>
+<Cell data='0'/>
+<Cell data='0'/>
+<Cell data='0'/>
+</Row>
+<Row>
+<Cell data='0'/>
+<Cell data='0'/>
+<Cell data='0'/>
+<Cell data='0'/>
+<Cell data='0'/>
+<Cell data='0'/>
+<Cell data='0'/>
+<Cell data='0'/>
+<Cell data='0'/>
+<Cell data='0'/>
+<Cell data='0'/>
+<Cell data='0'/>
+<Cell data='0'/>
+<Cell data='0'/>
+<Cell data='0'/>
+<Cell data='0'/>
+</Row>
+<Row>
+<Cell data='0'/>
+<Cell data='0'/>
+<Cell data='0'/>
+<Cell data='0'/>
+<Cell data='0'/>
+<Cell data='0'/>
+<Cell data='0'/>
+<Cell data='0'/>
+<Cell data='0'/>
+<Cell data='0'/>
+<Cell data='0'/>
+<Cell data='0'/>
+<Cell data='0'/>
+<Cell data='0'/>
+<Cell data='0'/>
+<Cell data='0'/>
+</Row>
+<Row>
+<Cell data='0'/>
+<Cell data='0'/>
+<Cell data='0'/>
+<Cell data='0'/>
+<Cell data='0'/>
+<Cell data='0'/>
+<Cell data='0'/>
+<Cell data='0'/>
+<Cell data='0'/>
+<Cell data='0'/>
+<Cell data='0'/>
+<Cell data='0'/>
+<Cell data='0'/>
+<Cell data='0'/>
+<Cell data='0'/>
+<Cell data='0'/>
+</Row>
+<Row>
+<Cell data='0'/>
+<Cell data='0'/>
+<Cell data='0'/>
+<Cell data='0'/>
+<Cell data='0'/>
+<Cell data='0'/>
+<Cell data='0'/>
+<Cell data='0'/>
+<Cell data='0'/>
+<Cell data='0'/>
+<Cell data='0'/>
+<Cell data='0'/>
+<Cell data='0'/>
+<Cell data='0'/>
+<Cell data='0'/>
+<Cell data='0'/>
+</Row>
+<Row>
+<Cell data='0'/>
+<Cell data='0'/>
+<Cell data='0'/>
+<Cell data='0'/>
+<Cell data='0'/>
+<Cell data='0'/>
+<Cell data='0'/>
+<Cell data='0'/>
+<Cell data='0'/>
+<Cell data='0'/>
+<Cell data='0'/>
+<Cell data='0'/>
+<Cell data='0'/>
+<Cell data='0'/>
+<Cell data='0'/>
+<Cell data='0'/>
+</Row>
+</Screen>
+<Screen mapTileCollection='0'>
+<Row>
+<Cell data='0'/>
+<Cell data='0'/>
+<Cell data='0'/>
+<Cell data='0'/>
+<Cell data='0'/>
+<Cell data='0'/>
+<Cell data='0'/>
+<Cell data='0'/>
+<Cell data='0'/>
+<Cell data='0'/>
+<Cell data='0'/>
+<Cell data='0'/>
+<Cell data='0'/>
+<Cell data='0'/>
+<Cell data='0'/>
+<Cell data='0'/>
+</Row>
+<Row>
+<Cell data='0'/>
+<Cell data='0'/>
+<Cell data='0'/>
+<Cell data='0'/>
+<Cell data='0'/>
+<Cell data='0'/>
+<Cell data='0'/>
+<Cell data='0'/>
+<Cell data='0'/>
+<Cell data='0'/>
+<Cell data='0'/>
+<Cell data='0'/>
+<Cell data='0'/>
+<Cell data='0'/>
+<Cell data='0'/>
+<Cell data='0'/>
+</Row>
+<Row>
+<Cell data='0'/>
+<Cell data='0'/>
+<Cell data='0'/>
+<Cell data='0'/>
+<Cell data='0'/>
+<Cell data='0'/>
+<Cell data='0'/>
+<Cell data='0'/>
+<Cell data='0'/>
+<Cell data='0'/>
+<Cell data='0'/>
+<Cell data='0'/>
+<Cell data='0'/>
+<Cell data='0'/>
+<Cell data='0'/>
+<Cell data='0'/>
+</Row>
+<Row>
+<Cell data='0'/>
+<Cell data='0'/>
+<Cell data='0'/>
+<Cell data='0'/>
+<Cell data='0'/>
+<Cell data='0'/>
+<Cell data='0'/>
+<Cell data='0'/>
+<Cell data='0'/>
+<Cell data='0'/>
+<Cell data='0'/>
+<Cell data='0'/>
+<Cell data='0'/>
+<Cell data='0'/>
+<Cell data='0'/>
+<Cell data='0'/>
+</Row>
+<Row>
+<Cell data='0'/>
+<Cell data='0'/>
+<Cell data='0'/>
+<Cell data='0'/>
+<Cell data='0'/>
+<Cell data='0'/>
+<Cell data='0'/>
+<Cell data='0'/>
+<Cell data='0'/>
+<Cell data='0'/>
+<Cell data='0'/>
+<Cell data='0'/>
+<Cell data='0'/>
+<Cell data='0'/>
+<Cell data='0'/>
+<Cell data='0'/>
+</Row>
+<Row>
+<Cell data='0'/>
+<Cell data='0'/>
+<Cell data='0'/>
+<Cell data='0'/>
+<Cell data='0'/>
+<Cell data='0'/>
+<Cell data='0'/>
+<Cell data='0'/>
+<Cell data='0'/>
+<Cell data='0'/>
+<Cell data='0'/>
+<Cell data='0'/>
+<Cell data='0'/>
+<Cell data='0'/>
+<Cell data='0'/>
+<Cell data='0'/>
+</Row>
+<Row>
+<Cell data='0'/>
+<Cell data='0'/>
+<Cell data='0'/>
+<Cell data='0'/>
+<Cell data='0'/>
+<Cell data='0'/>
+<Cell data='0'/>
+<Cell data='0'/>
+<Cell data='0'/>
+<Cell data='0'/>
+<Cell data='0'/>
+<Cell data='0'/>
+<Cell data='0'/>
+<Cell data='0'/>
+<Cell data='0'/>
+<Cell data='0'/>
+</Row>
+<Row>
+<Cell data='0'/>
+<Cell data='0'/>
+<Cell data='0'/>
+<Cell data='0'/>
+<Cell data='0'/>
+<Cell data='0'/>
+<Cell data='0'/>
+<Cell data='0'/>
+<Cell data='0'/>
+<Cell data='0'/>
+<Cell data='0'/>
+<Cell data='0'/>
+<Cell data='0'/>
+<Cell data='0'/>
+<Cell data='0'/>
+<Cell data='0'/>
+</Row>
+<Row>
+<Cell data='0'/>
+<Cell data='0'/>
+<Cell data='0'/>
+<Cell data='0'/>
+<Cell data='0'/>
+<Cell data='0'/>
+<Cell data='0'/>
+<Cell data='0'/>
+<Cell data='0'/>
+<Cell data='0'/>
+<Cell data='0'/>
+<Cell data='0'/>
+<Cell data='0'/>
+<Cell data='0'/>
+<Cell data='0'/>
+<Cell data='0'/>
+</Row>
+<Row>
+<Cell data='0'/>
+<Cell data='0'/>
+<Cell data='0'/>
+<Cell data='0'/>
+<Cell data='0'/>
+<Cell data='0'/>
+<Cell data='0'/>
+<Cell data='0'/>
+<Cell data='0'/>
+<Cell data='0'/>
+<Cell data='0'/>
+<Cell data='0'/>
+<Cell data='0'/>
+<Cell data='0'/>
+<Cell data='0'/>
+<Cell data='0'/>
+</Row>
+<Row>
+<Cell data='0'/>
+<Cell data='0'/>
+<Cell data='0'/>
+<Cell data='0'/>
+<Cell data='0'/>
+<Cell data='0'/>
+<Cell data='0'/>
+<Cell data='0'/>
+<Cell data='0'/>
+<Cell data='0'/>
+<Cell data='0'/>
+<Cell data='0'/>
+<Cell data='0'/>
+<Cell data='0'/>
+<Cell data='0'/>
+<Cell data='0'/>
+</Row>
+<Row>
+<Cell data='0'/>
+<Cell data='0'/>
+<Cell data='0'/>
+<Cell data='0'/>
+<Cell data='0'/>
+<Cell data='0'/>
+<Cell data='0'/>
+<Cell data='0'/>
+<Cell data='0'/>
+<Cell data='0'/>
+<Cell data='0'/>
+<Cell data='0'/>
+<Cell data='0'/>
+<Cell data='0'/>
+<Cell data='0'/>
+<Cell data='0'/>
+</Row>
+</Screen>
 <Screen mapTileCollection='0'>
 <Row>
 <Cell data='0'/>

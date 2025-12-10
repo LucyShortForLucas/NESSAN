@@ -16,7 +16,9 @@
 .export RedPlayerDown1, RedPlayerDown2, RedPlayerDown3
 .export RedPlayerUp1, RedPlayerUp2, RedPlayerUp3
 
-.export AbilityDash, AbilityGun, AbilityPhase
+.export AbilityDashIconRed, AbilityGunIconRed, AbilityPhaseIconRed
+.export AbilityDashIconBlue, AbilityGunIconBlue, AbilityPhaseIconBlue
+.export AbilityDashFrame1, AbilityGunFrame1, AbilityPhaseFrame1, AbilityDashFrame2, AbilityGunFrame2, AbilityPhaseFrame2
 
 .export palettes
 
@@ -377,14 +379,65 @@ RedPlayerUp3:
       .byte $08, $72, $03, $00  ; Bottom Left
       .byte $08, $73, $03, $08  ; Bottom Right
 
-AbilityDash:
+AbilityDashIconRed:
+      .byte $00, $28, $03, $00
+
+AbilityGunIconRed:
+      .byte $00, $29, $03, $00
+
+AbilityPhaseIconRed:
+      .byte $00, $2A, $03, $00
+
+AbilityDashIconBlue:
       .byte $00, $28, $02, $00
 
-AbilityGun:
-      .byte $00, $29, $00, $00
+AbilityGunIconBlue:
+      .byte $00, $29, $02, $00
 
-AbilityPhase:
-      .byte $00, $2A, $00, $00
+AbilityPhaseIconBlue:
+      .byte $00, $2A, $02, $00
+
+AbilityDashFrame1:
+      ; Y-off, Tile, Attr, X-off
+      .byte $00, $B8, $01, $00  ; Top Left
+      .byte $00, $B9, $01, $08  ; Top Right
+      .byte $08, $BA, $01, $00  ; Bottom Left
+      .byte $08, $BB, $01, $08  ; Bottom Right
+
+AbilityDashFrame2:
+      ; Y-off, Tile, Attr, X-off
+      .byte $00, $C4, $01, $00  ; Top Left
+      .byte $00, $C5, $01, $08  ; Top Right
+      .byte $08, $C6, $01, $00  ; Bottom Left
+      .byte $08, $C7, $01, $08  ; Bottom Right
+
+AbilityGunFrame1:
+      ; Y-off, Tile, Attr, X-off
+      .byte $00, $BC, $01, $00  ; Top Left
+      .byte $00, $BD, $01, $08  ; Top Right
+      .byte $08, $BE, $01, $00  ; Bottom Left
+      .byte $08, $BF, $01, $08  ; Bottom Right
+
+AbilityGunFrame2:
+      ; Y-off, Tile, Attr, X-off
+      .byte $00, $C8, $01, $00  ; Top Left
+      .byte $00, $C9, $01, $08  ; Top Right
+      .byte $08, $CA, $01, $00  ; Bottom Left
+      .byte $08, $CB, $01, $08  ; Bottom Right
+
+AbilityPhaseFrame1:
+      ; Y-off, Tile, Attr, X-off
+      .byte $00, $C0, $01, $00  ; Top Left
+      .byte $00, $C1, $01, $08  ; Top Right
+      .byte $08, $C2, $01, $00  ; Bottom Left
+      .byte $08, $C3, $01, $08  ; Bottom Right
+
+AbilityPhaseFrame2:
+      ; Y-off, Tile, Attr, X-off
+      .byte $00, $CC, $01, $00  ; Top Left
+      .byte $00, $CD, $01, $08  ; Top Right
+      .byte $08, $CE, $01, $00  ; Bottom Left
+      .byte $08, $CF, $01, $08  ; Bottom Right
 
 palettes:
   ; Background Palette
