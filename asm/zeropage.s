@@ -42,6 +42,8 @@
 
 .exportzp ability_red
 .exportzp ability_blue
+.exportzp blue_respawn_timer
+.exportzp red_respawn_timer
 
 .exportzp ability_red_icon_x, ability_red_icon_y, ability_blue_icon_x, ability_blue_icon_y
 
@@ -97,3 +99,6 @@ ability_red_icon_x: .res 1
 ability_red_icon_y: .res 1
 ability_blue_icon_x: .res 1
 ability_blue_icon_y: .res 1
+
+blue_respawn_timer: .res 1
+red_respawn_timer: .res 1

@@ -6,9 +6,9 @@
 
 - use PascalCase for macros
 
-- use camelCare for file names
+- use camelCase for file names
 
-- use ALL CAPS for constant names
+- use ALL_CAPS for constant names
 
 - asm instructions should be lowercase
 
