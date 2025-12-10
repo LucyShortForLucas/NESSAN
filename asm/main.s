@@ -1,8 +1,6 @@
 ; import engine functions
 .import famistudio_update
-.import famistudio_init
 
-.import famistudio_sfx_init
 ;.import famistudio_sfx_play
 ;.import famistudio_music_play (is handled in "initializeScene.s")
  

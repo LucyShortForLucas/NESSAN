@@ -59,6 +59,7 @@
 .include "consts.s"
 .include "coinListMacro.s"
 .include "spawnPickupMacro.s"
+.include "musicMacro.s"
 
 .segment "CODE"
 
@@ -88,11 +89,12 @@ do_red_update:
     ; Coin
     jsr HandleCoinCollection
     UpdateScore score_red, 1
+    ChooseSFX SFX_COIN ; Play Coin Pickup SFX
     jmp skipRedPickupHandling
 
 RedHitAbility:
     ; Ability
-
+    ChooseSFX SFX_COIN ; Play Ability Pickup SFX
     GrabAbility ability_red, ability_red_passtrough_timers
     jsr HandleCoinCollection
 
@@ -126,11 +128,12 @@ do_blue_update:
     ; Coin
     jsr HandleCoinCollection
     UpdateScore score_blue, 1
+    ChooseSFX SFX_COIN ; Play Coin Pickup SFX
     jmp skipBluePickupHandling
 
 BlueHitAbility:
     ; Ability
-
+    ChooseSFX SFX_COIN ; Play Ability Pickup SFX
     GrabAbility ability_blue, ability_blue_passtrough_timers
     jsr HandleCoinCollection
 

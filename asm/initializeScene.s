@@ -1,8 +1,4 @@
-; import engine function to handle the correct music
-.import famistudio_music_play ; isnt needed in main anymore
-.import famistudio_sfx_play
-
-.include "musicMacro.s" ; sets macro    - i assume the music is already initialized on the start
+.include "musicMacro.s"
 .include "consts.s"
 .include "graphicsMacro.s"
 
@@ -21,8 +17,7 @@
 .export initialize_scene_start, initialize_scene_game, initialize_scene_end
 
 initialize_scene_start:
-   LDA #SONG_START ; load the value of Startscreen music (can make consts)
-   ChooseSongFromAccumulator
+   ChooseSong SONG_START
 
    lda #SCENE_STARTSCREEN ; Load const var into accumulator
    sta current_scene ; update current_scene var
@@ -32,9 +27,8 @@ rts
 
 
 initialize_scene_game:
-    LDA #01; load the value of game music (can make consts)
-    ChooseSongFromAccumulatorSFX
-
+    ChooseSong SONG_START
+    
     lda #SCENE_GAME ; Load const var into accumulator
     sta current_scene ; update current_scene var
     
@@ -44,8 +38,7 @@ initialize_scene_game:
 rts
 
 initialize_scene_end:
-    LDA #00 ; load the value of end music (can make consts)
-    ChooseSongFromAccumulator
+    ChooseSong SONG_START
 
     lda #SCENE_ENDSCREEN
     sta current_scene

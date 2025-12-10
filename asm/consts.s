@@ -9,11 +9,6 @@ APU_Status = $4015 ; APU Status/Sound channel (R/W)
 APU_Counter = $4017 ; Controls timing 
 APU_DM_CONTROL = $4010 ; APU Delta Modulation Control (W)
 
-; Songs enum
-SONG_START = $00
-SONG_GAME = $01
-SONG_END = $02
-
 ; spawn postions player
 BLUE_PLAYER_SPAWN_X = $20
 BLUE_PLAYER_SPAWN_Y = $20
@@ -55,9 +50,28 @@ MiddleEndScreen_Y_pos = 112
 ; Enum endState
 endState_TimerUp = $00
 endState_Player1 = $01
-endState_Player2 = $02; Direction enum
+endState_Player2 = $02
 
+; Direction enum
 DIR_DOWN = 0
 DIR_UP = 1
 DIR_LEFT = 2
 DIR_RIGHT = 3
+
+; Songs enum
+SONG_START = $00
+SONG_GAME = $01
+SONG_END = $02
+
+; SFX Enum
+SFX_COIN = $00
+SFX_AbilityPickup = $01
+SFX_GunFire = $02
+SFX_AbilityUsage = $03
+SFX_Win = $04
+SFX_Lose = $05
+SFX_Spawning = $06
+
+; Dash
+; Ghost
+; Die 
