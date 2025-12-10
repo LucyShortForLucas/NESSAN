@@ -4,7 +4,7 @@
 
 .include "PickupMacro.s"
 
-.macro PlayerMovementUpdate player_x, player_y, inputs, player_backup, player_dir, player_pickup, passthroughVariable, respawn_timer, coin_count, respawn_x, respawn_y
+.macro PlayerMovementUpdate player_x, player_y, inputs, player_backup, player_dir, player_pickup, passthroughVariable, respawn_timer, coin_count, respawn_x, respawn_y, dash_timer
 .scope 
 
     ; Y-Axis 
@@ -18,8 +18,21 @@
     and #%00001000      ; Bit 3 (Up) - Fixed the 9-bit typo
     beq @check_down
     dec player_y        ; Move Up
+
+    ; Direction Up
     lda #1              ; Set Dir UP
     sta player_dir
+
+    ; Dash Up
+    lda dash_timer      ; Is timer running?
+    beq @skip_dash_up   ; If 0, skip
+    dec player_y        ; Dash
+    dec player_y
+    dec player_y
+@skip_dash_up:
+
+
+
 @check_down:
 
     ; 3. Check Input DOWN
@@ -27,8 +40,20 @@
     and #%00000100      ; Bit 2 (Down)
     beq @check_col_y
     inc player_y        ; Move Down
+    
+    ; Direction Down
     lda #0              ; Set Dir DOWN
     sta player_dir
+
+    ; Dash Down
+    lda dash_timer
+    beq @skip_dash_down
+    inc player_y
+    inc player_y
+    inc player_y
+@skip_dash_down:
+
+
 
 @check_col_y:
     ; If passthrough is active, aka not 0, skip wall collisions
@@ -72,8 +97,19 @@
     and #%00000010      ; Bit 1 (Left)
     beq @check_right
     dec player_x        ; Move Left
+
+    ; Direction Left
     lda #2              ; Set Dir LEFT
     sta player_dir
+
+    ; Dash Left
+    lda dash_timer
+    beq @skip_dash_left
+    dec player_x
+    dec player_x
+    dec player_x
+@skip_dash_left:
+
 @check_right:
 
     ; 3. Check Input RIGHT
@@ -81,8 +117,20 @@
     and #%00000001      ; Bit 0 (Right)
     beq @check_col_x
     inc player_x        ; Move Right
+
+    ; Direction Right
     lda #3              ; Set Dir RIGHT
     sta player_dir
+
+    ; Dash Right
+    lda dash_timer
+    beq @skip_dash_right
+    inc player_x
+    inc player_x
+    inc player_x
+@skip_dash_right:
+
+
 
 @check_col_x:
 
@@ -117,33 +165,39 @@
 @end_x:
 
     ; Do ability (if available)
+
+    ; Check Button Press
     lda inputs
-    and #%10000000      ; A button
-    beq end_ability
+    and #%10000000       ; A button
+    beq end_ability      ; If not pressed, we are done
 
+    ; Check if we have a pickup
     lda player_pickup 
-    beq end_ability ; skip on 0 (no pickup)
+    beq end_ability      ; If 0 (None), we are done
 
-    lda player_pickup ; fetch the pickup enum
-
-    cmp #PICKUP_GUN ; check for gun
-    bne skip_gun
+    ; Check for the Gun
+    cmp #PICKUP_GUN
+    bne check_dash        ; If not Gun, try next
     ShootGun player_x, player_y, player_dir
-skip_gun:
+    jmp end_ability      ; If match found we jump to end.
 
-    cmp #PICKUP_DASH ; check for dash
-    bne skip_dash
-    ;;; TODO: Add dash macro
-skip_dash:
+check_dash:
+    ; Check for the Dash
+    cmp #PICKUP_DASH
+    bne check_passthrough ; If not Dash, try next
+    DashInitialize dash_timer
+    jmp end_ability      ; If match found we jump to end.
 
-    cmp #PICKUP_PASSTHROUGH ; check for passthrough
-    bne skip_Passthrough
+check_passthrough:
+    ; Check for passthrough
+    cmp #PICKUP_PASSTHROUGH
+    bne end_ability      ; If not Passthrough, we are done
     PhaseWallInitialize passthroughVariable
-skip_Passthrough:
+    jmp end_ability      ; If match found we jump to end.   
 
 end_ability:
-
-    ; update passthrough ability timer
+    ; Ability Updates
+    DashUpdate dash_timer, player_pickup
     PhaseWallUpdate player_pickup, passthroughVariable, respawn_timer, coin_count, player_pickup, player_x, player_y, respawn_x, respawn_y
 .endscope
 .endmacro

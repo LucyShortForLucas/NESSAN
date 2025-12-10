@@ -41,3 +41,5 @@ PASSTHROUGH_FRAME_COUNTER_MAX = 250 ; frames before passthrough depletes, assumi
 RESPAWN_FRAMES = 100
 COINS_LOST_ON_DEATH = 3
 
+DASH_DURATION = 20
+

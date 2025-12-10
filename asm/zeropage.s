@@ -50,6 +50,8 @@
 .exportzp ability_red_passtrough_timers
 .exportzp ability_blue_passtrough_timers
 
+.exportzp dash_timer
+
 
 .segment "ZEROPAGE" ; zero-page memory, fast access: Use sparingly!
 
@@ -109,3 +111,5 @@ ability_red_passtrough_timers: .res 2
 ability_blue_passtrough_timers: .res 2
 blue_respawn_timer: .res 1
 red_respawn_timer: .res 1
+
+dash_timer: .res 1
