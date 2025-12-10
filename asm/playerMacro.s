@@ -213,6 +213,6 @@ skip_Passthrough:
 end_ability:
     ; Ability Updates
     DashUpdate dash_timer, player_pickup
-    PhaseWallUpdate player_pickup, passthroughVariable, respawn_timer, coin_count, player_pickup, player_x, player_y, respawn_x, respawn_y
+    PhaseWallUpdate player_pickup, passthroughVariable, respawn_timer, coin_count, player_x, player_y, respawn_x, respawn_y
 .endscope
 .endmacro

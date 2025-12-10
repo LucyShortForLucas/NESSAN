@@ -132,7 +132,7 @@ red_no_hit:
 .endscope
 .endmacro
 
-.macro PhaseWallUpdate player_abilitySlot, passtroughTimer, respawn_timer, coin_count, player_pickup, player_x, player_y, respawn_x, respawn_y
+.macro PhaseWallUpdate player_abilitySlot, passtroughTimer, respawn_timer, coin_count, player_x, player_y, respawn_x, respawn_y
 .scope
     lda passtroughTimer
     ; If 0 skip everything
@@ -162,7 +162,7 @@ red_no_hit:
     ; if in wall, kill player
     bcc skip_PhaseWallUpdate
     ; kill player
-    Kill respawn_timer, coin_count, player_pickup, player_x, player_y, respawn_x, respawn_y
+    Kill respawn_timer, coin_count, player_abilitySlot, player_x, player_y, respawn_x, respawn_y
     jmp skip_PhaseWallUpdate
 
 skip_remove_ability:
