@@ -4,6 +4,7 @@
 
 .segment "CODE"
 .include "coinListMacro.s"
+.importzp ability_red_passtrough_timers, ability_blue_passtrough_timers
 
 .macro InitVariables
 

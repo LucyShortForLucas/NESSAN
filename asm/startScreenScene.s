@@ -9,7 +9,7 @@
 .include "consts.s"
 .include "graphicsMacro.s"
 ; test
-.import initialize_scene_end
+.import initialize_scene_game
 
 start_screen_scene:
     ldy #$00
@@ -24,7 +24,7 @@ start_screen_scene:
     lda inputs ; Check for Start Press 
     and #%00010000
     beq @skip ; skips scene change if nothing is pressed
-    jsr initialize_scene_end ; initialize scene
+    jsr initialize_scene_game ; initialize scene
 @skip:
 
     rts
