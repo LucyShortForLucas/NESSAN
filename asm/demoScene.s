@@ -76,8 +76,6 @@ skip_red_update:
 
 do_red_update:
 
-    lda ability_red_passtrough_timers
-    bne skipRedPickupHandling ; check if it's 0, if so, skip grabbing all items
     
     CheckForCoinCollision red_player_x, red_player_y
     bcc skipRedPickupHandling
@@ -94,6 +92,8 @@ do_red_update:
 
 RedHitAbility:
     ; Ability
+    lda ability_red_passtrough_timers
+    bne skipRedPickupHandling ; check if it's 0, if so, skip grabbing all items
 
     GrabAbility ability_red
     jsr HandleCoinCollection
@@ -116,8 +116,6 @@ skip_blue_update:
 
 do_blue_update:
 
-    lda ability_blue_passtrough_timers
-    bne skipBluePickupHandling ; check if it's 0, if so, skip grabbing all items
 
     CheckForCoinCollision blue_player_x, blue_player_y
     bcc skipBluePickupHandling
@@ -134,6 +132,8 @@ do_blue_update:
 
 BlueHitAbility:
     ; Ability
+    lda ability_blue_passtrough_timers
+    bne skipBluePickupHandling ; check if it's 0, if so, skip grabbing all items
 
     GrabAbility ability_blue
     jsr HandleCoinCollection
