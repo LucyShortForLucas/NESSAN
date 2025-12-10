@@ -1,6 +1,6 @@
 ;; exports and imports
 ;; backgrounds  
-.export background:=gameScreenMap
+.export gameScreenMap
 .export startScreenMap
 .export endScreenMap
 ;
@@ -19,6 +19,9 @@
 .export AbilityDashIconRed, AbilityGunIconRed, AbilityPhaseIconRed
 .export AbilityDashIconBlue, AbilityGunIconBlue, AbilityPhaseIconBlue
 .export AbilityDashFrame1, AbilityGunFrame1, AbilityPhaseFrame1, AbilityDashFrame2, AbilityGunFrame2, AbilityPhaseFrame2
+
+.export Pointer, EmptyPointer
+.export PlayerWinText, TimeUpText, WinText
 
 .export palettes
 
@@ -438,6 +441,39 @@ AbilityPhaseFrame2:
       .byte $00, $CD, $01, $08  ; Top Right
       .byte $08, $CE, $01, $00  ; Bottom Left
       .byte $08, $CF, $01, $08  ; Bottom Right
+
+Pointer:
+ 	  .byte $00, $3E, $03, $00
+
+EmptyPointer: ; change?
+	  	  .byte $00, $00, $03, $00
+
+PlayerWinText: ; total letters: 7 x 4 = 28 -> 0x28 = 1C
+;	  Y-off, Tile, Attr, X-off
+	  .byte $00, $50, $00, $00 ; P
+	  .byte $00, $4C, $00, $08 ; L
+	  .byte $00, $41, $00, $10 ; A
+	  .byte $00, $59, $00, $18 ; Y
+	  .byte $00, $45, $00, $20 ; E
+	  .byte $00, $52, $00, $28 ; R
+	  .byte $00, $00, $00, $30 ; 
+								; winner VAR
+WinText: ; total letters: 4
+;	  Y-off, Tile, Attr, X-off
+	  .byte $00, $57, $00, $00 ; W
+	  .byte $00, $49, $00, $08 ; I
+	  .byte $00, $4E, $00, $10 ; N
+	  .byte $00, $53, $00, $18 ; S
+  
+TimeUpText: ; total letters: 7 x 4 = 28 -> 0x28 = 1C
+;	  Y-off, Tile, Attr, X-off
+	  .byte $00, $54, $00, $00 ; T
+	  .byte $00, $49, $00, $08 ; I
+	  .byte $00, $4D, $00, $10 ; M
+	  .byte $00, $45, $00, $18 ; E
+	  .byte $00, $00, $00, $20 ; 
+	  .byte $00, $55, $00, $28 ; U
+	  .byte $00, $50, $00, $30 ; P
 
 palettes:
   ; Background Palette
