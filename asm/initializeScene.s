@@ -60,5 +60,7 @@ initialize_scene_end:
     lda #SCENE_ENDSCREEN
     sta current_scene
 
+    SetClock #00, #03 ; How long the deathscreen will be displayed
+
      DrawBackground endScreenMap ; Update background
 rts

@@ -13,6 +13,7 @@
 end_screen_scene:
     ldy #$00
     
+    UpdateClock
     ; check which type of win happend
     lda end_state ; Load the endstate from RAM to compare and choose the correct display
     cmp #ENDSTATE_TIMERUP
@@ -38,13 +39,13 @@ end_screen_scene:
      DrawRedWins
 
 skip:
-    lda inputs ; Check for Start Press 
-    and #%00010000
-    beq @skipScene ; skips scene change if nothing is pressed
-    jsr initialize_scene_start ; initialize scene
-
-  ; THE GAME GOES TO STARTSCREEN BUT DUE TO IT BEING THE SAME START BUTTON IT INSTANTLY GOES TO GAME
-
+    ;lda inputs ; Check for Start Press 
+    ;and #%00010000
+    ;beq @skipScene ; skips scene change if nothing is pressed
+    lda clock_sec
+    ora clock_sec
+    bne @skipScene ; if the clock isnt zero SKIP
+      jsr initialize_scene_start ; initialize scene
 @skipScene:
 
     rts
