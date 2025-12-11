@@ -79,33 +79,28 @@ spawn_new_pickup:
 	jsr prng
     lda rand             ; Load the random number (0-255)
 
-    cmp #167             ; 65% of 256 is approx 167
+    cmp #NUMBER_RAND_COINS             ; 65% of 256 is approx 167
     bcc @SetCoin         ; If less than 180, it is a Coin
 
-    cmp #180             ; next 5% (167 + 13)
-    bcc @SetBomb         ; If between 167 and 180, it is a bomb
 
-    cmp #206             ; Next 10% (180 + 26)
+    cmp #NUMBER_RAND_DASH             ; Next 10% (180 + 26)
     bcc @SetDash         ; If between 180 and 205, it is Dash
 
-    cmp #231             ; Next 10% (206 + 25)
+    cmp #NUMBER_RAND_GUN             ; Next 10% (206 + 25)
     bcc @SetGun          ; If between 206 and 230, it is Gun
+	
+    cmp #NUMBER_RAND_PASSTHROUGH   ; next 10% (167 + 13)
+    bcc @SetPhase         ; If between 167 and 180, it is a bomb
 
-    ; If we are here, it is > 230 (The last 10%)
-    lda #3               ; Set Phase
-    sta list_pickup+2, x
-    rts
+    ; If we are here, it is > 230 (The last %)
+    lda #PICKUP_BOMB               ; Set bomb
+    jmp @return
 
 @SetCoin:
     lda #PICKUP_NONE
     jmp @return
 
-@SetBomb:
-	; if 0 then bomb is not active and we can use it
-	;lda bomb_x
-	;bne @SetDash ; if bomb is active, skip to next pickup type
-	;lda #1 ; to indicate bomb is active
-	;sta bomb_x
+@SetPhase:
 	lda #PICKUP_BOMB ; set bomb pickup
 	jmp @return
 
