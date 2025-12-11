@@ -28,8 +28,12 @@
 
 @coinCollisionLoop: ; loop over each item and check collision
     lda list_pickup, x
+    ; move x over by 4 to the right to account for offcenter
+    adc #4
     sta math_buffer+4 ; set x
     lda list_pickup+1, x
+    ; move y over by 4 to the bottom to account for offcenter
+    adc #4
     sta math_buffer+5 ; set y
     jsr aabb_collision ; gets carry  bit if hit
     bcs @coinHit
@@ -46,31 +50,6 @@
     sta math_buffer
     sec ; set the carry
     @endCoinCollision:
-.endscope
-.endmacro
-
-
-
-; input: x_pos, y_pos, type as direct values
-; uses a and x register
-; output: None
-.macro AddItemToPickupList x_pos, y_pos, type
-.scope
-    clc
-    lda list_pickup
-    adc #1
-    cmp #3
-    bcs @skipAddCoin
-    jsr ConvertIndexToPosition
-    ; can't add coin, max reached 
-    ; add coin at position
-    lda #x_pos
-    sta list_pickup, x
-    lda #y_pos
-    sta list_pickup+1, x
-    lda #type
-    sta list_pickup+2, x
-@skipAddCoin:
 .endscope
 .endmacro
 
