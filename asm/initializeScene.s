@@ -17,7 +17,7 @@
 .export initialize_scene_start, initialize_scene_game, initialize_scene_end
 
 ; reseting
-.importzp score_red, score_blue
+.importzp score_red, score_blue, blue_player_x, blue_player_y, red_player_x, red_player_y, ability_blue, ability_red
 
 initialize_scene_start:
    ChooseSong SONG_START
@@ -36,11 +36,20 @@ initialize_scene_game:
     sta current_scene ; update current_scene var
     
     SetClock #02, #30  ; Start clock at 2:30
-        ; Resets Scores
     lda #00
-    sta score_red
+    sta score_red ; reset scores
     sta score_blue
+    sta ability_blue ; reset abilities
+    sta ability_red
 
+    lda #RED_PLAYER_SPAWN_X ; reset red position
+    sta red_player_x
+    lda #RED_PLAYER_SPAWN_Y
+    sta red_player_y
+    lda #BLUE_PLAYER_SPAWN_X ; reset blue position
+    sta blue_player_x
+    lda #BLUE_PLAYER_SPAWN_Y
+    sta blue_player_y
 
     DrawBackground gameScreenMap ; Update background
 rts

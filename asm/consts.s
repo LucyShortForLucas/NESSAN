@@ -74,4 +74,4 @@ SFX_SPAWNING = $06
 ; Die 
 
 ; Coin Cap
-COIN_CAP = 5
+COIN_CAP = 10
