@@ -1,7 +1,7 @@
 
 .importzp inputs
 .import current_scene
-.import endState
+.import end_state
 .import initialize_scene_start
 
 .include "consts.s"
@@ -14,41 +14,37 @@ end_screen_scene:
     ldy #$00
     
     ; check which type of win happend
-    lda endState ; Load the endstate from RAM to compare and choose the correct display
-    bne TimeUp
-    cmp #endState_Player1 ; Player 1 victory
-    bne Player_1_Won
-
-; if uncommented leaves behind error code "asm\endScreenScene.s:23: Error: Range error (966 not in [-128..127])"
-    ;cmp #endState_Player2 ; Player 2 victory
-    ;bne Player_2_Won    
-
-    jmp skip ; if nothing was in the endState just skip towards input
+    lda end_state ; Load the endstate from RAM to compare and choose the correct display
+    cmp #ENDSTATE_TIMERUP
+    beq time_up
+    cmp #ENDSTATE_BLUEWINS ; Player 1 victory
+    beq blue_won
+    jmp skip_until_red ; if nothing was in the endState just skip towards input
     
-    TimeUp:
-      ChooseSFX SFX_COIN
-      
+    time_up:
       DrawTimeUp 
-      jmp skip
+      jmp skip_until_red
 
-    Player_1_Won:
-      ChooseSFX SFX_COIN
+    blue_won:
+      DrawBlueWins
+      jmp skip_until_red
 
-      DrawPlayerWin
-      DrawRedPlayer #120, #80
-      jmp skip
+    skip_until_red: ; due to the jmp being too big for one go this is a inbetween
+        cmp #ENDSTATE_REDWINS 
+        beq red_won
+        jmp skip
 
-    Player_2_Won:
-      ChooseSFX SFX_COIN
-
-      DrawPlayerWin
-      DrawBluePlayer #120, #80
+    red_won:
+     DrawRedWins
 
 skip:
     lda inputs ; Check for Start Press 
     and #%00010000
     beq @skipScene ; skips scene change if nothing is pressed
     jsr initialize_scene_start ; initialize scene
+
+  ; THE GAME GOES TO STARTSCREEN BUT DUE TO IT BEING THE SAME START BUTTON IT INSTANTLY GOES TO GAME
+
 @skipScene:
 
     rts

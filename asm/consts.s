@@ -41,16 +41,13 @@ DASH_DURATION = 20
 
 
 ; Static start screen pointer
-Pointer_X_pos = 80
-Pointer_Y_pos = 136
-
-MiddleEndScreen_X_pos = 96
-MiddleEndScreen_Y_pos = 112
+POINTER_X_POS = 80
+POINTER_Y_POS = 136
 
 ; Enum endState
-endState_TimerUp = $00
-endState_Player1 = $01
-endState_Player2 = $02
+ENDSTATE_TIMERUP = 0
+ENDSTATE_BLUEWINS = 1
+ENDSTATE_REDWINS = 2
 
 ; Direction enum
 DIR_DOWN = 0
@@ -65,13 +62,16 @@ SONG_END = $02
 
 ; SFX Enum
 SFX_COIN = $00
-SFX_AbilityPickup = $01
-SFX_GunFire = $02
-SFX_AbilityUsage = $03
-SFX_Win = $04
-SFX_Lose = $05
-SFX_Spawning = $06
+SFX_ABILITYPICKUP = $01
+SFX_GUNFIRE = $02
+SFX_ABILITYUSAGE = $03
+SFX_WIN = $04
+SFX_LOSE = $05
+SFX_SPAWNING = $06
 
 ; Dash
 ; Ghost
 ; Die 
+
+; Coin Cap
+COIN_CAP = 5

@@ -16,6 +16,9 @@
 ; exports for intitialization
 .export initialize_scene_start, initialize_scene_game, initialize_scene_end
 
+; reseting
+.importzp score_red, score_blue
+
 initialize_scene_start:
    ChooseSong SONG_START
 
@@ -28,17 +31,22 @@ rts
 
 initialize_scene_game:
     ChooseSong SONG_START
-    
+
     lda #SCENE_GAME ; Load const var into accumulator
     sta current_scene ; update current_scene var
     
     SetClock #02, #30  ; Start clock at 2:30
+        ; Resets Scores
+    lda #00
+    sta score_red
+    sta score_blue
+
 
     DrawBackground gameScreenMap ; Update background
 rts
 
 initialize_scene_end:
-    ChooseSong SONG_START
+    jsr famistudio_music_stop
 
     lda #SCENE_ENDSCREEN
     sta current_scene

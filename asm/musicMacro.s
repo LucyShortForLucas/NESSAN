@@ -2,6 +2,7 @@
 .import famistudio_sfx_play, famistudio_music_play
 .import famistudio_init
 .import famistudio_sfx_init
+.import famistudio_music_stop
 
 .macro InitializeSongs
 ; Setup music

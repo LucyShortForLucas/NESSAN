@@ -1,9 +1,6 @@
 ; import engine functions
 .import famistudio_update
 
-;.import famistudio_sfx_play
-;.import famistudio_music_play (is handled in "initializeScene.s")
- 
 ; Music initialization
 .import music_data_coinheist ; import song
 .import sounds

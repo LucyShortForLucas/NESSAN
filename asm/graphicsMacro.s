@@ -669,10 +669,10 @@ ClockFinished:
     adc #increment
     sta score_var
     
-    ; Cap at 99
-    cmp #100
+    ; Cap at variable in consts
+    cmp #COIN_CAP
     bcc ScoreUpdateDone
-    lda #99
+    lda #COIN_CAP
     sta score_var
 
 ScoreUpdateDone:
@@ -688,10 +688,16 @@ DrawSprite x_pos, y_pos, Pointer
 .endscope
 .endmacro
 
-.macro DrawPlayerWin
+.macro DrawBlueWins
 .scope
-    ;DrawText #96, #112, PlayerWinText, $1C
-    ;DrawText #112, #136, WinText, $10
+    DrawMetasprite #120, #80, BluePlayerDown1
+    DrawText #112, #112, WinText, $10
+.endscope
+.endmacro
+
+.macro DrawRedWins
+.scope
+    DrawMetasprite #120, #80, RedPlayerDown1
     DrawText #112, #112, WinText, $10
 .endscope
 .endmacro

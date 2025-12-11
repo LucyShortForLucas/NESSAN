@@ -51,6 +51,8 @@
 .import HandleCoinCollection
 .import aabb_collision
 
+.import end_state, initialize_scene_end
+
 .export demo_scene
 
 
@@ -90,6 +92,7 @@ do_red_update:
     jsr HandleCoinCollection
     UpdateScore score_red, 1
     ChooseSFX SFX_COIN ; Play Coin Pickup SFX
+    jsr check_coin_cap_red
     jmp skipRedPickupHandling
 
 RedHitAbility:
@@ -129,6 +132,7 @@ do_blue_update:
     jsr HandleCoinCollection
     UpdateScore score_blue, 1
     ChooseSFX SFX_COIN ; Play Coin Pickup SFX
+    jsr check_coin_cap_blue
     jmp skipBluePickupHandling
 
 BlueHitAbility:
@@ -144,7 +148,8 @@ blue_update_end:
 
 
     UpdateClock
-    
+    jsr check_clock
+
     ; Draw Sprites
     ldy #$00 ; do NOT forget to load y with 0 before drawing sprites!
 
@@ -170,7 +175,7 @@ blue_update_end:
     jmp @loopDrawLoop
 @endPickupDraw:   
 
-    DrawClock count_down_x, count_down_y
+    DrawClock count_down_x, count_down_y ; 
 
     lda blue_respawn_timer
     cmp #35
@@ -210,4 +215,40 @@ skip_red_draw:
 ; Subroutine to draw the pickups
 DrawPickupJSR:
     DrawPickup
+    rts
+
+; Clock cap check subroutine
+check_clock:
+    ; Check if 00:00
+    lda clock_min
+    ora clock_sec
+    bne @skip ; if the clock isnt zero SKIP
+        lda #ENDSTATE_TIMERUP
+        sta end_state
+
+        jsr initialize_scene_end ; doesnt know what to do
+    @skip:
+    rts
+; coin cap check subroutine
+check_coin_cap_blue:
+ ; Check one player has reached the max coins and wins
+    lda score_blue
+    cmp #COIN_CAP
+    bne @skipBlue ; if the cap isnt reached SKIP
+        lda #ENDSTATE_BLUEWINS
+        sta end_state
+
+        jsr initialize_scene_end ; doesnt know what to do
+    @skipBlue:
+    rts
+
+check_coin_cap_red:
+    lda score_red
+    cmp #COIN_CAP
+    bne @skipRed ; if the cap isnt reached SKIP
+        lda #ENDSTATE_REDWINS
+        sta end_state
+
+        jsr initialize_scene_end ; doesnt know what to do
+    @skipRed:
     rts

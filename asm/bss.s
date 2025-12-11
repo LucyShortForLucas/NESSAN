@@ -20,7 +20,7 @@
 
 .export pickup_timer
 
-.export endState
+.export end_state
 
 .segment "BSS"
 
@@ -47,4 +47,4 @@ list_pickup: .res 10 ; 0th element for how many are active, max 3 coins: 1th for
 
 pickup_timer: .res 1
 
-endState: .res 1 ; to check what type of ending you have
+end_state: .res 1 ; to check what type of ending you have
