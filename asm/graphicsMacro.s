@@ -89,19 +89,24 @@ sta $2001
 .scope
     lda list_pickup+2, x   ; Load the type
 
-    cmp #1
+    cmp #PICKUP_DASH
     bne @CheckGun       ; If not 1, hop over
     jmp Pickup_Dash     ; If is 1, jump to the label 
 
 @CheckGun:
-    cmp #2
+    cmp #PICKUP_GUN
     bne @CheckPhase     ; If not 2, hop over
     jmp Pickup_Gun      ; If is 2, jump
 
 @CheckPhase:
-    cmp #3
-    bne @DrawDefault    ; If not 3, hop over
+    cmp #PICKUP_PASSTHROUGH
+    bne @CheckBomb    ; If not 3, hop over
     jmp Pickup_Phase    ; If is 3, jump
+
+@CheckBomb:
+    cmp #PICKUP_BOMB
+    bne @DrawDefault    ; If not 4, hop over
+    jmp Pickup_Bomb    ; If is 4, jump
 
 @DrawDefault:
     DrawCoin
@@ -117,6 +122,10 @@ Pickup_Gun:
 
 Pickup_Phase:
     DrawPhase
+    rts
+
+Pickup_Bomb:
+    DrawBomb
     rts
 .endscope
 .endmacro
@@ -388,9 +397,10 @@ PlayerDone:
 
 .macro DrawAbilityRed x_pos, y_pos, ability_lbl
 .scope
-    lda ability_lbl     ; Load the ability value (0=Empty, 1=Dash, 2=Gun, 3=Phase)
-    beq Done            ; If 0, draw nothing and exit
-
+    lda ability_lbl     ; Load the ability value (0=Empty, 1=Dash, 2=Gun, 3=Phase, 4=Bomb)
+    bne Draw            ; If NOT 0, draw
+    jmp Done            ; If 0, draw nothing and exit
+Draw:
     ; Check specific abilities
     cmp #1
     beq RenderDash      ; If 1, go to Dash
@@ -401,7 +411,10 @@ PlayerDone:
     cmp #3
     beq RenderPhase     ; If 3, go to Phase
     
-    jmp Done            ; Safety catch (if value is >3)
+    cmp #4
+    beq RenderBomb      ; If 4, go to Bomb
+    
+    jmp Done            ; Safety catch (if value is >4)
 
 RenderDash:
     DrawSprite x_pos, y_pos, AbilityDashIconRed
@@ -415,15 +428,20 @@ RenderPhase:
     DrawSprite x_pos, y_pos, AbilityPhaseIconRed
     jmp Done
 
+RenderBomb:
+    DrawSprite x_pos, y_pos, AbilityBombIconRed
+    jmp Done
+
 Done:
 .endscope
 .endmacro
 
 .macro DrawAbilityBlue x_pos, y_pos, ability_lbl
 .scope
-    lda ability_lbl     ; Load the ability value (0=Empty, 1=Dash, 2=Gun, 3=Phase)
-    beq Done            ; If 0, draw nothing and exit
-
+    lda ability_lbl     ; Load the ability value (0=Empty, 1=Dash, 2=Gun, 3=Phase, 4=Bomb)
+    bne Draw            ; If NOT 0, draw
+    jmp Done            ; If 0, draw nothing and exit
+Draw:
     ; Check specific abilities
     cmp #1
     beq RenderDash      ; If 1, go to Dash
@@ -434,7 +452,10 @@ Done:
     cmp #3
     beq RenderPhase     ; If 3, go to Phase
     
-    jmp Done            ; Safety catch (if value is >3)
+    cmp #4
+    beq RenderBomb     ; If 4, go to Bomb
+    
+    jmp Done            ; Safety catch (if value is >4)
 
 RenderDash:
     DrawSprite x_pos, y_pos, AbilityDashIconBlue
@@ -446,6 +467,10 @@ RenderGun:
 
 RenderPhase:
     DrawSprite x_pos, y_pos, AbilityPhaseIconBlue
+    jmp Done
+
+RenderBomb:
+    DrawSprite x_pos, y_pos, AbilityBombIconBlue
     jmp Done
 
 Done:

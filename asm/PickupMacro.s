@@ -248,3 +248,172 @@ skip_PhaseWallUpdate:
 @skip_timer_logic:
 .endscope
 .endmacro
+
+
+
+.macro ThrowBomb player_abilitySlot, player_x, player_y, player_dir
+.scope
+    ;remove bomb from ability slot
+    lda #PICKUP_NONE
+    sta player_abilitySlot
+    ; throw bomb code!
+
+    ; set bomb to our position
+    lda player_x
+    sta bomb_x
+    lda player_y
+    sta bomb_y
+    ; set bomb timer to correct time & draw frame counter to 0
+    lda #BOMB_TIMER_FRAMES
+    sta bomb_timer
+    lda #0
+    sta bomb_draw_frame_counter
+    
+    ; throw bomb in direction player is facing
+    lda player_dir
+
+    cmp #DIR_UP
+    beq @throw_up
+
+    cmp #DIR_DOWN
+    beq @throw_down
+
+    cmp #DIR_LEFT
+    beq @throw_left
+
+    cmp #DIR_RIGHT
+    beq @throw_right
+
+    jmp @end_throw ; safety catch, should not happen
+@throw_up:
+    lda #0
+    sta bomb_veloctiy_x
+    lda #(256-BOMB_THROW_SPEED) ; instead of using complex add/sub later, we just add what would be negative but divide the speed by 2 to make sure it's the same speed
+    sta bomb_velocity_y
+    jmp @end_throw
+@throw_down:
+    lda #0
+    sta bomb_veloctiy_x
+    lda #BOMB_THROW_SPEED
+    sta bomb_velocity_y
+    jmp @end_throw
+@throw_left:
+    lda #(256-BOMB_THROW_SPEED) ; instead of using complex add/sub later, we just add what would be negative but divide the speed by 2 to make sure it's the same speed
+    sta bomb_veloctiy_x
+    lda #0
+    sta bomb_velocity_y
+    jmp @end_throw
+@throw_right:
+    lda #BOMB_THROW_SPEED
+    sta bomb_veloctiy_x
+    lda #0
+    sta bomb_velocity_y
+@end_throw:
+.endscope
+.endmacro
+
+.macro BombUpdate 
+.scope
+
+    lda bomb_timer
+    bne bomb_logic ; If not 0, do code,
+    jmp skip_bomb_logic ; else skip
+bomb_logic:
+;; bomb logic code ;;
+blink1_inc_else:
+    ; if below threshold, move the bomb!
+    ; move bomb based on velocity, if negative is set then subtract
+    lda bomb_timer
+    cmp BOMB_THROW_THRESHOLD
+    bpl skip_moving_bomb
+
+    lda bomb_x
+    clc 
+    adc bomb_veloctiy_x
+    sta bomb_x
+
+    lda bomb_y
+    clc 
+    adc bomb_velocity_y
+    sta bomb_y
+
+skip_moving_bomb:
+    ; tick up draw frame counter
+    inc bomb_draw_frame_counter
+    ; if above threshold 1, inc
+    lda bomb_timer
+    cmp #BOMB_BLINK_THRESHOLD1
+    bpl skip_blink1_inc
+    inc bomb_draw_frame_counter
+skip_blink1_inc:
+
+
+    ; if above threshold 2, inc
+    lda bomb_timer
+    cmp #BOMB_BLINK_THRESHOLD2
+    bpl skip_blink2_inc
+    inc bomb_draw_frame_counter
+    inc bomb_draw_frame_counter
+    inc bomb_draw_frame_counter
+    inc bomb_draw_frame_counter
+skip_blink2_inc:
+
+    ; if above 20 frames, reset to 0
+    lda bomb_draw_frame_counter
+    cmp #40
+    bmi skip_blink_reset
+    lda #0
+    sta bomb_draw_frame_counter
+skip_blink_reset:
+
+    dec bomb_timer         ; tick down timer
+    bne skip_bomb_logic ; If not 0 yet, continue
+    ; Timer hit 0 then explode bomb
+    ; Kill players in radius
+    ; first we move the x to half the radius left and y to half the radius up
+    lda bomb_x
+    sec 
+    sbc #((BOMB_BLAST_RADIUS / 2)-8) ; -8 for sprite offset
+    sta math_buffer+0 ; x
+    lda bomb_y
+    sec 
+    sbc #((BOMB_BLAST_RADIUS / 2)-8) ; -8 for sprite offset
+    sta math_buffer+1 ; y
+    lda #BOMB_BLAST_RADIUS
+    sta math_buffer+2 ; width
+    lda #BOMB_BLAST_RADIUS
+    sta math_buffer+3 ; height
+    ; load player width
+    lda #PLAYER_W
+    sta math_buffer+6
+    lda #PLAYER_H
+    sta math_buffer+7
+    ; check blue player
+    lda blue_player_x
+    sta math_buffer+4
+    lda blue_player_y
+    sta math_buffer+5
+
+
+    jsr aabb_collision
+    bcc blue_no_hit_bomb
+    Kill blue_respawn_timer, score_blue, ability_blue, blue_player_x, blue_player_y, #BLUE_PLAYER_SPAWN_X, #BLUE_PLAYER_SPAWN_Y
+blue_no_hit_bomb:
+    ; check red player
+    lda red_player_x
+    sta math_buffer+4
+    lda red_player_y
+    sta math_buffer+5
+
+    jsr aabb_collision
+    bcc red_no_hit_bomb
+    Kill red_respawn_timer, score_red, ability_red, red_player_x, red_player_y, #RED_PLAYER_SPAWN_X, #RED_PLAYER_SPAWN_Y
+red_no_hit_bomb:
+
+    lda #0
+    sta bomb_x
+    sta bomb_y
+
+skip_bomb_logic:
+.endscope
+.endmacro

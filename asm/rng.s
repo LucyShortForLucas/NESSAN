@@ -2,6 +2,7 @@
 
 .importzp rand
 .importzp math_buffer
+.importzp bomb_x
 
 .import wall_collisions
 .import ConvertIndexToPosition
@@ -74,13 +75,15 @@ spawn_new_pickup:
     sta list_pickup, x
     lda rand+1
     sta list_pickup+1, x
-
-    ; 70% Coin, 10% each Ability
+    ; 65% Coin, 10% each Ability, except for bomb has 5%
 	jsr prng
     lda rand             ; Load the random number (0-255)
 
-    cmp #180             ; 70% of 256 is approx 179
+    cmp #167             ; 65% of 256 is approx 167
     bcc @SetCoin         ; If less than 180, it is a Coin
+
+    cmp #180             ; next 5% (167 + 13)
+    bcc @SetBomb         ; If between 167 and 180, it is a bomb
 
     cmp #206             ; Next 10% (180 + 26)
     bcc @SetDash         ; If between 180 and 205, it is Dash
@@ -94,15 +97,24 @@ spawn_new_pickup:
     rts
 
 @SetCoin:
-    lda #0
+    lda #PICKUP_NONE
     jmp @return
 
+@SetBomb:
+	; if 0 then bomb is not active and we can use it
+	;lda bomb_x
+	;bne @SetDash ; if bomb is active, skip to next pickup type
+	;lda #1 ; to indicate bomb is active
+	;sta bomb_x
+	lda #PICKUP_BOMB ; set bomb pickup
+	jmp @return
+
 @SetDash:
-    lda #1
+    lda #PICKUP_DASH
     jmp @return
 
 @SetGun:
-    lda #2
+    lda #PICKUP_GUN
 
 @return:
     sta list_pickup+2, x

@@ -56,6 +56,8 @@
 .exportzp last_blue_player_dir
 .exportzp last_red_player_dir
 
+.exportzp bomb_timer, bomb_x, bomb_y, bomb_draw_frame_counter, bomb_veloctiy_x, bomb_velocity_y
+
 .exportzp laser_timer, laser_state, laser_dir_save, laser_x_tile, laser_y_tile, laser_length, laser_buffer, ppu_addr_temp, draw_x, draw_y
 
 .segment "ZEROPAGE" ; zero-page memory, fast access: Use sparingly!
@@ -134,3 +136,11 @@ laser_buffer:   .res 32    ; Temporary storage for the tiles behind the laser
 ppu_addr_temp:  .res 2     ; 2-byte helper for PPU address
 draw_x:         .res 1     ; Temp variable for calculating start position
 draw_y:         .res 1     ; Temp variable for calculating start position
+
+; bomb variables
+bomb_timer: .res 1
+bomb_x: .res 1
+bomb_y: .res 1
+bomb_draw_frame_counter: .res 1
+bomb_veloctiy_x: .res 1
+bomb_velocity_y: .res 1

@@ -215,6 +215,12 @@ skip_dash:
     jmp end_ability      ; If match found we jump to end.   
 skip_Passthrough:
 
+    cmp #PICKUP_BOMB ; check for bomb
+    bne skip_bomb
+    ThrowBomb player_pickup, player_x, player_y, last_player_dir
+    jmp end_ability      ; If match found we jump to end.   
+skip_bomb:
+
 end_ability:
     ; Ability Updates
     DashUpdate dash_timer, player_pickup

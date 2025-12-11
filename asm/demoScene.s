@@ -58,6 +58,8 @@
 .export demo_scene
 
 
+.importzp bomb_timer, bomb_x, bomb_y, bomb_draw_frame_counter, bomb_veloctiy_x, bomb_velocity_y
+
 .include "playerMacro.s"
 .include "graphicsMacro.s"
 .include "consts.s"
@@ -162,6 +164,7 @@ skipBluePickupHandling:
 
 blue_update_end:
 
+    BombUpdate
 
     UpdateClock
     jsr check_clock
@@ -220,6 +223,19 @@ draw_red:
     DrawRedPlayer red_player_x, red_player_y
 skip_red_draw:
 
+    lda bomb_x
+    cmp #0
+    ; if bomb x is 0, bomb is not active so skip draw
+    beq skip_bomb_draw
+
+    ; if bomb is active, draw it
+    lda bomb_draw_frame_counter
+    ; compare to half of 40, 20, if less than 20 draw sprite else draw nothing
+    cmp #20
+    bpl skip_bomb_draw
+    DrawMetasprite bomb_x, bomb_y, AbilityBombFrame2
+
+skip_bomb_draw:
 
     DrawScore score_red_x, score_red_y, score_red
     DrawScore score_blue_x, score_blue_y, score_blue
