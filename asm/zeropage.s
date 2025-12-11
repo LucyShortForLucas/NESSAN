@@ -56,6 +56,8 @@
 .exportzp last_blue_player_dir
 .exportzp last_red_player_dir
 
+.exportzp laser_timer, laser_state, laser_dir_save, laser_x_tile, laser_y_tile, laser_length, laser_buffer, ppu_addr_temp, draw_x, draw_y
+
 .segment "ZEROPAGE" ; zero-page memory, fast access: Use sparingly!
 
 ;; System variables
@@ -119,3 +121,16 @@ red_respawn_timer: .res 1
 
 dash_timer_red: .res 1
 dash_timer_blue: .res 1
+
+; Laser animation
+laser_timer:    .res 1     ; Countdown timer
+laser_state:    .res 1     ; 0 = Off, 1 = Draw White, 2 = Draw Restore
+laser_x_tile:   .res 1     ; Saved X (in tiles, not pixels)
+laser_y_tile:   .res 1     ; Saved Y (in tiles, not pixels)
+laser_dir_save: .res 1     ; Saved Direction
+laser_length:   .res 1     ; Store calculated length here
+
+laser_buffer:   .res 32    ; Temporary storage for the tiles behind the laser
+ppu_addr_temp:  .res 2     ; 2-byte helper for PPU address
+draw_x:         .res 1     ; Temp variable for calculating start position
+draw_y:         .res 1     ; Temp variable for calculating start position

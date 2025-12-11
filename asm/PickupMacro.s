@@ -119,6 +119,37 @@ red_no_hit:
 .endscope
 .endmacro
 
+.macro ShootGunAnimation laser_timer, laser_state, last_player_dir, laser_dir_save, player_x, laser_x_tile, player_y, laser_y_tile
+.scope
+    ; set the duration for how long the laser stays on screen
+    lda #LASER_ANIMATION_DURATION
+    sta laser_timer
+    
+    ; set state to 1 which tells the nmi to draw the white line
+    lda #1
+    sta laser_state
+
+    ; save the direction the player is facing
+    lda last_player_dir
+    sta laser_dir_save
+
+    ; convert pixel coordinates to tile coordinates by dividing by 8
+    ; process x coordinate
+    lda player_x
+    lsr
+    lsr
+    lsr
+    sta laser_x_tile
+    
+    ; process y coordinate
+    lda player_y
+    lsr
+    lsr
+    lsr
+    sta laser_y_tile
+.endscope
+.endmacro
+
 .macro PhaseWallInitialize passtroughTimer
 .scope
     ; Initialize the passtrough timer to the maximum value so that in the update it later

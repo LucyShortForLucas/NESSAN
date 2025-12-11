@@ -1,6 +1,7 @@
 
 .import wall_collisions
 .import initialize_scene_end
+.importzp laser_timer, laser_state, laser_dir_save, laser_x_tile, laser_y_tile, laser_length, laser_buffer, ppu_addr_temp, draw_x, draw_y
 
 .include "PickupMacro.s"
 
@@ -195,9 +196,11 @@ skip_gun:
 do_gun:
 
     ShootGun player_x, player_y, last_player_dir
-    lda #0
+    ShootGunAnimation laser_timer, laser_state, last_player_dir, laser_dir_save, player_x, laser_x_tile, player_y, laser_y_tile
+
+    lda #0 ; After shot the ability gets removed
     sta player_pickup
-    jmp end_ability      ; If match found we jump to end.   
+    jmp end_ability ; If match found we jump to end. 
 end_gun:
 
     cmp #PICKUP_DASH ; check for dash

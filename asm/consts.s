@@ -38,7 +38,7 @@ COINS_LOST_ON_DEATH = 3
 
 DASH_DURATION = 20
 
-
+LASER_ANIMATION_DURATION = 5
 
 ; Static start screen pointer
 POINTER_X_POS = 80

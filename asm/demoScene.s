@@ -43,6 +43,8 @@
 .importzp ability_blue_passtrough_timers, ability_red_passtrough_timers
 .importzp dash_timer_red, dash_timer_blue
 
+.importzp laser_timer, laser_state, laser_dir_save, laser_x_tile, laser_y_tile, laser_buffer, ppu_addr_temp
+
 .import list_pickup
 .import ConvertIndexToPosition
 
@@ -67,6 +69,20 @@
 
 demo_scene:
     HandlePickupSpawn ; Reduce the pickup spawn timer and check if a new one must be spawned
+
+    ; check if the laser timer is active
+    lda laser_timer
+    beq @skip_timer
+    
+    ; decrease the timer by one
+    dec laser_timer
+    bne @skip_timer
+    
+    ; if timer hits zero tell the nmi to erase the laser
+    lda #2              
+    sta laser_state
+
+@skip_timer:
 
 ;; Red Player Update
     lda red_respawn_timer
