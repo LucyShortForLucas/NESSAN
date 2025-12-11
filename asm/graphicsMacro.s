@@ -26,9 +26,9 @@
 
 .importzp ability_red_passtrough_timers, ability_blue_passtrough_timers
 
-.import AbilityDashIconRed, AbilityGunIconRed, AbilityPhaseIconRed
-.import AbilityDashIconBlue, AbilityGunIconBlue, AbilityPhaseIconBlue
-.import AbilityDashFrame1, AbilityGunFrame1, AbilityPhaseFrame1, AbilityDashFrame2, AbilityGunFrame2, AbilityPhaseFrame2
+.import AbilityDashIconRed, AbilityGunIconRed, AbilityPhaseIconRed, AbilityBombIconRed
+.import AbilityDashIconBlue, AbilityGunIconBlue, AbilityPhaseIconBlue, AbilityBombIconBlue
+.import AbilityDashFrame1, AbilityGunFrame1, AbilityPhaseFrame1, AbilityDashFrame2, AbilityGunFrame2, AbilityPhaseFrame2, AbilityBombFrame1, AbilityBombFrame2
 
 .import PASSTHROUGH_ANIMATION_MAX_DOUBLE
 
@@ -142,6 +142,12 @@ Pickup_Phase:
 .macro DrawPhase
 .scope
     DrawAnimatedMetasprite2Frames math_buffer+0, math_buffer+1, AbilityPhaseFrame1, AbilityPhaseFrame2, $20
+.endscope
+.endmacro
+
+.macro DrawBomb
+.scope
+    DrawAnimatedMetasprite2Frames math_buffer+0, math_buffer+1, AbilityBombFrame1, AbilityBombFrame2, $20
 .endscope
 .endmacro
 

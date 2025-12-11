@@ -16,9 +16,9 @@
 .export RedPlayerDown1, RedPlayerDown2, RedPlayerDown3
 .export RedPlayerUp1, RedPlayerUp2, RedPlayerUp3
 
-.export AbilityDashIconRed, AbilityGunIconRed, AbilityPhaseIconRed
-.export AbilityDashIconBlue, AbilityGunIconBlue, AbilityPhaseIconBlue
-.export AbilityDashFrame1, AbilityGunFrame1, AbilityPhaseFrame1, AbilityDashFrame2, AbilityGunFrame2, AbilityPhaseFrame2
+.export AbilityDashIconRed, AbilityGunIconRed, AbilityPhaseIconRed, AbilityBombIconRed
+.export AbilityDashIconBlue, AbilityGunIconBlue, AbilityPhaseIconBlue, AbilityBombIconBlue
+.export AbilityDashFrame1, AbilityGunFrame1, AbilityPhaseFrame1, AbilityDashFrame2, AbilityGunFrame2, AbilityPhaseFrame2, AbilityBombFrame1, AbilityBombFrame2
 
 .export Pointer, EmptyPointer
 .export PlayerWinText, TimeUpText, WinText
@@ -391,6 +391,9 @@ AbilityGunIconRed:
 AbilityPhaseIconRed:
       .byte $00, $2A, $03, $00
 
+AbilityBombIconRed:
+	  .byte $00, $2B, $03, $00
+
 AbilityDashIconBlue:
       .byte $00, $28, $02, $00
 
@@ -399,6 +402,9 @@ AbilityGunIconBlue:
 
 AbilityPhaseIconBlue:
       .byte $00, $2A, $02, $00
+
+AbilityBombIconBlue:
+	  .byte $00, $2B, $02, $00
 
 AbilityDashFrame1:
       ; Y-off, Tile, Attr, X-off
@@ -441,6 +447,20 @@ AbilityPhaseFrame2:
       .byte $00, $CD, $01, $08  ; Top Right
       .byte $08, $CE, $01, $00  ; Bottom Left
       .byte $08, $CF, $01, $08  ; Bottom Right
+
+AbilityBombFrame1:
+      ; Y-off, Tile, Attr, X-off
+      .byte $00, $D0, $01, $00  ; Top Left
+      .byte $00, $D1, $01, $08  ; Top Right
+      .byte $08, $D2, $01, $00  ; Bottom Left
+      .byte $08, $D3, $01, $08  ; Bottom Right
+
+AbilityBombFrame2:
+      ; Y-off, Tile, Attr, X-off
+      .byte $00, $D4, $01, $00  ; Top Left
+      .byte $00, $D5, $01, $08  ; Top Right
+      .byte $08, $D6, $01, $00  ; Bottom Left
+      .byte $08, $D7, $01, $08  ; Bottom Right
 
 Pointer:
  	  .byte $00, $3E, $03, $00
