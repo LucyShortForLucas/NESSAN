@@ -198,6 +198,8 @@ do_gun:
     ShootGun player_x, player_y, last_player_dir
     ShootGunAnimation laser_timer, laser_state, last_player_dir, laser_dir_save, player_x, laser_x_tile, player_y, laser_y_tile
 
+    ChooseSFX SFX_GUNFIRE
+
     lda #0 ; After shot the ability gets removed
     sta player_pickup
     jmp end_ability ; If match found we jump to end. 
@@ -206,18 +208,21 @@ end_gun:
     cmp #PICKUP_DASH ; check for dash
     bne skip_dash
     DashInitialize dash_timer
+    ChooseSFX SFX_ABILITYUSAGE
     jmp end_ability      ; If match found we jump to end.   
 skip_dash:
 
     cmp #PICKUP_PASSTHROUGH ; check for passthrough
     bne skip_Passthrough
     PhaseWallInitialize passthroughVariable
+    ChooseSFX SFX_ABILITYUSAGE
     jmp end_ability      ; If match found we jump to end.   
 skip_Passthrough:
 
     cmp #PICKUP_BOMB ; check for bomb
     bne skip_bomb
     ThrowBomb player_pickup, player_x, player_y, last_player_dir
+    ChooseSFX SFX_BOMB
     jmp end_ability      ; If match found we jump to end.   
 skip_bomb:
 
