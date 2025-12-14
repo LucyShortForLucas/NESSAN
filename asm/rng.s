@@ -101,7 +101,7 @@ spawn_new_pickup:
     jmp @return
 
 @SetPhase:
-	lda #PICKUP_BOMB ; set bomb pickup
+	lda #PICKUP_PASSTHROUGH ; set bomb pickup
 	jmp @return
 
 @SetDash:

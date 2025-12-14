@@ -88,7 +88,7 @@ BOMB_BLINK_THRESHOLD2 = 50
 BOMB_THROW_SPEED = 3
 
 ; should add up up to 100, if not then remainder will be added to last variable, in this case bomb,
-PERCENTAGE_COINS = 54
+PERCENTAGE_COINS = 59
 PERCENTAGE_DASH = 12
 PERCENTAGE_GUN = 12
 PERCENTAGE_PASSTHROUGH = 12

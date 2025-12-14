@@ -118,6 +118,7 @@ ability_blue_icon_y: .res 1
 ; Byte 1 is main timer, byte 2 is animation timer
 ability_red_passtrough_timers: .res 2
 ability_blue_passtrough_timers: .res 2
+
 blue_respawn_timer: .res 1
 red_respawn_timer: .res 1
 

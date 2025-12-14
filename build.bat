@@ -42,4 +42,27 @@ set /a totalBoth+=total
 echo Total bss bytes used: %total%
 echo Total bytes used: %totalBoth%
 
+
+
+set totalPerc = 0
+for /f "tokens=1,2,3" %%A in (asm\consts.s) do (
+    if "%%A"=="PERCENTAGE_COINS" (
+        set /a totalPerc+=%%C
+    )
+    if "%%A"=="PERCENTAGE_DASH" (
+        set /a totalPerc+=%%C
+    )
+    if "%%A"=="PERCENTAGE_PASSTHROUGH" (
+        set /a totalPerc+=%%C
+    )
+    if "%%A"=="PERCENTAGE_BOMB" (
+        set /a totalPerc+=%%C
+    )
+    if "%%A"=="PERCENTAGE_GUN" (
+        set /a totalPerc+=%%C
+    )
+)
+echo Total %% adds up to: %totalPerc%
+
+
 endlocal
