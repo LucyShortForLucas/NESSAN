@@ -22,6 +22,8 @@
 
 .export end_state
 
+.export laser_buffer
+
 .segment "BSS"
 
 ;; System variables
@@ -48,3 +50,5 @@ list_pickup: .res 10 ; 0th element for how many are active, max 3 coins: 1th for
 pickup_timer: .res 1
 
 end_state: .res 1 ; to check what type of ending you have
+
+laser_buffer: .res 32

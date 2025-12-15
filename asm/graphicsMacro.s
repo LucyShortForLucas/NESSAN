@@ -582,15 +582,17 @@ TileLoop:
 
 .macro DrawAnimatedMetasprite2Frames x_pos, y_pos, frame1, frame2, speed
 .scope
-    lda frame_counter
-    and #speed
-    bne DrawFrameTwo
+    lda frame_counter ; check the global frame counter to decide which frame to show
+    and #speed ; use a bitmask to control the animation speed
+    bne DrawFrameTwo ; if the result is not zero, jump to the second frame
 
 DrawFrameOne:
+    ; draw the first frame of the animation
     DrawMetasprite x_pos, y_pos, frame1
     jmp AnimationDone
 
 DrawFrameTwo:
+    ; draw the second frame of the animation
     DrawMetasprite x_pos, y_pos, frame2
 
 AnimationDone:

@@ -1,7 +1,8 @@
 
 .import wall_collisions
 .import initialize_scene_end
-.importzp laser_timer, laser_state, laser_dir_save, laser_x_tile, laser_y_tile, laser_length, laser_buffer, ppu_addr_temp, draw_x, draw_y
+.importzp laser_timer, laser_state, laser_dir_save, laser_x_tile, laser_y_tile, laser_length, ppu_addr_temp, draw_x, draw_y
+
 
 .include "PickupMacro.s"
 

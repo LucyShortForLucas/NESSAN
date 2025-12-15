@@ -58,7 +58,7 @@
 
 .exportzp bomb_timer, bomb_x, bomb_y, bomb_draw_frame_counter, bomb_veloctiy_x, bomb_velocity_y
 
-.exportzp laser_timer, laser_state, laser_dir_save, laser_x_tile, laser_y_tile, laser_length, laser_buffer, ppu_addr_temp, draw_x, draw_y
+.exportzp laser_timer, laser_state, laser_dir_save, laser_x_tile, laser_y_tile, laser_length, ppu_addr_temp, draw_x, draw_y
 
 .segment "ZEROPAGE" ; zero-page memory, fast access: Use sparingly!
 
@@ -133,7 +133,6 @@ laser_y_tile:   .res 1     ; Saved Y (in tiles, not pixels)
 laser_dir_save: .res 1     ; Saved Direction
 laser_length:   .res 1     ; Store calculated length here
 
-laser_buffer:   .res 32    ; Temporary storage for the tiles behind the laser
 ppu_addr_temp:  .res 2     ; 2-byte helper for PPU address
 draw_x:         .res 1     ; Temp variable for calculating start position
 draw_y:         .res 1     ; Temp variable for calculating start position

@@ -40,6 +40,28 @@ DASH_DURATION = 20
 
 LASER_ANIMATION_DURATION = 5
 
+; Hardware Registers & Flags
+PPU_CTRL        = $2000
+PPU_STATUS      = $2002
+PPU_ADDR        = $2006
+PPU_DATA        = $2007
+
+; PPU Control settings
+PPU_INC_1       = %10000000   ; Increment address by 1 (Horizontal)
+PPU_INC_32      = %10000100   ; Increment address by 32 (Vertical)
+NAMETABLE_HI    = $20         ; High byte of Nametable 0 ($2000)
+
+
+SCREEN_LIMIT_R  = 31          ; Right edge tile column
+SCREEN_LIMIT_L  = 1           ; Left edge tile column
+SCREEN_LIMIT_B  = 28          ; Bottom edge tile row
+SCREEN_LIMIT_T  = 2           ; Top edge tile row
+
+; Laser Specifics
+LASER_OFFSET    = 2           ; Start 2 tiles away from player center
+LASER_TILE_ID   = $FF         ; The solid white tile index
+LASER_STATE_DRAW = 1          ; State ID for drawing phase
+
 ; Static start screen pointer
 POINTER_X_POS = 80
 POINTER_Y_POS = 136
