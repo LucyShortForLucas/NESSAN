@@ -1,7 +1,9 @@
-
+;; IMPORTS AND EXPORTS
 .importzp math_buffer
 
 .export division_16
+
+; ------------------------------------------------------------------------
 
 .segment "CODE"
 

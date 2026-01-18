@@ -1,5 +1,4 @@
-
-; Backgrounds
+;; IMPORTS AND EXPORTS
 .import background
 
 .import palettes
@@ -32,6 +31,7 @@
 
 .import PASSTHROUGH_ANIMATION_MAX_DOUBLE
 
+; ------------------------------------------------------------------------
 
 ; ==============================================================================
 ; PUBLIC USE DRAWING MACROS

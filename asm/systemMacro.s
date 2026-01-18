@@ -1,8 +1,10 @@
-
+;; IMPORTS AND EXPORTS
 .importzp inputs
 
 .importzp frame_counter
 .importzp second_counter
+
+; ------------------------------------------------------------------------
 
 .macro UpdateTime 
     inc frame_counter

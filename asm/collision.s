@@ -1,17 +1,21 @@
+;; IMPORTS AND EXPORTS
+
+.include "consts.s"
+
 .export aabb_collision
 .export wall_collisions
-
-.importzp math_buffer
-.importzp ptr
 
 .import collision_aabb_2x2
 .import collision_aabb_2x3
 .import collision_aabb_3x3
 .import collision_aabb_9x2
 
-.segment "CODE"
+.importzp math_buffer       
+.importzp ptr            
 
-.include "consts.s"
+; ------------------------------------------------------------------------
+
+.segment "CODE"
 
 ; aabb_collison
 ; input: mathbuffer in the following order:

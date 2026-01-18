@@ -1,15 +1,17 @@
-
-.importzp inputs
-.import current_scene
-.import prng
-
-.export start_screen_scene
-.importzp rand
-
+;; IMPORTS AND EXPORTS
 .include "consts.s"
 .include "graphicsMacro.s"
 
-.import initialize_scene_game
+.export start_screen_scene    
+
+.import current_scene         
+.import initialize_scene_game 
+
+.importzp inputs              
+.importzp rand                
+.import prng                  
+
+; ------------------------------------------------------------------------
 
 start_screen_scene:
     ldy #$00

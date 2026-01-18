@@ -1,17 +1,21 @@
-.segment "CODE"
+;; IMPORTS AND EXPORTS
+.include "consts.s"
 
-.importzp rand
-.importzp math_buffer
-.importzp bomb_x
+.export prng                 
+.export spawn_new_pickup     
+
+.importzp rand               
+.importzp math_buffer        
 
 .import wall_collisions
 .import ConvertIndexToPosition
-.import list_pickup
+.importzp bomb_x              
 
-.export prng
-.export spawn_new_pickup
+.import list_pickup           
 
-.include "consts.s"
+; ------------------------------------------------------------------------
+
+.segment "CODE"
 
 ;;
 ;; A subroutine that, when called, fills [rand+0, rand+1] with pseudorandom bytes. 

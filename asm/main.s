@@ -1,94 +1,66 @@
-; import engine functions
-.import famistudio_update
-
-; Music initialization
-.import music_data_coinheist ; import song
-.import sounds
-
 ;;
 ;; This module holds the entry-point, main game loop, and NMI interrupt
 ;;
 
-;; exports and imports
-
-; Interrupt adresses
+;; IMPORTS AND EXPORTS
 .export nmi
 .export reset
 
-; drawing
-.import palettes
-.import clock_draw_buffer
-.import wall_collisions
-.import move_player_input
-.import gameScreenMap
-.importzp math_buffer
+.include "consts.s"
+.include "systemMacro.s"
+.include "musicMacro.s"
+.include "playerMacro.s"
+.include "inits.s"
 
-; flags
+.import famistudio_update
+.import music_data_coinheist
+.import sounds
+
 .import current_scene
 .import frame_ready
+.importzp math_buffer       ; General purpose math scratchpad
 
-; Scenes
-.import start_screen_scene
-.import initialize_scene_start
+.import start_screen_scene, initialize_scene_start
 .import demo_scene
 .import end_screen_scene
+
+.import palettes
+.import gameScreenMap
+.import clock_draw_buffer
+
+.import HandleLaser, laser_buffer
+.import HandleExplosion, explosion_buffer
+
+.import wall_collisions
+.import aabb_collision
+.import move_player_input
 
 .import collision_aabb_2x2
 .import collision_aabb_2x3
 .import collision_aabb_3x3
 .import collision_aabb_9x2
 
-; demo
-.importzp clock_x
-.importzp clock_y
-.importzp clock_dirty
-.importzp score_red_x
-.importzp score_red_y
-.importzp score_blue_x
-.importzp score_blue_y
-
-.importzp ability_blue_icon_x
-.importzp ability_blue_icon_y
-.importzp ability_red_icon_x
-.importzp ability_red_icon_y
-
-; mathbuffer (used by coinlist for now)
-.importzp math_buffer
-
-; coin list
 .import list_pickup
-.import aabb_collision
 .import HandleCoinCollection
 .import ConvertIndexToPosition
-
-.import laser_buffer
-
-.import HandleLaser
-
-;; includes
-.include "systemMacro.s"
-.include "consts.s"
-.include "inits.s"
 
 .importzp blue_player_x, blue_player_y
 .importzp red_player_x, red_player_y
 
-;;.importzp frame_ready
+.importzp coin_x, coin_y
+.importzp coin_x2, coin_y2
+.importzp count_down_x, count_down_y
 
-.importzp coin_x
-.importzp coin_y
-.importzp count_down_x
-.importzp count_down_y
-.importzp coin_x2
-.importzp coin_y2
+.importzp clock_x, clock_y, clock_dirty
+.importzp score_red_x, score_red_y
+.importzp score_blue_x, score_blue_y
+.importzp ability_red_icon_x, ability_red_icon_y
+.importzp ability_blue_icon_x, ability_blue_icon_y
 
-; Macros
-.include "musicMacro.s"
-.include "playerMacro.s"
+; ------------------------------------------------------------------------
 
 .segment "CODE"
 
-; reset is the Entry-point of the entire project
 reset:
   sei		; disable IRQs
   cld		; disable decimal mode
@@ -146,57 +118,7 @@ vblankwait2:
   sta $2001
 
 InitVariables ; Setup initial variables
-
-lda #$60          ; X = 96 (Center-left position)
-sta coin_x
-lda #$60          ; Y = 96 (Center vertical position)
-sta coin_y
-
-lda #BLUE_PLAYER_SPAWN_X          
-sta blue_player_x
-lda #BLUE_PLAYER_SPAWN_Y         
-sta blue_player_y
-
-lda #RED_PLAYER_SPAWN_X
-sta red_player_x
-lda #RED_PLAYER_SPAWN_Y    
-sta red_player_y
-
-
-lda #$6D          
-sta count_down_x
-lda #$E3         
-sta count_down_y
-
-lda #50
-sta clock_x
-sta clock_y
-
-lda #$D0
-sta score_red_x
-lda #$02
-sta score_red_y
-
-lda #$20
-sta score_blue_x
-lda #$02
-sta score_blue_y
-
-lda #$14
-sta ability_blue_icon_x
-lda #$E3
-sta ability_blue_icon_y
-lda #$E4
-sta ability_red_icon_x
-lda #$E3
-sta ability_red_icon_y
-
-
-lda #%00000111 
-sta clock_dirty
-
-; Setup music
-InitializeSongs
+InitializeSongs ; Setup music
 
 ; Setup Start screen
 jsr initialize_scene_start
@@ -251,7 +173,7 @@ nmi:
     tya 
     pha ; push Y
 
-    ; --- 1. OAM PREP ---
+    ; OAM Prepare
     ldx #$00  ; Set SPR-RAM address to 0
     stx $2003 
 
@@ -262,6 +184,7 @@ nmi:
     sta $4014   ; Trigger DMA transfer
 
     jsr HandleLaser ; Calling the laser handler  
+    jsr HandleExplosion ; Calling the explosion handler
 
     ; Scroll
     lda #$00

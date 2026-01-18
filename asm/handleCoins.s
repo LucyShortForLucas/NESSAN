@@ -1,10 +1,15 @@
-.import list_pickup
-.importzp math_buffer
+;; IMPORTS AND EXPORTS
 .export HandleCoinCollection
-.import ConvertIndexToPosition
+
+.import list_pickup             
+
+.import ConvertIndexToPosition  
+.import prng                    
+.importzp math_buffer           
+
+; ------------------------------------------------------------------------
 
 .segment "CODE"
-.import prng
 
 ; input: mathbuffer as index
 ; no output

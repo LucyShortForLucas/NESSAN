@@ -1,23 +1,29 @@
-.include "musicMacro.s"
+;; IMPORTS AND EXPORTS
 .include "consts.s"
 .include "graphicsMacro.s"
+.include "musicMacro.s"
 
-; Backgrounds from graphics.s
+.export initialize_scene_start 
+.export initialize_scene_game  
+.export initialize_scene_end   
+
 .import gameScreenMap
 .import startScreenMap
 .import endScreenMap
 
-; Counter
-.importzp second_counter
-.import current_scene
+.import current_scene          
+.importzp second_counter       
+
 .import list_pickup
 .import spawn_new_pickup
 
-; exports for intitialization
-.export initialize_scene_start, initialize_scene_game, initialize_scene_end
+.importzp blue_player_x, blue_player_y
+.importzp red_player_x, red_player_y
 
-; reseting
-.importzp score_red, score_blue, blue_player_x, blue_player_y, red_player_x, red_player_y, ability_blue, ability_red
+.importzp score_red, score_blue
+.importzp ability_blue, ability_red
+
+; ------------------------------------------------------------------------
 
 initialize_scene_start:
    ChooseSong SONG_START

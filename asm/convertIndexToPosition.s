@@ -1,5 +1,9 @@
-.importzp math_buffer
+;; IMPORTS AND EXPORTS
 .export ConvertIndexToPosition
+
+.importzp math_buffer      
+
+; ------------------------------------------------------------------------
 
 .segment "CODE"
 

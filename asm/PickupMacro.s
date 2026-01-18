@@ -1,5 +1,7 @@
-
+;; IMPORTS AND EXPORTS
 .include "killMacro.s"
+
+; ------------------------------------------------------------------------
 
 .macro ShootGun x_coord, y_coord, direction
 .scope

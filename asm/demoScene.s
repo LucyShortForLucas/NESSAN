@@ -1,71 +1,73 @@
-
-; imports and exports
-
-.importzp frame_counter
-.importzp second_counter
-
-.import move_player_input
-
-.import spawn_new_pickup
-.import pickup_timer
-
-.import clock_draw_buffer
-.import pickup_timer
-.importzp clock_dirty
-.importzp clock_x
-.importzp clock_y
-.importzp math_buffer
-.importzp inputs
-.importzp coin_x2
-.importzp coin_y2
-.importzp coin_x
-.importzp coin_y
-.importzp blue_player_x, blue_player_y
-.importzp red_player_x, red_player_y
-.importzp count_down_x
-.importzp count_down_y
-.importzp blue_respawn_timer
-.importzp red_respawn_timer
-.importzp last_blue_player_dir
-.importzp last_red_player_dir
-
-.importzp score_red_x, score_blue_x
-.importzp score_red_y, score_blue_y
-.importzp score_red, score_blue
-
-.importzp ability_blue_icon_x, ability_blue_icon_y, ability_red_icon_x, ability_red_icon_y
-
-.importzp blue_player_dir, red_player_dir
-.import blue_player_backup, red_player_backup
-
-.importzp ability_blue, ability_red
-
-.importzp ability_blue_passtrough_timers, ability_red_passtrough_timers
-.importzp dash_timer_red, dash_timer_blue
-
-.importzp laser_timer, laser_state, laser_dir_save, laser_x_tile, laser_y_tile, laser_buffer, ppu_addr_temp
-
-.import list_pickup
-.import ConvertIndexToPosition
-
-.import division_16
-.import prng
-.import HandleCoinCollection
-.import aabb_collision
-
-.import end_state, initialize_scene_end
-
-.export demo_scene
-
-
-.importzp bomb_timer, bomb_x, bomb_y, bomb_draw_frame_counter, bomb_veloctiy_x, bomb_velocity_y
-
+;; IMPORTS AND EXPORTS
+.include "consts.s"
 .include "playerMacro.s"
 .include "graphicsMacro.s"
-.include "consts.s"
 .include "coinListMacro.s"
 .include "spawnPickupMacro.s"
 .include "musicMacro.s"
+
+.export demo_scene
+
+.importzp frame_counter
+.importzp second_counter
+.importzp inputs
+
+.importzp math_buffer      
+.import division_16
+.import prng
+
+.import end_state, initialize_scene_end
+
+.import move_player_input
+
+.importzp blue_player_x, blue_player_y
+.importzp blue_player_dir, last_blue_player_dir
+.importzp blue_respawn_timer
+.import blue_player_backup
+
+.importzp red_player_x, red_player_y
+.importzp red_player_dir, last_red_player_dir
+.importzp red_respawn_timer
+.import red_player_backup
+
+.importzp ability_blue, ability_red
+.importzp ability_blue_passtrough_timers
+.importzp ability_red_passtrough_timers
+.importzp dash_timer_blue, dash_timer_red
+
+.import list_pickup
+.import spawn_new_pickup
+.import pickup_timer
+.import HandleCoinCollection
+.importzp coin_x, coin_y
+.importzp coin_x2, coin_y2
+
+.importzp bomb_timer, bomb_draw_frame_counter
+.importzp bomb_x, bomb_y
+.importzp bomb_veloctiy_x, bomb_velocity_y
+.importzp bomb_ppu_addr
+
+.importzp laser_state, laser_timer
+.importzp laser_x_tile, laser_y_tile, laser_dir_save
+.importzp laser_buffer, ppu_addr_temp
+
+.importzp explosion_state, explosion_timer
+
+.import aabb_collision
+.import ConvertIndexToPosition
+
+.importzp score_red, score_blue
+.importzp score_red_x, score_red_y
+.importzp score_blue_x, score_blue_y
+
+.importzp ability_blue_icon_x, ability_blue_icon_y
+.importzp ability_red_icon_x, ability_red_icon_y
+
+.importzp clock_x, clock_y, clock_dirty
+.importzp count_down_x, count_down_y
+.import clock_draw_buffer
+
+; ------------------------------------------------------------------------
 
 .segment "CODE"
 
@@ -163,6 +165,31 @@ skipBluePickupHandling:
 blue_update_end:
 
     BombUpdate
+
+    lda explosion_timer
+    beq @check_new_explosion ; If 0, check if we need to start a NEW one
+    
+    dec explosion_timer      ; Count down
+    bne @skip_explosion      ; If still > 0, do nothing
+    
+    ; TIMER HIT ZERO: TRIGGER RESTORE
+    lda #2                   ; State 2 = Restore
+    sta explosion_state
+    jmp @skip_explosion
+
+@check_new_explosion:
+    ; Check if bomb exploded (Timer = 1)
+    lda bomb_timer
+    cmp #1
+    bne @skip_explosion
+    
+    ; TRIGGER FLASH
+    lda #1
+    sta explosion_state
+    lda #5                   ; Lasts 5 frames
+    sta explosion_timer
+
+@skip_explosion:
 
     UpdateClock
     jsr check_clock
