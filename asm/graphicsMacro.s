@@ -40,18 +40,18 @@
 .macro DrawBackground background
 .scope
 ; Disable rendering so we can write to VRAM safely
-lda #$00
-sta $2001      
+    lda #$00
+    sta $2001      
 
 WaitForVblank:
     bit $2002
     bpl WaitForVblank
 
-lda $2002    ; reset latch
-lda #$20
-sta $2006    ; high byte of address: $20xx
-lda #$00
-sta $2006    ; low byte: $2000
+    lda $2002    ; reset latch
+    lda #$20
+    sta $2006    ; high byte of address: $20xx
+    lda #$00
+    sta $2006    ; low byte: $2000
 
 ; else write to ppudata
     ldx #$00
@@ -79,9 +79,9 @@ LoadFourthQuarter:
     inx
     bne LoadFourthQuarter
 
-; Re-enable rendering
-lda #%00011110  ; enable BG + sprites, maybe left-clip off etc.
-sta $2001
+    ; Re-enable rendering
+    lda #%00011110  ; enable BG + sprites, maybe left-clip off etc.
+    sta $2001
 .endscope
 .endmacro
 
