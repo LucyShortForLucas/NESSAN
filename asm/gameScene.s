@@ -6,7 +6,7 @@
 .include "spawnPickupMacro.s"
 .include "musicMacro.s"
 
-.export demo_scene
+.export main_scene
 
 .importzp frame_counter
 .importzp second_counter
@@ -71,7 +71,7 @@
 
 .segment "CODE"
 
-demo_scene:
+main_scene:
     HandlePickupSpawn ; Reduce the pickup spawn timer and check if a new one must be spawned
 
     ; check if the laser timer is active
@@ -235,7 +235,7 @@ draw_blue:
 skip_blue_draw:
 
 
-  lda red_respawn_timer
+    lda red_respawn_timer
     cmp #35
     bcc check_frame_red ; Only draw if less than 35 frames left till respawn\
     jmp skip_red_draw ; jump over draw (too big for branch) 
@@ -280,10 +280,10 @@ check_clock:
     lda clock_min
     ora clock_sec
     bne @skip ; if the clock isnt zero SKIP
-        lda #ENDSTATE_TIMERUP
-        sta end_state
+    lda #ENDSTATE_TIMERUP
+    sta end_state
 
-        jsr initialize_scene_end ; doesnt know what to do
+    jsr initialize_scene_end ; doesnt know what to do
     @skip:
     rts
 ; coin cap check subroutine
@@ -292,10 +292,10 @@ check_coin_cap_blue:
     lda score_blue
     cmp #COIN_CAP
     bne @skip_blue ; if the cap isnt reached SKIP
-        lda #ENDSTATE_BLUEWINS
-        sta end_state
+    lda #ENDSTATE_BLUEWINS
+    sta end_state
 
-        jsr initialize_scene_end ; doesnt know what to do
+    jsr initialize_scene_end ; doesnt know what to do
     @skip_blue:
     rts
 
@@ -303,9 +303,9 @@ check_coin_cap_red:
     lda score_red
     cmp #COIN_CAP
     bne @skip_red ; if the cap isnt reached SKIP
-        lda #ENDSTATE_REDWINS
-        sta end_state
+    lda #ENDSTATE_REDWINS
+    sta end_state
 
-        jsr initialize_scene_end ; doesnt know what to do
+    jsr initialize_scene_end ; doesnt know what to do
     @skip_red:
     rts
