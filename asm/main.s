@@ -148,19 +148,19 @@ main:
   jsr famistudio_update ; Updates the music 
     ;; Scene Select
     lda current_scene
-    bne @skipStartScene ; $00 is always start screen
+    bne @skip_start_scene ; $00 is always start screen
       jsr start_screen_scene
-    @skipStartScene:
+    @skip_start_scene:
 
   cmp #SCENE_GAME
-  bne @skipGameScene
+  bne @skip_game_scene
   jsr main_scene
-  @skipGameScene:
+  @skip_game_scene:
 
    cmp #SCENE_ENDSCREEN
-  bne @skipEndScene
+  bne @skip_end_scene
   jsr end_screen_scene
-  @skipEndScene:
+  @skip_end_scene:
 
   jmp main ; Loop
 
