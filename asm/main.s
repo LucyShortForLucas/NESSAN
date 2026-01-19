@@ -28,8 +28,8 @@
 .import gameScreenMap
 .import clock_draw_buffer
 
-.import HandleLaser, laser_buffer
-.import HandleExplosion, explosion_buffer
+.import handle_laser, laser_buffer
+.import handle_explosion, explosion_buffer
 
 .import wall_collisions
 .import aabb_collision
@@ -182,8 +182,8 @@ nmi:
     lda #$02    ; High byte of $0200
     sta $4014   ; Trigger DMA transfer
 
-    jsr HandleLaser ; Calling the laser handler  
-    jsr HandleExplosion ; Calling the explosion handler
+    jsr handle_laser ; Calling the laser handler  
+    jsr handle_explosion ; Calling the explosion handler
 
     ; Scroll
     lda #$00

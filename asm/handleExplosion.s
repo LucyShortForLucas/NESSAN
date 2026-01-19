@@ -1,7 +1,7 @@
 ;; IMPORTS AND EXPORTS
 .include "consts.s"
 
-.export HandleExplosion       
+.export handle_explosion       
 
 .import explosion_buffer      
 .importzp explosion_state     
@@ -13,8 +13,8 @@
 
 .segment "CODE"
 
-HandleExplosion:        
-.scope HandleExplosion  
+handle_explosion:        
+.scope  
     ; Check current state
     lda explosion_state
     cmp #1              

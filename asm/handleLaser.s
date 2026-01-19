@@ -2,7 +2,7 @@
 .include "consts.s" 
 .include "systemMacro.s" 
 
-.export HandleLaser           
+.export handle_laser           
 
 .import laser_buffer          
 .importzp laser_state         
@@ -19,8 +19,8 @@
 
 .segment "CODE"
 
-HandleLaser:
-.scope HandleLaser
+handle_laser:
+.scope
     ; check if we need to draw or restore the laser
     lda laser_state
     bne @start_calc
