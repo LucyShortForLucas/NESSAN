@@ -1,5 +1,5 @@
 ;; IMPORTS AND EXPORTS
-.export ConvertIndexToPosition
+.export convert_index_to_position
 
 .importzp math_buffer      
 
@@ -10,7 +10,7 @@
 ; input: Index in register A
 ; using registers: A & X & math_buffer+7
 ; output: in X
-ConvertIndexToPosition:
+convert_index_to_position:
     tax ; load into x, index
     dex ; x-1 | if amount = 1 go to index 0
     ; Now lets say index is 0 1 2

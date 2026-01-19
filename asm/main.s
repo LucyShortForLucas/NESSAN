@@ -42,7 +42,6 @@
 
 .import list_pickup
 .import HandleCoinCollection
-.import ConvertIndexToPosition
 
 .importzp blue_player_x, blue_player_y
 .importzp red_player_x, red_player_y

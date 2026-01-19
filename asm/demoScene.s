@@ -54,7 +54,7 @@
 .importzp explosion_state, explosion_timer
 
 .import aabb_collision
-.import ConvertIndexToPosition
+.import convert_index_to_position
 
 .importzp score_red, score_blue
 .importzp score_red_x, score_red_y
@@ -202,7 +202,7 @@ blue_update_end:
     bne @startPickupDraw ; if 0 then we're done! nothing to check!
     jmp @endPickupDraw ; skip drawing coins
 @startPickupDraw:
-    jsr ConvertIndexToPosition
+    jsr convert_index_to_position
 @loopDrawLoop: ; loop over each item
 
     lda list_pickup, x ; x

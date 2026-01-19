@@ -3,7 +3,7 @@
 
 .import list_pickup             
 
-.import ConvertIndexToPosition  
+.import convert_index_to_position  
 .import prng                    
 .importzp math_buffer           
 
@@ -22,7 +22,7 @@ HandleCoinCollection:
     lda list_pickup
     adc #1
 
-    jsr ConvertIndexToPosition ; convert last item index to a position we can use
+    jsr convert_index_to_position ; convert last item index to a position we can use
 
 
 

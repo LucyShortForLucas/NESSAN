@@ -8,7 +8,7 @@
 .importzp math_buffer        
 
 .import wall_collisions
-.import ConvertIndexToPosition
+.import convert_index_to_position
 .importzp bomb_x              
 
 .import list_pickup           
@@ -73,7 +73,7 @@ spawn_new_pickup:
 	bcs @try_place_loop
 
 	pla
-	jsr ConvertIndexToPosition ; Get pickup index in x register
+	jsr convert_index_to_position ; Get pickup index in x register
 
 	lda rand
     sta list_pickup, x

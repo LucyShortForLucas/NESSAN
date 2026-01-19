@@ -6,7 +6,7 @@
     lda list_pickup ; load amount into pickup
     beq @end_coin_collision ; if 0 then we're done! nothing to check!
 
-    jsr ConvertIndexToPosition
+    jsr convert_index_to_position
 
     ; put player x into math_buffer so we can use it now that it's free!
     lda player_x
