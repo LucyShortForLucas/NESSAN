@@ -140,7 +140,7 @@ do_blue_update:
 
 
     CheckForCoinCollision blue_player_x, blue_player_y
-    bcc skip_red_pickup_handling
+    bcc skip_blue_pickup_handling
 
     ; Check if it is a Coin or Ability
     ldx math_buffer
@@ -152,7 +152,7 @@ do_blue_update:
     UpdateScore score_blue, 1
     ChooseSFX SFX_COIN ; Play Coin Pickup SFX
     jsr check_coin_cap_blue
-    jmp skip_red_pickup_handling
+    jmp skip_blue_pickup_handling
 
 blue_hit_ability:
     ; Ability
@@ -160,8 +160,8 @@ blue_hit_ability:
     ChooseSFX SFX_ABILITYPICKUP ; Play Ability Usage SFX
     jsr handle_coin_collection
 
-skip_red_pickup_handling:
-  PlayerMovementUpdate blue_player_x, blue_player_y, inputs, blue_player_backup, blue_player_dir, last_blue_player_dir, ability_blue, ability_blue_passtrough_timers, blue_respawn_timer, score_blue, #BLUE_PLAYER_SPAWN_X, #BLUE_PLAYER_SPAWN_Y, dash_timer_blue
+skip_blue_pickup_handling:
+    PlayerMovementUpdate blue_player_x, blue_player_y, inputs, blue_player_backup, blue_player_dir, last_blue_player_dir, ability_blue, ability_blue_passtrough_timers, blue_respawn_timer, score_blue, #BLUE_PLAYER_SPAWN_X, #BLUE_PLAYER_SPAWN_Y, dash_timer_blue
 blue_update_end:
 
     BombUpdate
