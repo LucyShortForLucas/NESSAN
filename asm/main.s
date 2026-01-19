@@ -21,7 +21,7 @@
 .importzp math_buffer       ; General purpose math scratchpad
 
 .import start_screen_scene, initialize_scene_start
-.import demo_scene
+.import main_scene
 .import end_screen_scene
 
 .import palettes
@@ -154,7 +154,7 @@ main:
 
   cmp #SCENE_GAME
   bne @skipGameScene
-  jsr demo_scene
+  jsr main_scene
   @skipGameScene:
 
    cmp #SCENE_ENDSCREEN
