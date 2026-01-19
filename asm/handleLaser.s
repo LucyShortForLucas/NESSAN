@@ -20,7 +20,7 @@
 .segment "CODE"
 
 handle_laser:
-.scope handle_laser
+.scope
     ; check if we need to draw or restore the laser
     lda laser_state
     bne @start_calc

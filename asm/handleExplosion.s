@@ -14,7 +14,7 @@
 .segment "CODE"
 
 handle_explosion:        
-.scope handle_explosion  
+.scope  
     ; Check current state
     lda explosion_state
     cmp #1              
