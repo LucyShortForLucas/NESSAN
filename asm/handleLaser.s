@@ -19,7 +19,8 @@
 
 .segment "CODE"
 
-.proc HandleLaser
+HandleLaser:
+.scope HandleLaser
     ; check if we need to draw or restore the laser
     lda laser_state
     bne @start_calc
@@ -232,4 +233,4 @@
     lda #PPU_INC_1
     sta PPU_CTRL
     rts
-.endproc
+.endscope

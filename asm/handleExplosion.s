@@ -13,7 +13,8 @@
 
 .segment "CODE"
 
-.proc HandleExplosion
+HandleExplosion:        
+.scope HandleExplosion  
     ; Check current state
     lda explosion_state
     cmp #1              
@@ -195,4 +196,4 @@
     sty PPU_ADDR
     rts
 
-.endproc
+.endscope
