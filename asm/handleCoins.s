@@ -1,5 +1,5 @@
 ;; IMPORTS AND EXPORTS
-.export HandleCoinCollection
+.export handle_coin_collection
 
 .import list_pickup             
 
@@ -14,7 +14,7 @@
 ; input: mathbuffer as index
 ; no output
 ; switches the last coin with the current index one and does -1
-HandleCoinCollection:
+handle_coin_collection:
     dec list_pickup ; -1 to active amount of coins as we're removing one
     beq @skipCoinListMov ; if 0 skip all!
     

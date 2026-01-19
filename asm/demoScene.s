@@ -38,7 +38,7 @@
 .import list_pickup
 .import spawn_new_pickup
 .import pickup_timer
-.import HandleCoinCollection
+.import handle_coin_collection
 .importzp coin_x, coin_y
 .importzp coin_x2, coin_y2
 
@@ -101,27 +101,27 @@ do_red_update:
 
     
     CheckForCoinCollision red_player_x, red_player_y
-    bcc skipRedPickupHandling
+    bcc skip_red_pickup_handling
 
     ; Check if it is a Coin or Ability
     ldx math_buffer         
     lda list_pickup+2, x    
-    bne RedHitAbility      ; If Type is NOT 0, jump to Ability logic
+    bne red_hit_ability      ; If Type is NOT 0, jump to Ability logic
 
     ; Coin
-    jsr HandleCoinCollection
+    jsr handle_coin_collection
     UpdateScore score_red, 1
     ChooseSFX SFX_COIN ; Play Coin Pickup SFX
     jsr check_coin_cap_red
-    jmp skipRedPickupHandling
+    jmp skip_red_pickup_handling
 
-RedHitAbility:
+red_hit_ability:
     ; Ability
     GrabAbility ability_red, ability_red_passtrough_timers
     ChooseSFX SFX_ABILITYPICKUP ; Play Ability Pickup SFX
-    jsr HandleCoinCollection
+    jsr handle_coin_collection
 
-skipRedPickupHandling:
+skip_red_pickup_handling:
 
     PlayerMovementUpdate red_player_x, red_player_y, inputs+1, red_player_backup, red_player_dir, last_red_player_dir, ability_red, ability_red_passtrough_timers, red_respawn_timer, score_red, #RED_PLAYER_SPAWN_X, #RED_PLAYER_SPAWN_Y, dash_timer_red
 red_update_end:
@@ -140,27 +140,27 @@ do_blue_update:
 
 
     CheckForCoinCollision blue_player_x, blue_player_y
-    bcc skipBluePickupHandling
+    bcc skip_red_pickup_handling
 
     ; Check if it is a Coin or Ability
     ldx math_buffer
     lda list_pickup+2, x
-    bne BlueHitAbility     ; If Type is NOT 0, jump to Ability logic
+    bne blue_hit_ability     ; If Type is NOT 0, jump to Ability logic
 
     ; Coin
-    jsr HandleCoinCollection
+    jsr handle_coin_collection
     UpdateScore score_blue, 1
     ChooseSFX SFX_COIN ; Play Coin Pickup SFX
     jsr check_coin_cap_blue
-    jmp skipBluePickupHandling
+    jmp skip_red_pickup_handling
 
-BlueHitAbility:
+blue_hit_ability:
     ; Ability
     GrabAbility ability_blue, ability_blue_passtrough_timers
     ChooseSFX SFX_ABILITYPICKUP ; Play Ability Usage SFX
-    jsr HandleCoinCollection
+    jsr handle_coin_collection
 
-skipBluePickupHandling:
+skip_red_pickup_handling:
   PlayerMovementUpdate blue_player_x, blue_player_y, inputs, blue_player_backup, blue_player_dir, last_blue_player_dir, ability_blue, ability_blue_passtrough_timers, blue_respawn_timer, score_blue, #BLUE_PLAYER_SPAWN_X, #BLUE_PLAYER_SPAWN_Y, dash_timer_blue
 blue_update_end:
 
@@ -199,25 +199,25 @@ blue_update_end:
 
     ; Loop over all
     lda list_pickup ; load amount into pickup
-    bne @startPickupDraw ; if 0 then we're done! nothing to check!
-    jmp @endPickupDraw ; skip drawing coins
-@startPickupDraw:
+    bne @start_pickup_draw ; if 0 then we're done! nothing to check!
+    jmp @end_pickup_draw ; skip drawing coins
+@start_pickup_draw:
     jsr convert_index_to_position
-@loopDrawLoop: ; loop over each item
+@loop_draw_loop: ; loop over each item
 
     lda list_pickup, x ; x
     sta math_buffer+0
     lda list_pickup+1, x ; y
     sta math_buffer+1
     stx math_buffer+2
-    jsr DrawPickupJSR
+    jsr draw_pickup_JSR
     ldx math_buffer+2
     dex 
     dex 
     dex ; -3 for next item
-    bmi @endPickupDraw ; branch IF negative, aka no more to loop over
-    jmp @loopDrawLoop
-@endPickupDraw:   
+    bmi @end_pickup_draw ; branch IF negative, aka no more to loop over
+    jmp @loop_draw_loop
+@end_pickup_draw:   
 
     DrawClock count_down_x, count_down_y ; 
 
@@ -270,7 +270,7 @@ skip_bomb_draw:
     rts 
 
 ; Subroutine to draw the pickups
-DrawPickupJSR:
+draw_pickup_JSR:
     DrawPickup
     rts
 
@@ -291,21 +291,21 @@ check_coin_cap_blue:
  ; Check one player has reached the max coins and wins
     lda score_blue
     cmp #COIN_CAP
-    bne @skipBlue ; if the cap isnt reached SKIP
+    bne @skip_blue ; if the cap isnt reached SKIP
         lda #ENDSTATE_BLUEWINS
         sta end_state
 
         jsr initialize_scene_end ; doesnt know what to do
-    @skipBlue:
+    @skip_blue:
     rts
 
 check_coin_cap_red:
     lda score_red
     cmp #COIN_CAP
-    bne @skipRed ; if the cap isnt reached SKIP
+    bne @skip_red ; if the cap isnt reached SKIP
         lda #ENDSTATE_REDWINS
         sta end_state
 
         jsr initialize_scene_end ; doesnt know what to do
-    @skipRed:
+    @skip_red:
     rts

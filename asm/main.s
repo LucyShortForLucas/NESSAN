@@ -41,7 +41,7 @@
 .import collision_aabb_9x2
 
 .import list_pickup
-.import HandleCoinCollection
+.import handle_coin_collection
 
 .importzp blue_player_x, blue_player_y
 .importzp red_player_x, red_player_y
