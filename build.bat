@@ -62,7 +62,7 @@ for /f "tokens=1,2,3" %%A in (asm\consts.s) do (
         set /a totalPerc+=%%C
     )
 )
-echo Total %% adds up to: %totalPerc%
+echo Total spawning percentage %% adds up to: %totalPerc%, should be 100.
 
 
 endlocal
