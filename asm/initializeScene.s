@@ -28,11 +28,11 @@
 initialize_scene_start:
    ChooseSong SONG_START
 
-   lda #SCENE_STARTSCREEN ; Load const var into accumulator
-   sta current_scene ; update current_scene var
+    lda #SCENE_STARTSCREEN ; Load const var into accumulator
+    sta current_scene ; update current_scene var
 
-   DrawBackground startScreenMap ; Update background
-rts
+    DrawBackground startScreenMap ; Update background
+    rts
 
 
 initialize_scene_game:
@@ -58,7 +58,7 @@ initialize_scene_game:
     sta blue_player_y
 
     DrawBackground gameScreenMap ; Update background
-rts
+    rts
 
 initialize_scene_end:
     jsr famistudio_music_stop
@@ -69,4 +69,4 @@ initialize_scene_end:
     SetClock #00, #03 ; How long the deathscreen will be displayed
 
      DrawBackground endScreenMap ; Update background
-rts
+    rts
