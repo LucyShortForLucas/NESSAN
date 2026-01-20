@@ -466,7 +466,7 @@ Pointer:
  	  .byte $00, $3E, $03, $00
 
 EmptyPointer: ; change?
-	  	  .byte $00, $00, $03, $00
+	  .byte $00, $00, $03, $00
 
 PlayerWinText: ; total letters: 7 x 4 = 28 -> 0x28 = 1C
 ;	  Y-off, Tile, Attr, X-off

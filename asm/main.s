@@ -68,13 +68,13 @@ reset:
   ldx #$ff 	; Set up stack
   txs		;  .
   inx		; now X = 0
-  stx $2000	; disable NMI
+  stx PPU_CTRL	; disable NMI
   stx $2001 	; disable rendering
   stx $4010 	; disable DMC IRQs
 
 ;; first wait for vblank to make sure PPU is ready
 vblankwait1:
-  bit $2002
+  bit PPU_STATUS
   bpl vblankwait1
 
 clear_memory:
@@ -92,19 +92,19 @@ clear_memory:
 
 ;; second wait for vblank, PPU is ready after this
 vblankwait2:
-  bit $2002
+  bit PPU_STATUS
   bpl vblankwait2
 
 ; load palettes
-  lda $2002
+  lda PPU_STATUS
   lda #$3f
-  sta $2006
+  sta PPU_ADDR
   lda #$00
-  sta $2006
+  sta PPU_ADDR
   ldx #$00
 @loop:
   lda palettes, x
-  sta $2007
+  sta PPU_DATA
   inx
   cpx #$20
   bne @loop

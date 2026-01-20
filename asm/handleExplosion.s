@@ -1,87 +1,88 @@
 ;; IMPORTS AND EXPORTS
 .include "consts.s"
 
-.export handle_explosion       
+.export handle_explosion
 
-.import explosion_buffer      
-.importzp explosion_state     
-.importzp bomb_ppu_addr       
+.import explosion_buffer
+.importzp explosion_state
+.importzp bomb_ppu_addr
 
-.importzp bomb_x, bomb_y 
+.importzp bomb_x, bomb_y
 
 ; ------------------------------------------------------------------------
 
 .segment "CODE"
 
-handle_explosion:        
-.scope  
-    ; Check current state
+handle_explosion:
+.scope
+    ; Check what the bomb needs to do
     lda explosion_state
-    cmp #1              
-    beq @state_draw     ; State 1 = Draw Flash
+    cmp #EXPLOSION_STATE_DRAW
+    beq @state_draw      ; Go draw the flash
     
-    cmp #2              
-    bne @exit_func      ; Not 2, Then do nothing.
-    jmp @state_restore  ; State 2 = Restore Background (Long jump needed)
+    cmp #EXPLOSION_STATE_RESTORE
+    bne @exit_func       ; If not restore, we are idle/done
+    jmp @state_restore   ; Go restore background
 
 @exit_func:
     rts
 
-; Draw Flash, Calculates screen position, saves BG tiles to buffer, draws white square.
+; Runs when bomb explodes
 @state_draw:
-    ; Calculate PPU address
-    ; We determine where the bomb is on the screen grid.
+    
+    ; Calculate Address
 
-    ; Calculate Y offset (Row)
-    lda bomb_y          
-    sta bomb_ppu_addr   ; Store temporarily
-
-    ; High Byte: Base Address ($20) + (Y / 8)
+    ; High Byte: Divide Y by 64 (Pages)
+    lda bomb_y
+    sta bomb_ppu_addr
+    
     lda bomb_ppu_addr
     lsr
     lsr
     lsr
     lsr
     lsr
-    lsr                 ; Shift down to get high bits
+    lsr
     clc
     adc #NAMETABLE_HI
     sta bomb_ppu_addr+1
 
-    ; Low Byte: (Y % 8) * 32
+    ; Low Byte: Snap Y to row, Multiply by 32
     lda bomb_ppu_addr
-    and #%11111000      ; Mask to align with rows
+    and #%11111000
     asl
-    asl                 ; Multiply to get row offset
+    asl
     sta bomb_ppu_addr
 
-    ; Calculate X offset (Column)
-    lda bomb_x          
+    ; Add X offset (Pixels -> Tiles)
+    lda bomb_x
     lsr
     lsr
-    lsr                 ; Divide by 8 to get tile column
+    lsr
     clc
-    adc bomb_ppu_addr   ; Add to low byte
+    adc bomb_ppu_addr
     sta bomb_ppu_addr
-    
-    bcc @draw_pixels    ; Handle carry if we crossed a page boundary
+
+    ; Handle page crossing
+    bcc @draw_pixels
     inc bomb_ppu_addr+1
 
 @draw_pixels:
-    ; Save background, Read the 3x3 area of tiles and store them in RAM.
+    ; Save Background Tiles
+    
     ; Row 1 (Top)
     jsr @set_ppu_addr_row1
-    lda PPU_DATA            ; Dummy read (hardware requirement)
-    lda PPU_DATA            ; Read Tile 1
+    lda PPU_DATA        ; Dummy read
+    lda PPU_DATA
     sta explosion_buffer+0
-    lda PPU_DATA            ; Read Tile 2
+    lda PPU_DATA
     sta explosion_buffer+1
-    lda PPU_DATA            ; Read Tile 3
+    lda PPU_DATA
     sta explosion_buffer+2
 
     ; Row 2 (Middle)
     jsr @set_ppu_addr_row2
-    lda PPU_DATA            ; Dummy read
+    lda PPU_DATA        ; Dummy read
     lda PPU_DATA
     sta explosion_buffer+3
     lda PPU_DATA
@@ -91,7 +92,7 @@ handle_explosion:
 
     ; Row 3 (Bottom)
     jsr @set_ppu_addr_row3
-    lda PPU_DATA            ; Dummy read
+    lda PPU_DATA        ; Dummy read
     lda PPU_DATA
     sta explosion_buffer+6
     lda PPU_DATA
@@ -99,7 +100,8 @@ handle_explosion:
     lda PPU_DATA
     sta explosion_buffer+8
 
-    ; Draw flash, overwrite the area with white tiles.
+    ; Draw White Flash
+
     ; Row 1
     jsr @set_ppu_addr_row1
     lda #LASER_TILE_ID
@@ -121,13 +123,13 @@ handle_explosion:
     sta PPU_DATA
     sta PPU_DATA
 
-    ; Done. Reset state to 0 (Wait for timer).
-    lda #0
+    ; Done, wait for timer
+    lda #EXPLOSION_STATE_IDLE
     sta explosion_state
     rts
 
 
-; Restore Background, writes the saved tiles back to the screen using the saved address.
+; Puts the original tiles back on screen
 @state_restore:
     ; Row 1
     jsr @set_ppu_addr_row1
@@ -156,12 +158,15 @@ handle_explosion:
     lda explosion_buffer+8
     sta PPU_DATA
 
-    ; Done. Reset state to 0 (Explosion finished).
-    lda #0
+    ; Done.
+    lda #EXPLOSION_STATE_IDLE
     sta explosion_state
     rts
 
-; Helpers, Sets the PPU address for each row of the 3x3 block.
+
+; Helpers 
+
+; Top row
 @set_ppu_addr_row1:
     lda PPU_STATUS
     lda bomb_ppu_addr+1
@@ -170,10 +175,11 @@ handle_explosion:
     sta PPU_ADDR
     rts
 
+; Middle row
 @set_ppu_addr_row2:
     lda bomb_ppu_addr
     clc
-    adc #32             ; Add 32 bytes (1 row down)
+    adc #EXPLOSION_SCREEN_WIDTH   
     tay
     lda bomb_ppu_addr+1
     adc #0
@@ -183,10 +189,11 @@ handle_explosion:
     sty PPU_ADDR
     rts
 
+; Bottom row
 @set_ppu_addr_row3:
     lda bomb_ppu_addr
     clc
-    adc #64             ; Add 64 bytes (2 rows down)
+    adc #EXPLOSIONTWO_ROWS_OFFSET 
     tay
     lda bomb_ppu_addr+1
     adc #0
