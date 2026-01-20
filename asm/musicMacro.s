@@ -1,8 +1,13 @@
-; Macro for music
-.import famistudio_sfx_play, famistudio_music_play
+;; IMPORTS AND EXPORTS
+
 .import famistudio_init
 .import famistudio_sfx_init
+
+.import famistudio_music_play
 .import famistudio_music_stop
+.import famistudio_sfx_play
+
+; ------------------------------------------------------------------------
 
 .macro InitializeSongs
 ; Setup music

@@ -1,75 +1,77 @@
-
-; imports and exports
-
-.importzp frame_counter
-.importzp second_counter
-
-.import move_player_input
-
-.import spawn_new_pickup
-.import pickup_timer
-
-.import clock_draw_buffer
-.import pickup_timer
-.importzp clock_dirty
-.importzp clock_x
-.importzp clock_y
-.importzp math_buffer
-.importzp inputs
-.importzp coin_x2
-.importzp coin_y2
-.importzp coin_x
-.importzp coin_y
-.importzp blue_player_x, blue_player_y
-.importzp red_player_x, red_player_y
-.importzp count_down_x
-.importzp count_down_y
-.importzp blue_respawn_timer
-.importzp red_respawn_timer
-.importzp last_blue_player_dir
-.importzp last_red_player_dir
-
-.importzp score_red_x, score_blue_x
-.importzp score_red_y, score_blue_y
-.importzp score_red, score_blue
-
-.importzp ability_blue_icon_x, ability_blue_icon_y, ability_red_icon_x, ability_red_icon_y
-
-.importzp blue_player_dir, red_player_dir
-.import blue_player_backup, red_player_backup
-
-.importzp ability_blue, ability_red
-
-.importzp ability_blue_passtrough_timers, ability_red_passtrough_timers
-.importzp dash_timer_red, dash_timer_blue
-
-.importzp laser_timer, laser_state, laser_dir_save, laser_x_tile, laser_y_tile, laser_buffer, ppu_addr_temp
-
-.import list_pickup
-.import ConvertIndexToPosition
-
-.import division_16
-.import prng
-.import HandleCoinCollection
-.import aabb_collision
-
-.import end_state, initialize_scene_end
-
-.export demo_scene
-
-
-.importzp bomb_timer, bomb_x, bomb_y, bomb_draw_frame_counter, bomb_veloctiy_x, bomb_velocity_y
-
+;; IMPORTS AND EXPORTS
+.include "consts.s"
 .include "playerMacro.s"
 .include "graphicsMacro.s"
-.include "consts.s"
 .include "coinListMacro.s"
 .include "spawnPickupMacro.s"
 .include "musicMacro.s"
 
+.export main_scene
+
+.importzp frame_counter
+.importzp second_counter
+.importzp inputs
+
+.importzp math_buffer      
+.import division_16
+.import prng
+
+.import end_state, initialize_scene_end
+
+.import move_player_input
+
+.importzp blue_player_x, blue_player_y
+.importzp blue_player_dir, last_blue_player_dir
+.importzp blue_respawn_timer
+.import blue_player_backup
+
+.importzp red_player_x, red_player_y
+.importzp red_player_dir, last_red_player_dir
+.importzp red_respawn_timer
+.import red_player_backup
+
+.importzp ability_blue, ability_red
+.importzp ability_blue_passtrough_timers
+.importzp ability_red_passtrough_timers
+.importzp dash_timer_blue, dash_timer_red
+
+.import list_pickup
+.import spawn_new_pickup
+.import pickup_timer
+.import handle_coin_collection
+.importzp coin_x, coin_y
+.importzp coin_x2, coin_y2
+
+.importzp bomb_timer, bomb_draw_frame_counter
+.importzp bomb_x, bomb_y
+.importzp bomb_veloctiy_x, bomb_velocity_y
+.importzp bomb_ppu_addr
+
+.importzp laser_state, laser_timer
+.importzp laser_x_tile, laser_y_tile, laser_dir_save
+.importzp laser_buffer, ppu_addr_temp
+
+.importzp explosion_state, explosion_timer
+
+.import aabb_collision
+.import convert_index_to_position
+
+.importzp score_red, score_blue
+.importzp score_red_x, score_red_y
+.importzp score_blue_x, score_blue_y
+
+.importzp ability_blue_icon_x, ability_blue_icon_y
+.importzp ability_red_icon_x, ability_red_icon_y
+
+.importzp clock_x, clock_y, clock_dirty
+.importzp count_down_x, count_down_y
+.import clock_draw_buffer
+
+; ------------------------------------------------------------------------
+
 .segment "CODE"
 
-demo_scene:
+main_scene:
     HandlePickupSpawn ; Reduce the pickup spawn timer and check if a new one must be spawned
 
     ; check if the laser timer is active
@@ -99,27 +101,27 @@ do_red_update:
 
     
     CheckForCoinCollision red_player_x, red_player_y
-    bcc skipRedPickupHandling
+    bcc skip_red_pickup_handling
 
     ; Check if it is a Coin or Ability
     ldx math_buffer         
     lda list_pickup+2, x    
-    bne RedHitAbility      ; If Type is NOT 0, jump to Ability logic
+    bne red_hit_ability      ; If Type is NOT 0, jump to Ability logic
 
     ; Coin
-    jsr HandleCoinCollection
+    jsr handle_coin_collection
     UpdateScore score_red, 1
     ChooseSFX SFX_COIN ; Play Coin Pickup SFX
     jsr check_coin_cap_red
-    jmp skipRedPickupHandling
+    jmp skip_red_pickup_handling
 
-RedHitAbility:
+red_hit_ability:
     ; Ability
     GrabAbility ability_red, ability_red_passtrough_timers
     ChooseSFX SFX_ABILITYPICKUP ; Play Ability Pickup SFX
-    jsr HandleCoinCollection
+    jsr handle_coin_collection
 
-skipRedPickupHandling:
+skip_red_pickup_handling:
 
     PlayerMovementUpdate red_player_x, red_player_y, inputs+1, red_player_backup, red_player_dir, last_red_player_dir, ability_red, ability_red_passtrough_timers, red_respawn_timer, score_red, #RED_PLAYER_SPAWN_X, #RED_PLAYER_SPAWN_Y, dash_timer_red
 red_update_end:
@@ -138,34 +140,59 @@ do_blue_update:
 
 
     CheckForCoinCollision blue_player_x, blue_player_y
-    bcc skipBluePickupHandling
+    bcc skip_blue_pickup_handling
 
     ; Check if it is a Coin or Ability
     ldx math_buffer
     lda list_pickup+2, x
-    bne BlueHitAbility     ; If Type is NOT 0, jump to Ability logic
+    bne blue_hit_ability     ; If Type is NOT 0, jump to Ability logic
 
     ; Coin
-    jsr HandleCoinCollection
+    jsr handle_coin_collection
     UpdateScore score_blue, 1
     ChooseSFX SFX_COIN ; Play Coin Pickup SFX
     jsr check_coin_cap_blue
-    jmp skipBluePickupHandling
+    jmp skip_blue_pickup_handling
 
-BlueHitAbility:
+blue_hit_ability:
     ; Ability
     GrabAbility ability_blue, ability_blue_passtrough_timers
     ChooseSFX SFX_ABILITYPICKUP ; Play Ability Usage SFX
-    jsr HandleCoinCollection
+    jsr handle_coin_collection
 
-skipBluePickupHandling:
-  PlayerMovementUpdate blue_player_x, blue_player_y, inputs, blue_player_backup, blue_player_dir, last_blue_player_dir, ability_blue, ability_blue_passtrough_timers, blue_respawn_timer, score_blue, #BLUE_PLAYER_SPAWN_X, #BLUE_PLAYER_SPAWN_Y, dash_timer_blue
+skip_blue_pickup_handling:
+    PlayerMovementUpdate blue_player_x, blue_player_y, inputs, blue_player_backup, blue_player_dir, last_blue_player_dir, ability_blue, ability_blue_passtrough_timers, blue_respawn_timer, score_blue, #BLUE_PLAYER_SPAWN_X, #BLUE_PLAYER_SPAWN_Y, dash_timer_blue
 blue_update_end:
 
     ; players have been updated
     ; rest of scene: 
 
     BombUpdate
+
+    lda explosion_timer
+    beq @check_new_explosion ; If 0, check if we need to start a NEW one
+    
+    dec explosion_timer      ; Count down
+    bne @skip_explosion      ; If still > 0, do nothing
+    
+    ; TIMER HIT ZERO: TRIGGER RESTORE
+    lda #2                   ; State 2 = Restore
+    sta explosion_state
+    jmp @skip_explosion
+
+@check_new_explosion:
+    ; Check if bomb exploded (Timer = 1)
+    lda bomb_timer
+    cmp #1
+    bne @skip_explosion
+    
+    ; TRIGGER FLASH
+    lda #1
+    sta explosion_state
+    lda #5                   ; Lasts 5 frames
+    sta explosion_timer
+
+@skip_explosion:
 
     UpdateClock
     jsr check_clock
@@ -175,25 +202,25 @@ blue_update_end:
 
     ; Loop over all
     lda list_pickup ; load amount into pickup
-    bne @startPickupDraw ; if 0 then we're done! nothing to check!
-    jmp @endPickupDraw ; skip drawing coins
-@startPickupDraw:
-    jsr ConvertIndexToPosition
-@loopDrawLoop: ; loop over each item
+    bne @start_pickup_draw ; if 0 then we're done! nothing to check!
+    jmp @end_pickup_draw ; skip drawing coins
+@start_pickup_draw:
+    jsr convert_index_to_position
+@loop_draw_loop: ; loop over each item
 
     lda list_pickup, x ; x
     sta math_buffer+0
     lda list_pickup+1, x ; y
     sta math_buffer+1
     stx math_buffer+2
-    jsr DrawPickupJSR 
+    jsr draw_pickup_JSR
     ldx math_buffer+2
     dex 
     dex 
     dex ; -3 for next item
-    bmi @endPickupDraw ; branch IF negative, aka no more to loop over
-    jmp @loopDrawLoop
-@endPickupDraw:   
+    bmi @end_pickup_draw ; branch IF negative, aka no more to loop over
+    jmp @loop_draw_loop
+@end_pickup_draw:   
 
     DrawClock count_down_x, count_down_y ; 
 
@@ -211,7 +238,7 @@ draw_blue:
 skip_blue_draw:
 
 
-  lda red_respawn_timer
+    lda red_respawn_timer
     cmp #35
     bcc check_frame_red ; Only draw if less than 35 frames left till respawn\
     jmp skip_red_draw ; jump over draw (too big for branch) 
@@ -246,7 +273,7 @@ skip_bomb_draw:
     rts 
 
 ; Subroutine to draw the pickups
-DrawPickupJSR:
+draw_pickup_JSR:
     DrawPickup
     rts
 
@@ -256,10 +283,10 @@ check_clock:
     lda clock_min
     ora clock_sec
     bne @skip ; if the clock isnt zero SKIP
-        lda #ENDSTATE_TIMERUP
-        sta end_state
+    lda #ENDSTATE_TIMERUP
+    sta end_state
 
-        jsr initialize_scene_end ; doesnt know what to do
+    jsr initialize_scene_end ; doesnt know what to do
     @skip:
     rts
 ; coin cap check subroutine
@@ -267,21 +294,21 @@ check_coin_cap_blue:
  ; Check one player has reached the max coins and wins
     lda score_blue
     cmp #COIN_CAP
-    bne @skipBlue ; if the cap isnt reached SKIP
-        lda #ENDSTATE_BLUEWINS
-        sta end_state
+    bne @skip_blue ; if the cap isnt reached SKIP
+    lda #ENDSTATE_BLUEWINS
+    sta end_state
 
-        jsr initialize_scene_end ; doesnt know what to do
-    @skipBlue:
+    jsr initialize_scene_end ; doesnt know what to do
+    @skip_blue:
     rts
 
 check_coin_cap_red:
     lda score_red
     cmp #COIN_CAP
-    bne @skipRed ; if the cap isnt reached SKIP
-        lda #ENDSTATE_REDWINS
-        sta end_state
+    bne @skip_red ; if the cap isnt reached SKIP
+    lda #ENDSTATE_REDWINS
+    sta end_state
 
-        jsr initialize_scene_end ; doesnt know what to do
-    @skipRed:
+    jsr initialize_scene_end ; doesnt know what to do
+    @skip_red:
     rts

@@ -1,32 +1,38 @@
-.include "musicMacro.s"
+;; IMPORTS AND EXPORTS
 .include "consts.s"
 .include "graphicsMacro.s"
+.include "musicMacro.s"
 
-; Backgrounds from graphics.s
+.export initialize_scene_start 
+.export initialize_scene_game  
+.export initialize_scene_end   
+
 .import gameScreenMap
 .import startScreenMap
 .import endScreenMap
 
-; Counter
-.importzp second_counter
-.import current_scene
+.import current_scene          
+.importzp second_counter       
+
 .import list_pickup
 .import spawn_new_pickup
 
-; exports for intitialization
-.export initialize_scene_start, initialize_scene_game, initialize_scene_end
+.importzp blue_player_x, blue_player_y
+.importzp red_player_x, red_player_y
 
-; reseting
-.importzp score_red, score_blue, blue_player_x, blue_player_y, red_player_x, red_player_y, ability_blue, ability_red
+.importzp score_red, score_blue
+.importzp ability_blue, ability_red
+
+; ------------------------------------------------------------------------
 
 initialize_scene_start:
    ChooseSong SONG_START
 
-   lda #SCENE_STARTSCREEN ; Load const var into accumulator
-   sta current_scene ; update current_scene var
+    lda #SCENE_STARTSCREEN ; Load const var into accumulator
+    sta current_scene ; update current_scene var
 
-   DrawBackground startScreenMap ; Update background
-rts
+    DrawBackground startScreenMap ; Update background
+    rts
 
 
 initialize_scene_game:
@@ -52,7 +58,7 @@ initialize_scene_game:
     sta blue_player_y
 
     DrawBackground gameScreenMap ; Update background
-rts
+    rts
 
 initialize_scene_end:
     jsr famistudio_music_stop
@@ -63,4 +69,4 @@ initialize_scene_end:
     SetClock #00, #03 ; How long the deathscreen will be displayed
 
      DrawBackground endScreenMap ; Update background
-rts
+    rts

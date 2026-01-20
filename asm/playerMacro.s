@@ -1,10 +1,18 @@
-
-.import wall_collisions
-.import initialize_scene_end
-.importzp laser_timer, laser_state, laser_dir_save, laser_x_tile, laser_y_tile, laser_length, ppu_addr_temp, draw_x, draw_y
-
-
+;; IMPORTS AND EXPORTS
 .include "PickupMacro.s"
+
+.import initialize_scene_end  
+.import wall_collisions       
+
+.importzp laser_state, laser_timer
+.importzp laser_length, laser_dir_save
+
+.importzp laser_x_tile, laser_y_tile
+
+.importzp draw_x, draw_y      
+.importzp ppu_addr_temp       
+
+; ------------------------------------------------------------------------
 
 .macro PlayerMovementUpdate player_x, player_y, inputs, player_backup, player_dir, last_player_dir, player_pickup, passthroughVariable, respawn_timer, coin_count, respawn_x, respawn_y, dash_timer
 .scope 

@@ -2,9 +2,15 @@
 ;; Simple macro for initial ram variable values
 ;; 
 
-.segment "CODE"
+;; IMPORTS AND EXPORTS
 .include "coinListMacro.s"
-.importzp ability_red_passtrough_timers, ability_blue_passtrough_timers
+
+.importzp ability_red_passtrough_timers
+.importzp ability_blue_passtrough_timers
+
+; ------------------------------------------------------------------------
+
+.segment "CODE"
 
 .macro InitVariables
 
@@ -19,6 +25,46 @@ sta clock_dirty
 lda #0
 sta ability_blue_passtrough_timers ; Set to 0 (inactive)
 sta ability_red_passtrough_timers  ; Set to 0 (inactive)
+
+; positions
+lda #$60          ; X = 96 (Center-left position)
+sta coin_x
+lda #$60          ; Y = 96 (Center vertical position)
+sta coin_y
+
+lda #BLUE_PLAYER_SPAWN_X          
+sta blue_player_x
+lda #BLUE_PLAYER_SPAWN_Y         
+sta blue_player_y
+
+lda #RED_PLAYER_SPAWN_X
+sta red_player_x
+lda #RED_PLAYER_SPAWN_Y    
+sta red_player_y
+
+lda #$6D          
+sta count_down_x
+lda #$E3         
+sta count_down_y
+
+lda #$D0
+sta score_red_x
+lda #$02
+sta score_red_y
+
+lda #$20
+sta score_blue_x
+lda #$02
+sta score_blue_y
+
+lda #$14
+sta ability_blue_icon_x
+lda #$E3
+sta ability_blue_icon_y
+lda #$E4
+sta ability_red_icon_x
+lda #$E3
+sta ability_red_icon_y
 
 ; setup main level collisions
 ; These are in "tile coordinates", where each coordinate represents the top-left corner of an 8x8 tile.

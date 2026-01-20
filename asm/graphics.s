@@ -1,12 +1,9 @@
-;; exports and imports
-;; backgrounds  
+;; IMPORTS AND EXPORTS
 .export gameScreenMap
 .export startScreenMap
 .export endScreenMap
-;
 
-.export CoinFrame1
-.export CoinFrame2
+.export CoinFrame1, CoinFrame2
 
 .export BluePlayerRight1, BluePlayerRight2, BluePlayerLeft1, BluePlayerLeft2
 .export BluePlayerDown1, BluePlayerDown2, BluePlayerDown3
@@ -25,7 +22,10 @@
 
 .export palettes
 
+; ------------------------------------------------------------------------
+
 .segment "RODATA" 
+
 startScreenMap:
 	.byte $00,$00,$00,$00,$00,$00,$00,$00,$3d,$00,$00,$00,$00,$00,$00,$00
 	.byte $00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00
@@ -466,7 +466,7 @@ Pointer:
  	  .byte $00, $3E, $03, $00
 
 EmptyPointer: ; change?
-	  	  .byte $00, $00, $03, $00
+	  .byte $00, $00, $03, $00
 
 PlayerWinText: ; total letters: 7 x 4 = 28 -> 0x28 = 1C
 ;	  Y-off, Tile, Attr, X-off

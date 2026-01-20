@@ -1,16 +1,26 @@
-.include "consts.s"       
-.include "systemMacro.s"  
+;; IMPORTS AND EXPORTS
+.include "consts.s" 
+.include "systemMacro.s" 
+
+.export handle_laser           
+
+.import laser_buffer          
+.importzp laser_state         
+.importzp laser_length        
+.importzp laser_dir_save      
+
+.importzp laser_x_tile        
+.importzp laser_y_tile        
+
+.importzp draw_x, draw_y      
+.importzp ppu_addr_temp       
+
+; ------------------------------------------------------------------------
 
 .segment "CODE"
 
-.export HandleLaser
-
-.import laser_buffer      
-.importzp laser_state, laser_x_tile, laser_y_tile, laser_dir_save, laser_length        
-.importzp draw_x, draw_y
-.importzp ppu_addr_temp
-
-.proc HandleLaser
+handle_laser:
+.scope
     ; check if we need to draw or restore the laser
     lda laser_state
     bne @start_calc
@@ -223,4 +233,4 @@
     lda #PPU_INC_1
     sta PPU_CTRL
     rts
-.endproc
+.endscope

@@ -1,5 +1,4 @@
-
-; Backgrounds
+;; IMPORTS AND EXPORTS
 .import background
 
 .import palettes
@@ -32,6 +31,7 @@
 
 .import PASSTHROUGH_ANIMATION_MAX_DOUBLE
 
+; ------------------------------------------------------------------------
 
 ; ==============================================================================
 ; PUBLIC USE DRAWING MACROS
@@ -40,48 +40,51 @@
 .macro DrawBackground background
 .scope
 ; Disable rendering so we can write to VRAM safely
-lda #$00
-sta $2001      
+    lda #$00
+    sta $2001      
 
 WaitForVblank:
     bit $2002 ; set negative flag to -1
     bpl WaitForVblank ; see if negative flag is 0
+wait_for_vblank:
+    bit PPU_STATUS
+    bpl wait_for_vblank
 
-lda $2002    ; reset latch
-lda #$20
-sta $2006    ; high byte of address: $20xx
-lda #$00
-sta $2006    ; low byte: $2000
+    lda PPU_STATUS    ; reset latch
+    lda #$20
+    sta PPU_ADDR    ; high byte of address: $20xx
+    lda #$00
+    sta PPU_ADDR    ; low byte: $2000
 
 ; else write to ppudata
     ldx #$00
-LoadFirstQuarter:
+load_first_quarter:
     lda background, x
-    sta $2007 ; (PPUDATA)
+    sta PPU_DATA
     inx
-    bne LoadFirstQuarter
+    bne load_first_quarter
 
-LoadSecondQuarter:
+load_second_quarter:
     lda background + 256, x
-    sta $2007
+    sta PPU_DATA
     inx
-    bne LoadSecondQuarter
+    bne load_second_quarter
 
-LoadThirdQuarter:
+load_third_quarter:
     lda background + 512, x
-    sta $2007
+    sta PPU_DATA
     inx
-    bne LoadThirdQuarter
+    bne load_third_quarter
 
-LoadFourthQuarter:
+load_fourth_quarter:
     lda background + 768, x
-    sta $2007
+    sta PPU_DATA
     inx
-    bne LoadFourthQuarter
+    bne load_fourth_quarter
 
-; Re-enable rendering
-lda #%00011110  ; enable BG + sprites, maybe left-clip off etc.
-sta $2001
+    ; Re-enable rendering
+    lda #%00011110  ; enable BG + sprites, maybe left-clip off etc.
+    sta $2001
 .endscope
 .endmacro
 
@@ -90,41 +93,41 @@ sta $2001
     lda list_pickup+2, x   ; Load the type
 
     cmp #PICKUP_DASH
-    bne @CheckGun       ; If not 1, hop over
-    jmp Pickup_Dash     ; If is 1, jump to the label 
+    bne check_gun       ; If not 1, hop over
+    jmp pickup_dash     ; If is 1, jump to the label 
 
-@CheckGun:
+check_gun:
     cmp #PICKUP_GUN
-    bne @CheckPhase     ; If not 2, hop over
-    jmp Pickup_Gun      ; If is 2, jump
+    bne check_phase     ; If not 2, hop over
+    jmp pickup_gun      ; If is 2, jump
 
-@CheckPhase:
+check_phase:
     cmp #PICKUP_PASSTHROUGH
-    bne @CheckBomb    ; If not 3, hop over
-    jmp Pickup_Phase    ; If is 3, jump
+    bne check_bomb    ; If not 3, hop over
+    jmp pickup_phase    ; If is 3, jump
 
-@CheckBomb:
+check_bomb:
     cmp #PICKUP_BOMB
-    bne @DrawDefault    ; If not 4, hop over
-    jmp Pickup_Bomb    ; If is 4, jump
+    bne draw_default    ; If not 4, hop over
+    jmp pickup_bomb    ; If is 4, jump
 
-@DrawDefault:
+draw_default:
     DrawCoin
     rts
 
-Pickup_Dash:
+pickup_dash:
     DrawDash
     rts
 
-Pickup_Gun:
+pickup_gun:
     DrawGun
     rts
 
-Pickup_Phase:
+pickup_phase:
     DrawPhase
     rts
 
-Pickup_Bomb:
+pickup_bomb:
     DrawBomb
     rts
 .endscope
@@ -164,89 +167,83 @@ Pickup_Bomb:
 .scope
     ; Check if blue player has invis frames
     lda ability_blue_passtrough_timers
-    beq DrawPlayer       ; If 0, ignore skipping check and draw
+    beq draw_player       ; If 0, ignore skipping check and draw
     ; if not, check animation timer to see if we should draw or skip
     lda ability_blue_passtrough_timers+1
     cmp #PASSTHROUGH_ANIMATION_MAX_DIV2
-    bpl DrawPlayer       ; If above threshold, draw!
-    jmp PlayerDone      ; else skip drawing entirely
-DrawPlayer:
+    bpl draw_player       ; If above threshold, draw!
+    jmp player_done      ; else skip drawing entirely
+draw_player:
     ; Check Idle or Moving
     lda inputs
     and #%00001111
-    bne CheckCollision   
-    jmp HandleIdleState  
+    bne check_collision   
+    jmp handle_idle_state  
 
-CheckCollision:
+check_collision:
     ; Check Collision
     lda blue_player_dir
     cmp #4
-    bcc DoMovement       ; If < 4, Move
-    jmp HandleIdleState  ; If >= 4, Idle
+    bcc do_movement       ; If < 4, Move
+    jmp handle_idle_state  ; If >= 4, Idle
 
-DoMovement:
+do_movement:
     lda blue_player_dir
     cmp #1
-    bne CheckLeft       
-    jmp AnimateUp        
-    
-CheckLeft:
+    bne check_left       
+    jmp animate_up         
+check_left:
     cmp #2
-    bne CheckRight       
-    jmp AnimateLeft      
-
-CheckRight:
+    bne check_right       
+    jmp animate_left      
+check_right:
     cmp #3
-    bne DoDefaultDown   
-    jmp AnimateRight     
+    bne animate_down   
+    jmp animate_right     
 
-DoDefaultDown:
+animate_down:
     DrawAnimatedMetasprite4Frames x_pos, y_pos, BluePlayerDown1, BluePlayerDown2, BluePlayerDown1, BluePlayerDown3, $08
-    jmp PlayerDone
-
-AnimateUp:
+    jmp player_done 
+animate_up:
     DrawAnimatedMetasprite4Frames x_pos, y_pos, BluePlayerUp1, BluePlayerUp2, BluePlayerUp1, BluePlayerUp3, $08
-    jmp PlayerDone
-AnimateLeft:
+    jmp player_done
+animate_left:
     DrawAnimatedMetasprite2Frames x_pos, y_pos, BluePlayerLeft1, BluePlayerLeft2, $08
-    jmp PlayerDone
-AnimateRight:
+    jmp player_done
+animate_right:
     DrawAnimatedMetasprite2Frames x_pos, y_pos, BluePlayerRight1, BluePlayerRight2, $08
-    jmp PlayerDone
+    jmp player_done
 
-HandleIdleState:
+handle_idle_state:
     ; Mask out collision flag
     lda blue_player_dir
     and #%00000011
 
     cmp #1
-    bne CheckIdleLeft   
-    jmp IdleUp
-
-CheckIdleLeft:
+    bne check_idle_left   
+    jmp idle_up
+check_idle_left:
     cmp #2
-    bne CheckIdleRight  
-    jmp IdleLeft
-
-CheckIdleRight:
+    bne check_idle_right  
+    jmp idle_left
+check_idle_right:
     cmp #3
-    bne DoIdleDown       
-    jmp IdleRight
+    bne idle_down       
+    jmp idle_right
 
-DoIdleDown:
+idle_down:
     DrawMetasprite x_pos, y_pos, BluePlayerDown1
-    jmp PlayerDone
-
-IdleUp:
+    jmp player_done
+idle_up:
     DrawMetasprite x_pos, y_pos, BluePlayerUp1
-    jmp PlayerDone
-IdleLeft:
+    jmp player_done
+idle_left:
     DrawMetasprite x_pos, y_pos, BluePlayerLeft1
-    jmp PlayerDone
-IdleRight:
+    jmp player_done
+idle_right:
     DrawMetasprite x_pos, y_pos, BluePlayerRight1
 
-PlayerDone:
+player_done:
 .endscope
 .endmacro
 
@@ -254,90 +251,84 @@ PlayerDone:
 .scope
     ; Check if red player has invis frames
     lda ability_red_passtrough_timers
-    beq DrawPlayer       ; If 0, ignore skipping check and draw
+    beq draw_player       ; If 0, ignore skipping check and draw
     ; if not, check animation timer to see if we should draw or skip
     lda ability_red_passtrough_timers+1
     cmp #PASSTHROUGH_ANIMATION_MAX_DIV2
-    bpl DrawPlayer       ; If above threshold, draw!
-    jmp PlayerDone      ; else skip drawing entirely
-DrawPlayer:
+    bpl draw_player       ; If above threshold, draw!
+    jmp player_done      ; else skip drawing entirely
+draw_player:
 
     ; Check Idle or Moving
     lda inputs+1
     and #%00001111
-    bne CheckCollision   
-    jmp HandleIdleState
+    bne check_collision   
+    jmp handle_idle_state 
 
-CheckCollision:
+check_collision:
     ; Check Collision
     lda red_player_dir
     cmp #4
-    bcc DoMovement       ; If < 4, Move
-    jmp HandleIdleState  ; If >= 4, Idle
+    bcc do_movement       ; If < 4, Move
+    jmp handle_idle_state  ; If >= 4, Idle
 
-DoMovement:
+do_movement:
     lda red_player_dir
     cmp #1
-    bne CheckLeft       
-    jmp AnimateUp        
-    
-CheckLeft:
+    bne check_left       
+    jmp animate_up        
+check_left:
     cmp #2
-    bne CheckRight       
-    jmp AnimateLeft      
-
-CheckRight:
+    bne check_right       
+    jmp animate_left      
+check_right:
     cmp #3
-    bne DoDefaultDown   
-    jmp AnimateRight     
+    bne animate_down   
+    jmp animate_right     
 
-DoDefaultDown:
+animate_down:
     DrawAnimatedMetasprite4Frames x_pos, y_pos, RedPlayerDown1, RedPlayerDown2, RedPlayerDown1, RedPlayerDown3, $08
-    jmp PlayerDone
-
-AnimateUp:
+    jmp player_done
+animate_up:
     DrawAnimatedMetasprite4Frames x_pos, y_pos, RedPlayerUp1, RedPlayerUp2, RedPlayerUp1, RedPlayerUp3, $08
-    jmp PlayerDone
-AnimateLeft:
+    jmp player_done
+animate_left:
     DrawAnimatedMetasprite2Frames x_pos, y_pos, RedPlayerLeft1, RedPlayerLeft2, $08
-    jmp PlayerDone
-AnimateRight:
+    jmp player_done
+animate_right:
     DrawAnimatedMetasprite2Frames x_pos, y_pos, RedPlayerRight1, RedPlayerRight2, $08
-    jmp PlayerDone
+    jmp player_done
 
-HandleIdleState:
+handle_idle_state:
     ; Mask out collision flag
     lda red_player_dir
     and #%00000011
 
     cmp #1
-    bne CheckIdleLeft   
-    jmp IdleUp
-
-CheckIdleLeft:
+    bne check_idle_left   
+    jmp idle_up
+check_idle_left:
     cmp #2
-    bne CheckIdleRight  
-    jmp IdleLeft
-
-CheckIdleRight:
+    bne check_idle_right  
+    jmp idle_left
+check_idle_right:
     cmp #3
-    bne DoIdleDown       
-    jmp IdleRight
+    bne idle_down       
+    jmp idle_right
 
-DoIdleDown:
+idle_down:
     DrawMetasprite x_pos, y_pos, RedPlayerDown1
-    jmp PlayerDone
-
-IdleUp:
+    jmp player_done
+idle_up:
     DrawMetasprite x_pos, y_pos, RedPlayerUp1
-    jmp PlayerDone
-IdleLeft:
+    jmp player_done
+idle_left:
     DrawMetasprite x_pos, y_pos, RedPlayerLeft1
-    jmp PlayerDone
-IdleRight:
+    jmp player_done
+idle_right:
     DrawMetasprite x_pos, y_pos, RedPlayerRight1
 
-PlayerDone:
+player_done:
 .endscope
 .endmacro
 
@@ -398,82 +389,76 @@ PlayerDone:
 .macro DrawAbilityRed x_pos, y_pos, ability_lbl
 .scope
     lda ability_lbl     ; Load the ability value (0=Empty, 1=Dash, 2=Gun, 3=Phase, 4=Bomb)
-    bne Draw            ; If NOT 0, draw
-    jmp Done            ; If 0, draw nothing and exit
-Draw:
+    bne draw            ; If NOT 0, draw
+    jmp done            ; If 0, draw nothing and exit
+draw:
     ; Check specific abilities
     cmp #1
-    beq RenderDash      ; If 1, go to Dash
+    beq render_dash      ; If 1, go to Dash
     
     cmp #2
-    beq RenderGun       ; If 2, go to Gun
-    
+    beq render_gun       ; If 2, go to Gun
+
     cmp #3
-    beq RenderPhase     ; If 3, go to Phase
+    beq render_phase     ; If 3, go to Phase
     
     cmp #4
-    beq RenderBomb      ; If 4, go to Bomb
+    beq render_bomb      ; If 4, go to Bomb
     
-    jmp Done            ; Safety catch (if value is >4)
+    jmp done            ; Safety catch (if value is >4)
 
-RenderDash:
+render_dash:
     DrawSprite x_pos, y_pos, AbilityDashIconRed
-    jmp Done
-
-RenderGun:
+    jmp done
+render_gun:
     DrawSprite x_pos, y_pos, AbilityGunIconRed
-    jmp Done
-
-RenderPhase:
+    jmp done
+render_phase:
     DrawSprite x_pos, y_pos, AbilityPhaseIconRed
-    jmp Done
-
-RenderBomb:
+    jmp done
+render_bomb:
     DrawSprite x_pos, y_pos, AbilityBombIconRed
-    jmp Done
+    jmp done
 
-Done:
+done:
 .endscope
 .endmacro
 
 .macro DrawAbilityBlue x_pos, y_pos, ability_lbl
 .scope
     lda ability_lbl     ; Load the ability value (0=Empty, 1=Dash, 2=Gun, 3=Phase, 4=Bomb)
-    bne Draw            ; If NOT 0, draw
-    jmp Done            ; If 0, draw nothing and exit
-Draw:
+    bne draw            ; If NOT 0, draw
+    jmp done            ; If 0, draw nothing and exit
+draw:
     ; Check specific abilities
     cmp #1
-    beq RenderDash      ; If 1, go to Dash
+    beq render_dash      ; If 1, go to Dash
     
     cmp #2
-    beq RenderGun       ; If 2, go to Gun
-    
+    beq render_gun       ; If 2, go to Gun
+
     cmp #3
-    beq RenderPhase     ; If 3, go to Phase
+    beq render_phase     ; If 3, go to Phase
     
     cmp #4
-    beq RenderBomb     ; If 4, go to Bomb
+    beq render_bomb     ; If 4, go to Bomb
     
-    jmp Done            ; Safety catch (if value is >4)
+    jmp done            ; Safety catch (if value is >4)
 
-RenderDash:
+render_dash:
     DrawSprite x_pos, y_pos, AbilityDashIconBlue
-    jmp Done
-
-RenderGun:
+    jmp done
+render_gun:
     DrawSprite x_pos, y_pos, AbilityGunIconBlue
-    jmp Done
-
-RenderPhase:
+    jmp done
+render_phase:
     DrawSprite x_pos, y_pos, AbilityPhaseIconBlue
-    jmp Done
-
-RenderBomb:
+    jmp done
+render_bomb:
     DrawSprite x_pos, y_pos, AbilityBombIconBlue
-    jmp Done
+    jmp done
 
-Done:
+done:
 .endscope
 .endmacro
 
@@ -485,13 +470,13 @@ Done:
 .scope
     lda variable
     ldx #0
-SubtractTenLoop:
+subtract_ten_loop:
     cmp #10
-    bcc CalculationDone  ; If < 10, we have the ones digit
+    bcc calculation_done  ; If < 10, we have the ones digit
     sbc #10
     inx                  ; Increment tens counter
-    jmp SubtractTenLoop
-CalculationDone:
+    jmp subtract_ten_loop
+calculation_done:
 .endscope
 .endmacro
 
@@ -584,18 +569,18 @@ TileLoop:
 .scope
     lda frame_counter ; check the global frame counter to decide which frame to show
     and #speed ; use a bitmask to control the animation speed
-    bne DrawFrameTwo ; if the result is not zero, jump to the second frame
+    bne draw_frame_two ; if the result is not zero, jump to the second frame
 
-DrawFrameOne:
+draw_frame_one:
     ; draw the first frame of the animation
     DrawMetasprite x_pos, y_pos, frame1
-    jmp AnimationDone
+    jmp animation_done
 
-DrawFrameTwo:
+draw_frame_two:
     ; draw the second frame of the animation
     DrawMetasprite x_pos, y_pos, frame2
 
-AnimationDone:
+animation_done:
 .endscope
 .endmacro
 
@@ -603,33 +588,33 @@ AnimationDone:
 .scope
     lda frame_counter
     and #(speed * 2)     ; Check upper bit for frames 3-4
-    beq DoFramesOneAndTwo       
-    jmp CheckFramesThreeAndFour 
+    beq do_frames_one_and_two       
+    jmp check_frames_three_and_four 
 
-DoFramesOneAndTwo:
+do_frames_one_and_two:
     lda frame_counter
     and #speed
-    bne DrawFrameTwo
+    bne draw_frame_two
     
     DrawMetasprite x_pos, y_pos, f1
-    jmp AnimationDone
+    jmp animation_done
 
-DrawFrameTwo:
+draw_frame_two:
     DrawMetasprite x_pos, y_pos, f2
-    jmp AnimationDone
+    jmp animation_done
 
-CheckFramesThreeAndFour:
+check_frames_three_and_four:
     lda frame_counter
     and #speed
-    bne DrawFrameFour
+    bne draw_frame_four
 
     DrawMetasprite x_pos, y_pos, f3
-    jmp AnimationDone
+    jmp animation_done
 
-DrawFrameFour:
+draw_frame_four:
     DrawMetasprite x_pos, y_pos, f4
 
-AnimationDone:
+animation_done:
 .endscope
 .endmacro
 
@@ -654,15 +639,15 @@ AnimationDone:
     ; Check if 00:00
     lda clock_min
     ora clock_sec
-    bne CheckFrames      
-    jmp ClockFinished    
+    bne check_frames      
+    jmp clock_finished    
 
-CheckFrames:
+check_frames:
     dec clock_frames
-    beq ResetFrames      
-    jmp ClockFinished    
+    beq reset_frames      
+    jmp clock_finished    
 
-ResetFrames:
+reset_frames:
     ; Second passed
     lda #50              ; Reset frames (PAL)
     sta clock_frames
@@ -670,10 +655,10 @@ ResetFrames:
     dec clock_sec
     lda clock_sec
     cmp #$FF             ; Check underflow
-    beq ResetSeconds     
-    jmp ClockFinished    
+    beq reset_seconds     
+    jmp clock_finished    
 
-ResetSeconds:
+reset_seconds:
     ; Minute passed
     lda #59              ; Reset seconds
     sta clock_sec
@@ -681,16 +666,16 @@ ResetSeconds:
     
     lda clock_min
     cmp #$FF
-    beq ForceStop        
-    jmp ClockFinished    
+    beq force_stop        
+    jmp clock_finished    
 
-ForceStop:
+force_stop:
     ; Hard Stop (Force 00:00 on underflow)
     lda #0
     sta clock_min
     sta clock_sec
 
-ClockFinished:
+clock_finished:
 .endscope
 .endmacro
 
@@ -704,11 +689,11 @@ ClockFinished:
     
     ; Cap at variable in consts
     cmp #COIN_CAP
-    bcc ScoreUpdateDone
+    bcc score_update_done
     lda #COIN_CAP
     sta score_var
 
-ScoreUpdateDone:
+score_update_done:
 .endscope
 .endmacro
 
@@ -744,7 +729,7 @@ DrawSprite x_pos, y_pos, Pointer
 .macro DrawText x_pos, y_pos, data_lbl, count 
 .scope
     ldx #$00             ; Reset data index
-TextLoop:
+text_loop:
     ; Y Position
     lda data_lbl, x
     clc
@@ -774,6 +759,6 @@ TextLoop:
     iny
 
     cpx #count             ; check if max amount of letters is reached
-    bne TextLoop
+    bne text_loop
 .endscope
 .endmacro

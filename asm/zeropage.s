@@ -4,143 +4,132 @@
 ;; In order to keep consistent track of zero-page memory ALL zero-page variables should be defined in this file 
 ;;
 
-.exportzp frame_counter
-.exportzp second_counter
-.exportzp clock_dirty
-.exportzp clock_x
-.exportzp clock_y
-.exportzp math_buffer
-.exportzp rand
-.exportzp inputs
-.exportzp ptr
+.exportzp math_buffer, rand, ptr
+.exportzp inputs, frame_counter
 
-;testing
-.exportzp blue_player_x
-.exportzp blue_player_y
-.exportzp red_player_x
-.exportzp red_player_y
+.exportzp second_counter, clock_dirty
+.exportzp clock_x, clock_y
+.exportzp clock_min, clock_sec, clock_frames
 
-.exportzp coin_x
-.exportzp coin_y
-.exportzp count_down_x
-.exportzp count_down_y
+.exportzp blue_player_x, blue_player_y, blue_player_dir, last_blue_player_dir
+.exportzp red_player_x, red_player_y, red_player_dir, last_red_player_dir
+.exportzp blue_respawn_timer, red_respawn_timer
 
-.exportzp score_red_x
-.exportzp score_red_y
-.exportzp score_blue_x
-.exportzp score_blue_y
+.exportzp coin_x, coin_y
+.exportzp count_down_x, count_down_y
 
-.exportzp clock_min       
-.exportzp clock_sec      
-.exportzp clock_frames    
+.exportzp score_red, score_blue
+.exportzp score_red_x, score_red_y
+.exportzp score_blue_x, score_blue_y
+.exportzp ability_red_icon_x, ability_red_icon_y
+.exportzp ability_blue_icon_x, ability_blue_icon_y
 
-.exportzp blue_player_dir
-.exportzp red_player_dir
+.exportzp ability_red, ability_blue
+.exportzp ability_red_passtrough_timers, ability_blue_passtrough_timers
+.exportzp dash_timer_red, dash_timer_blue
 
-.exportzp score_red
-.exportzp score_blue
+.exportzp bomb_timer, bomb_x, bomb_y
+.exportzp bomb_draw_frame_counter
+.exportzp bomb_veloctiy_x, bomb_velocity_y
+.exportzp explosion_state, explosion_timer, bomb_ppu_addr
 
-.exportzp ability_red
-.exportzp ability_blue
-.exportzp blue_respawn_timer
-.exportzp red_respawn_timer
+.exportzp laser_timer, laser_state, laser_length, laser_dir_save
+.exportzp laser_x_tile, laser_y_tile
+.exportzp ppu_addr_temp, draw_x, draw_y
 
-.exportzp ability_red_icon_x, ability_red_icon_y, ability_blue_icon_x, ability_blue_icon_y
-
-.exportzp ability_red_passtrough_timers
-.exportzp ability_blue_passtrough_timers
-
-.exportzp dash_timer_blue
-.exportzp dash_timer_red
-
-.exportzp last_blue_player_dir
-.exportzp last_red_player_dir
-
-.exportzp bomb_timer, bomb_x, bomb_y, bomb_draw_frame_counter, bomb_veloctiy_x, bomb_velocity_y
-
-.exportzp laser_timer, laser_state, laser_dir_save, laser_x_tile, laser_y_tile, laser_length, ppu_addr_temp, draw_x, draw_y
+; ------------------------------------------------------------------------
 
 .segment "ZEROPAGE" ; zero-page memory, fast access: Use sparingly!
 
-;; System variables
-math_buffer: .res 8
-frame_counter: .res 1
-inputs: .res 2
-rand: .res 2
-ptr: .res 2 ; a temporary 2 byte space to store pointers
+;; SYSTEM KERNEL
+math_buffer:    .res 8      
+ptr:            .res 2      ; a temporary 2 byte space to store pointers
+rand:           .res 2      
+inputs:         .res 2      
+frame_counter:  .res 1      
 
-;; Demo variables
+;; CLOCK & DEMO TIMERS
 second_counter: .res 2
+clock_dirty:    .res 1      ; a flag set to determine which parts of the buffer must be updated. Bit 0: value, bit 1: x, bit 2:y
+clock_x:        .res 1
+clock_y:        .res 1
+clock_min:      .res 1
+clock_sec:      .res 1
+clock_frames:   .res 1      
 
-clock_x: .res 1
-clock_y: .res 1
-clock_dirty: .res 1 ; a flag set to determine which parts of the buffer must be updated. Bit 0: value, bit 1: x, bit 2:y
+;; PLAYERS (PHYSICS & STATE)
+; Positions (Pixels)
+blue_player_x:      .res 1
+blue_player_y:      .res 1
+red_player_x:       .res 1
+red_player_y:       .res 1
 
-; positions
-blue_player_x: .res 1
-blue_player_y: .res 1
-blue_player_pickup: .res 1
-red_player_x: .res 1
-red_player_y: .res 1    
-red_player_pickup: .res 1    
+; Directions (Enum: 0=Down, 1=Up, 2=Left, 3=Right)
+blue_player_dir:        .res 1
+last_blue_player_dir:   .res 1
+red_player_dir:         .res 1
+last_red_player_dir:    .res 1
 
-coin_x: .res 1
-coin_y: .res 1
-count_down_x: .res 1
-count_down_y: .res 1
+; Status
+blue_player_pickup: .res 1      ; Item currently held by Blue.
+red_player_pickup:  .res 1      ; Item currently held by Red.
+blue_respawn_timer: .res 1      
+red_respawn_timer:  .res 1
 
-clock_min: .res 1
-clock_sec: .res 1
-clock_frames: .res 1 ; remove  these later when doing proper map buffer
+;; ABILITIES & POWERUPS
+; Ability State
+ability_red:        .res 1
+ability_blue:       .res 1
 
-blue_player_dir: .res 1
-last_blue_player_dir: .res 1
-red_player_dir: .res 1
-last_red_player_dir: .res 1
-
-score_red: .res 1
-score_red_x: .res 1
-score_red_y: .res 1
-
-score_blue: .res 1
-score_blue_x: .res 1
-score_blue_y: .res 1
-
-ability_red: .res 1
-ability_blue: .res 1
-
-ability_red_icon_x: .res 1
-ability_red_icon_y: .res 1
-ability_blue_icon_x: .res 1
-ability_blue_icon_y: .res 1
-
-; Ability timers for passthrough, can be moved to BSS if needed, called minimum 2x per frame
-; Byte 1 is main timer, byte 2 is animation timer
-ability_red_passtrough_timers: .res 2
+; Timers
+dash_timer_red:     .res 1
+dash_timer_blue:    .res 1
+ability_red_passtrough_timers:  .res 2 ; Byte 1=Main Timer, Byte 2=Anim Frame
 ability_blue_passtrough_timers: .res 2
 
-blue_respawn_timer: .res 1
-red_respawn_timer: .res 1
+; UI Icon Positions
+ability_red_icon_x: .res 1
+ability_red_icon_y: .res 1
+ability_blue_icon_x:.res 1
+ability_blue_icon_y:.res 1
 
-dash_timer_red: .res 1
-dash_timer_blue: .res 1
-
-; Laser animation
-laser_timer:    .res 1     ; Countdown timer
-laser_state:    .res 1     ; 0 = Off, 1 = Draw White, 2 = Draw Restore
-laser_x_tile:   .res 1     ; Saved X (in tiles, not pixels)
-laser_y_tile:   .res 1     ; Saved Y (in tiles, not pixels)
-laser_dir_save: .res 1     ; Saved Direction
-laser_length:   .res 1     ; Store calculated length here
-
-ppu_addr_temp:  .res 2     ; 2-byte helper for PPU address
-draw_x:         .res 1     ; Temp variable for calculating start position
-draw_y:         .res 1     ; Temp variable for calculating start position
-
-; bomb variables
-bomb_timer: .res 1
-bomb_x: .res 1
-bomb_y: .res 1
+;; WEAPON LOGIC: BOMB
+bomb_timer:         .res 1
+bomb_x:             .res 1
+bomb_y:             .res 1
+bomb_veloctiy_x:    .res 1
+bomb_velocity_y:    .res 1
 bomb_draw_frame_counter: .res 1
-bomb_veloctiy_x: .res 1
-bomb_velocity_y: .res 1
+
+; Bomb Visuals (Explosion)
+explosion_state:    .res 1      ; 0=Off, 1=Flash, 2=Restore
+explosion_timer:    .res 1      ; Duration of the white flash
+bomb_ppu_addr:      .res 2      ; Temp pointer for drawing the explosion
+
+;; WEAPON LOGIC: LASER
+laser_timer:        .res 1
+laser_state:        .res 1      ; 0=Off, 1=Draw, 2=Restore
+laser_length:       .res 1      ; Length of beam in tiles
+laser_dir_save:     .res 1      ; Direction shot (fixed once fired)
+laser_x_tile:       .res 1      ; Origin Tile X
+laser_y_tile:       .res 1      ; Origin Tile Y
+
+; Laser Visuals (Helpers)
+ppu_addr_temp:      .res 2      ; Temp pointer for drawing the laser
+draw_x:             .res 1      ; Scratch var for calculating beam path
+draw_y:             .res 1      ; Scratch var for calculating beam path
+
+;; OBJECTS & UI
+coin_x:         .res 1
+coin_y:         .res 1
+count_down_x:   .res 1
+count_down_y:   .res 1
+
+score_red:      .res 1
+score_red_x:    .res 1
+score_red_y:    .res 1
+
+score_blue:     .res 1
+score_blue_x:   .res 1
+score_blue_y:   .res 1
+; ------------------------------------------------------------------------

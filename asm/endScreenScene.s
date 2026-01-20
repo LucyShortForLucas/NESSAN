@@ -1,14 +1,17 @@
-
-.importzp inputs
-.import current_scene
-.import end_state
-.import initialize_scene_start
-
+;; IMPORTS AND EXPORTS
 .include "consts.s"
 .include "graphicsMacro.s"
 .include "musicMacro.s"
 
 .export end_screen_scene
+
+.import current_scene
+.import end_state
+.import initialize_scene_start  
+
+.importzp inputs                
+
+; ------------------------------------------------------------------------
 
 end_screen_scene:
     ldy #$00

@@ -1,4 +1,3 @@
-
 .macro HandlePickupSpawn
 .scope
 

@@ -2,11 +2,11 @@
 
 .macro CheckForCoinCollision player_x, player_y
 .scope
-    clc
+    clc 
     lda list_pickup ; load amount into pickup
-    beq @endCoinCollision ; if 0 then we're done! nothing to check!
+    beq @end_coin_collision ; if 0 then we're done! nothing to check!
 
-    jsr ConvertIndexToPosition
+    jsr convert_index_to_position
 
     ; put player x into math_buffer so we can use it now that it's free!
     lda player_x
@@ -26,7 +26,7 @@
     sta math_buffer+7
 
 
-@coinCollisionLoop: ; loop over each item and check collision
+@coin_collision_loop: ; loop over each item and check collision
     lda list_pickup, x
     ; move x over by 4 to the right to account for offcenter
     adc #4
@@ -36,32 +36,32 @@
     adc #4
     sta math_buffer+5 ; set y
     jsr aabb_collision ; gets carry  bit if hit
-    bcs @coinHit
+    bcs @coin_hit
     dex 
     dex 
     dex ; -3 for next 
-    bpl @coinCollisionLoop ; branch if not negative, aka more to loop
+    bpl @coin_collision_loop ; branch if not negative, aka more to loop
     ; no hit :(
     clc 
-    jmp @endCoinCollision
-    @coinHit:
+    jmp @end_coin_collision
+    @coin_hit:
     ; load index into mathbuffer
     txa 
-    sta math_buffer
+    sta math_buffer ; push index to math buffer for removal
     sec ; set the carry
-    @endCoinCollision:
+    @end_coin_collision:
 .endscope
 .endmacro
 
 .macro GrabAbility ability_lbl, ability_passtrough_timers
 .scope
-    ldx math_buffer
+    ldx math_buffer ; get index from math buffer for processing
     
     lda ability_passtrough_timers
-    bne skipGrabAbilityPickupHandling ; check if it's not 0, if so, skip grabbing all items
+    bne @skip_grab_ability_pickup_handling ; check if it's not 0, if so, skip grabbing all items
 
     lda list_pickup+2, x  ; Load type from the list
     sta ability_lbl ; Store it in the player's ability variable
-skipGrabAbilityPickupHandling:
+@skip_grab_ability_pickup_handling:
 .endscope
 .endmacro

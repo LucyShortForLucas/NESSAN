@@ -3,8 +3,11 @@
 
 ; to see the correct usage look at the file, "musicMacro.s"
 
+;; IMPORTS AND EXPORTS
 .export _music_data_coinheist:=music_data_coinheist
 .export _sounds=sounds
+
+; ------------------------------------------------------------------------
 
 music_data_coinheist:
 	.byte 1
