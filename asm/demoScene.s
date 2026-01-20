@@ -162,6 +162,9 @@ skipBluePickupHandling:
   PlayerMovementUpdate blue_player_x, blue_player_y, inputs, blue_player_backup, blue_player_dir, last_blue_player_dir, ability_blue, ability_blue_passtrough_timers, blue_respawn_timer, score_blue, #BLUE_PLAYER_SPAWN_X, #BLUE_PLAYER_SPAWN_Y, dash_timer_blue
 blue_update_end:
 
+    ; players have been updated
+    ; rest of scene: 
+
     BombUpdate
 
     UpdateClock
@@ -183,7 +186,7 @@ blue_update_end:
     lda list_pickup+1, x ; y
     sta math_buffer+1
     stx math_buffer+2
-    jsr DrawPickupJSR
+    jsr DrawPickupJSR 
     ldx math_buffer+2
     dex 
     dex 
@@ -195,7 +198,7 @@ blue_update_end:
     DrawClock count_down_x, count_down_y ; 
 
     lda blue_respawn_timer
-    cmp #35
+    cmp #35 ; make const?
     bcc check_frame_blue ; Only draw if less than 35 frames left till respawn\
     jmp skip_blue_draw ; jump over draw (too big for branch) 
 check_frame_blue:

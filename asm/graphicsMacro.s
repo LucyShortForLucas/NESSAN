@@ -44,8 +44,8 @@ lda #$00
 sta $2001      
 
 WaitForVblank:
-    bit $2002
-    bpl WaitForVblank
+    bit $2002 ; set negative flag to -1
+    bpl WaitForVblank ; see if negative flag is 0
 
 lda $2002    ; reset latch
 lda #$20
