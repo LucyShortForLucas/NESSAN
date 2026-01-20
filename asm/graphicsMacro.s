@@ -699,13 +699,13 @@ score_update_done:
 
 ; Yanto title codes
 
-.macro DrawSelectorPointer x_pos, y_pos ; make it flash
-.scope
-;  DrawSelectorPointer #80, #136    
+.macro DrawSelectorPointer x_pos, y_pos 
+.scope   
 DrawSprite x_pos, y_pos, Pointer
 .endscope
 .endmacro
 
+; EndScreen Macros
 .macro DrawBlueWins
 .scope
     DrawMetasprite #120, #80, BluePlayerDown1
@@ -726,6 +726,7 @@ DrawSprite x_pos, y_pos, Pointer
 .endscope
 .endmacro
 
+; Text macro, Places them next to eachother on the X axis the LIMIT is 8 Letters (sprites) 
 .macro DrawText x_pos, y_pos, data_lbl, count 
 .scope
     ldx #$00             ; Reset data index

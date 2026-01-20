@@ -61,6 +61,7 @@ initialize_scene_game:
     rts
 
 initialize_scene_end:
+    ; Stopping the music so the next can start clean
     jsr famistudio_music_stop
 
     lda #SCENE_ENDSCREEN

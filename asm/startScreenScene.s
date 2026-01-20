@@ -15,6 +15,7 @@
 
 start_screen_scene:
     ldy #$00
+    ; The red Blinking pointer on the titlescreen
     DrawSelectorPointer #POINTER_X_POS, #POINTER_Y_POS
     
     inc rand ; increment seed by 1 every frame, giving us a 'random' frame on game start

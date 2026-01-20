@@ -41,15 +41,11 @@ end_screen_scene:
     red_won:
      DrawRedWins
 
-skip:
-    ;lda inputs ; Check for Start Press 
-    ;and #%00010000
-    ;beq @skipScene ; skips scene change if nothing is pressed
-    lda clock_sec
+skip: 
+    lda clock_sec ; load clock
     ora clock_sec
     bne @skipScene ; if the clock isnt zero SKIP
       jsr initialize_scene_start ; initialize scene
 @skipScene:
-
     rts
 
