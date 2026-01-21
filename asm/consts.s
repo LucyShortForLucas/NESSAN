@@ -1,6 +1,7 @@
 ; ------------------------------------------------------------------------
 ;; HARDWARE REGISTERS (PPU & APU)
 PPU_CTRL        = $2000     ; PPU Control Register (W)
+PPU_MASK        = $2001     ; PPU Mask Register (W)
 PPU_STATUS      = $2002     ; PPU Status Register (R)
 PPU_ADDR        = $2006     ; VRAM Address Register (W)
 PPU_DATA        = $2007     ; VRAM Data Register (R/W)
@@ -10,9 +11,13 @@ APU_COUNTER     = $4017     ; Frame Counter Control
 APU_DM_CONTROL  = $4010     ; DMC Control
 
 ;; PPU Configuration Flags
-PPU_INC_1       = %10000000 ; Increment VRAM addr by 1 (Horizontal writing)
-PPU_INC_32      = %10000100 ; Increment VRAM addr by 32 (Vertical writing)
-NAMETABLE_HI    = $20       ; Base High Byte for Nametable 0 ($2000)
+PPU_INC_1           = %10000000 ; Increment VRAM addr by 1 (Horizontal writing)
+PPU_INC_32          = %10000100 ; Increment VRAM addr by 32 (Vertical writing)
+PPU_MASK_ENABLE_ALL = %00011110 ; Enables Background and Sprites
+NAMETABLE_HI        = $20       ; Base High Byte for Nametable 0 ($2000)
+
+;; MEMORY MAP
+OAM_BUFFER      = $0200     ; Shadow OAM location in RAM
 
 ;; SCENE & GAME STATE
 SCENE_STARTSCREEN = $00
@@ -94,6 +99,10 @@ EXPLOSION_STATE_RESTORE = 2
 
 EXPLOSION_SCREEN_WIDTH  = 32   
 EXPLOSIONTWO_ROWS_OFFSET= 64 
+
+;; ANIMATION SPEEDS (Bitmasks)
+ANIM_SPEED_PICKUP = $20     ; Used for Coins, Dash, Gun, etc.
+ANIM_SPEED_PLAYER = $08     ; Used for Player walking
 
 ;; AUDIO (SONGS & SFX)
 ; Songs

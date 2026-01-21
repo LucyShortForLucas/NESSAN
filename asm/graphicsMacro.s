@@ -41,11 +41,8 @@
 .scope
 ; Disable rendering so we can write to VRAM safely
     lda #$00
-    sta $2001      
+    sta PPU_MASK     
 
-WaitForVblank:
-    bit $2002 ; set negative flag to -1
-    bpl WaitForVblank ; see if negative flag is 0
 wait_for_vblank:
     bit PPU_STATUS
     bpl wait_for_vblank
@@ -83,8 +80,8 @@ load_fourth_quarter:
     bne load_fourth_quarter
 
     ; Re-enable rendering
-    lda #%00011110  ; enable BG + sprites, maybe left-clip off etc.
-    sta $2001
+    lda #PPU_MASK_ENABLE_ALL  ; enable BG + sprites, maybe left-clip off etc.
+    sta PPU_MASK
 .endscope
 .endmacro
 
@@ -135,31 +132,31 @@ pickup_bomb:
 
 .macro DrawCoin
 .scope
-    DrawAnimatedMetasprite2Frames math_buffer+0, math_buffer+1, CoinFrame1, CoinFrame2, $20
+    DrawAnimatedMetasprite2Frames math_buffer+0, math_buffer+1, CoinFrame1, CoinFrame2, ANIM_SPEED_PICKUP
 .endscope
 .endmacro
 
 .macro DrawDash
 .scope
-    DrawAnimatedMetasprite2Frames math_buffer+0, math_buffer+1, AbilityDashFrame1, AbilityDashFrame2, $20
+    DrawAnimatedMetasprite2Frames math_buffer+0, math_buffer+1, AbilityDashFrame1, AbilityDashFrame2, ANIM_SPEED_PICKUP
 .endscope
 .endmacro
 
 .macro DrawGun
 .scope
-    DrawAnimatedMetasprite2Frames math_buffer+0, math_buffer+1, AbilityGunFrame1, AbilityGunFrame2, $20
+    DrawAnimatedMetasprite2Frames math_buffer+0, math_buffer+1, AbilityGunFrame1, AbilityGunFrame2, ANIM_SPEED_PICKUP
 .endscope
 .endmacro
 
 .macro DrawPhase
 .scope
-    DrawAnimatedMetasprite2Frames math_buffer+0, math_buffer+1, AbilityPhaseFrame1, AbilityPhaseFrame2, $20
+    DrawAnimatedMetasprite2Frames math_buffer+0, math_buffer+1, AbilityPhaseFrame1, AbilityPhaseFrame2, ANIM_SPEED_PICKUP
 .endscope
 .endmacro
 
 .macro DrawBomb
 .scope
-    DrawAnimatedMetasprite2Frames math_buffer+0, math_buffer+1, AbilityBombFrame1, AbilityBombFrame2, $20
+    DrawAnimatedMetasprite2Frames math_buffer+0, math_buffer+1, AbilityBombFrame1, AbilityBombFrame2, ANIM_SPEED_PICKUP
 .endscope
 .endmacro
 
@@ -202,16 +199,16 @@ check_right:
     jmp animate_right     
 
 animate_down:
-    DrawAnimatedMetasprite4Frames x_pos, y_pos, BluePlayerDown1, BluePlayerDown2, BluePlayerDown1, BluePlayerDown3, $08
+    DrawAnimatedMetasprite4Frames x_pos, y_pos, BluePlayerDown1, BluePlayerDown2, BluePlayerDown1, BluePlayerDown3, ANIM_SPEED_PLAYER
     jmp player_done 
 animate_up:
-    DrawAnimatedMetasprite4Frames x_pos, y_pos, BluePlayerUp1, BluePlayerUp2, BluePlayerUp1, BluePlayerUp3, $08
+    DrawAnimatedMetasprite4Frames x_pos, y_pos, BluePlayerUp1, BluePlayerUp2, BluePlayerUp1, BluePlayerUp3, ANIM_SPEED_PLAYER
     jmp player_done
 animate_left:
-    DrawAnimatedMetasprite2Frames x_pos, y_pos, BluePlayerLeft1, BluePlayerLeft2, $08
+    DrawAnimatedMetasprite2Frames x_pos, y_pos, BluePlayerLeft1, BluePlayerLeft2, ANIM_SPEED_PLAYER
     jmp player_done
 animate_right:
-    DrawAnimatedMetasprite2Frames x_pos, y_pos, BluePlayerRight1, BluePlayerRight2, $08
+    DrawAnimatedMetasprite2Frames x_pos, y_pos, BluePlayerRight1, BluePlayerRight2, ANIM_SPEED_PLAYER
     jmp player_done
 
 handle_idle_state:
@@ -287,16 +284,16 @@ check_right:
     jmp animate_right     
 
 animate_down:
-    DrawAnimatedMetasprite4Frames x_pos, y_pos, RedPlayerDown1, RedPlayerDown2, RedPlayerDown1, RedPlayerDown3, $08
+    DrawAnimatedMetasprite4Frames x_pos, y_pos, RedPlayerDown1, RedPlayerDown2, RedPlayerDown1, RedPlayerDown3, ANIM_SPEED_PLAYER
     jmp player_done
 animate_up:
-    DrawAnimatedMetasprite4Frames x_pos, y_pos, RedPlayerUp1, RedPlayerUp2, RedPlayerUp1, RedPlayerUp3, $08
+    DrawAnimatedMetasprite4Frames x_pos, y_pos, RedPlayerUp1, RedPlayerUp2, RedPlayerUp1, RedPlayerUp3, ANIM_SPEED_PLAYER
     jmp player_done
 animate_left:
-    DrawAnimatedMetasprite2Frames x_pos, y_pos, RedPlayerLeft1, RedPlayerLeft2, $08
+    DrawAnimatedMetasprite2Frames x_pos, y_pos, RedPlayerLeft1, RedPlayerLeft2, ANIM_SPEED_PLAYER
     jmp player_done
 animate_right:
-    DrawAnimatedMetasprite2Frames x_pos, y_pos, RedPlayerRight1, RedPlayerRight2, $08
+    DrawAnimatedMetasprite2Frames x_pos, y_pos, RedPlayerRight1, RedPlayerRight2, ANIM_SPEED_PLAYER
     jmp player_done
 
 handle_idle_state:
@@ -346,15 +343,15 @@ player_done:
 
     ; Draw Colon
     lda #$3A             ; Colon Tile
-    sta $0201, y
+    sta OAM_BUFFER+1, y
     lda #$01             ; Palette
-    sta $0202, y
+    sta OAM_BUFFER+2, y
     lda x_pos
     clc
     adc #16              ; Offset 16px
-    sta $0203, y
+    sta OAM_BUFFER+3, y
     lda y_pos
-    sta $0200, y
+    sta OAM_BUFFER, y
     iny                  ; Manually bump OAM for colon
     iny
     iny
@@ -484,15 +481,15 @@ calculation_done:
 .scope
     clc
     adc #$30             ; Convert number to ASCII tile
-    sta $0201, y         ; Store Tile ID
+    sta OAM_BUFFER+1, y         ; Store Tile ID
     lda #$01
-    sta $0202, y         ; Palette
+    sta OAM_BUFFER+2, y         ; Palette
     lda x_ref
     clc
     adc #x_offset        ; Shift X position
-    sta $0203, y
+    sta OAM_BUFFER+3, y
     lda y_ref
-    sta $0200, y         ; Store Y
+    sta OAM_BUFFER, y         ; Store Y
     iny                  ; Advance OAM index (4 bytes)
     iny
     iny
@@ -506,24 +503,24 @@ calculation_done:
     lda data_lbl      ; Load byte 0 (Relative Y) from data
     clc
     adc y_pos         ; Add World Y position
-    sta $0200, y      ; Store in OAM buffer
+    sta OAM_BUFFER, y      ; Store in OAM buffer
     iny               ; Move OAM index
 
     ; Tile ID
     lda data_lbl+1    ; Load byte 1 (Tile ID)
-    sta $0200, y
+    sta OAM_BUFFER, y
     iny
 
     ; Attributes
     lda data_lbl+2    ; Load byte 2 (Attributes/Palette)
-    sta $0200, y
+    sta OAM_BUFFER, y
     iny
 
     ; X Position
     lda data_lbl+3    ; Load byte 3 (Relative X)
     clc
     adc x_pos         ; Add World X position
-    sta $0200, y
+    sta OAM_BUFFER, y
     iny
 .endscope
 .endmacro
@@ -536,19 +533,19 @@ TileLoop:
     lda data_lbl, x
     clc
     adc y_pos            ; Add World Y
-    sta $0200, y
+    sta OAM_BUFFER, y
     inx
     iny
 
     ; Tile ID
     lda data_lbl, x
-    sta $0200, y
+    sta OAM_BUFFER, y
     inx
     iny
 
     ; Attributes
     lda data_lbl, x
-    sta $0200, y
+    sta OAM_BUFFER, y
     inx
     iny
 
@@ -556,7 +553,7 @@ TileLoop:
     lda data_lbl, x
     clc
     adc x_pos            ; Add World X
-    sta $0200, y
+    sta OAM_BUFFER, y
     inx
     iny
 
@@ -735,19 +732,19 @@ text_loop:
     lda data_lbl, x
     clc
     adc y_pos            ; Add World Y
-    sta $0200, y
+    sta OAM_BUFFER, y
     inx
     iny
 
     ; Tile ID
     lda data_lbl, x
-    sta $0200, y
+    sta OAM_BUFFER, y
     inx
     iny
 
     ; Attributes
     lda data_lbl, x
-    sta $0200, y
+    sta OAM_BUFFER, y
     inx
     iny
 
@@ -755,7 +752,7 @@ text_loop:
     lda data_lbl, x
     clc
     adc x_pos            ; Add World X
-    sta $0200, y
+    sta OAM_BUFFER, y
     inx
     iny
 

@@ -69,7 +69,7 @@ reset:
   txs		;  .
   inx		; now X = 0
   stx PPU_CTRL	; disable NMI
-  stx $2001 	; disable rendering
+  stx PPU_MASK 	; disable rendering
   stx $4010 	; disable DMC IRQs
 
 ;; first wait for vblank to make sure PPU is ready
@@ -112,9 +112,9 @@ vblankwait2:
 
 ; enable rendering
   lda #%10000000	; Enable NMI
-  sta $2000
-  lda #%00011110  ; Enable Background and Sprites
-  sta $2001
+  sta PPU_CTRL
+  lda #PPU_MASK_ENABLE_ALL  ; Enable Background and Sprites
+  sta PPU_MASK
 
 InitVariables ; Setup initial variables
 InitializeSongs ; Setup music
