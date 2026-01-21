@@ -19,9 +19,6 @@ lda #50
 sta clock_x
 sta clock_y
 
-lda #%00000111 
-sta clock_dirty
-
 lda #0
 sta ability_blue_passtrough_timers ; Set to 0 (inactive)
 sta ability_red_passtrough_timers  ; Set to 0 (inactive)

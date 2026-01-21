@@ -14,9 +14,6 @@
     bne @skip_seconds ; check if 50 frames have passed (1 second in PAL)
 
     inc second_counter
-    lda clock_dirty ; Set clock value to be updated
-    ora #1
-    sta clock_dirty
     bne @no_overflow ; check for overflow
     inc second_counter+1
 @no_overflow:

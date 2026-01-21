@@ -7,7 +7,7 @@
 .exportzp math_buffer, rand, ptr
 .exportzp inputs, frame_counter
 
-.exportzp second_counter, clock_dirty
+.exportzp second_counter
 .exportzp clock_x, clock_y
 .exportzp clock_min, clock_sec, clock_frames
 
@@ -48,9 +48,8 @@ rand:           .res 2
 inputs:         .res 2      
 frame_counter:  .res 1      
 
-;; CLOCK & DEMO TIMERS
+;; CLOCK
 second_counter: .res 2
-clock_dirty:    .res 1      ; a flag set to determine which parts of the buffer must be updated. Bit 0: value, bit 1: x, bit 2:y
 clock_x:        .res 1
 clock_y:        .res 1
 clock_min:      .res 1

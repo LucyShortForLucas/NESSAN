@@ -50,7 +50,7 @@
 .importzp coin_x2, coin_y2
 .importzp count_down_x, count_down_y
 
-.importzp clock_x, clock_y, clock_dirty
+.importzp clock_x, clock_y
 .importzp score_red_x, score_red_y
 .importzp score_blue_x, score_blue_y
 .importzp ability_red_icon_x, ability_red_icon_y

@@ -63,7 +63,7 @@
 .importzp ability_blue_icon_x, ability_blue_icon_y
 .importzp ability_red_icon_x, ability_red_icon_y
 
-.importzp clock_x, clock_y, clock_dirty
+.importzp clock_x, clock_y
 .importzp count_down_x, count_down_y
 .import clock_draw_buffer
 
@@ -175,7 +175,7 @@ blue_update_end:
     dec explosion_timer      ; Count down
     bne @skip_explosion      ; If still > 0, do nothing
     
-    ; TIMER HIT ZERO: TRIGGER RESTORE
+    ; timer hit zero, restore background
     lda #2                   ; State 2 = Restore
     sta explosion_state
     jmp @skip_explosion
@@ -186,7 +186,7 @@ blue_update_end:
     cmp #1
     bne @skip_explosion
     
-    ; TRIGGER FLASH
+    ; trigger flash
     lda #1
     sta explosion_state
     lda #5                   ; Lasts 5 frames
